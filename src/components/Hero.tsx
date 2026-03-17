@@ -10,7 +10,7 @@ export default function Hero() {
       {/* BRAND */}
       <div className="flex flex-col items-center gap-3 mb-10">
         <img src={logo} alt="Finityo logo" className="w-20 h-20 opacity-90" />
-        <h1 className="text-2xl font-bold font-heading tracking-tight text-foreground leading-none">
+        <h1 className="text-3xl font-semibold font-heading tracking-tight text-foreground leading-snug">
           Finityo
         </h1>
         <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-[0.2em]">
