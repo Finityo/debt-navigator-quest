@@ -9,7 +9,6 @@ interface Props {
 
 export function InterestPrincipalChart({ summaries }: Props) {
   const data = useMemo(() => {
-    // Show every Nth month to avoid overcrowding
     const step = Math.max(1, Math.floor(summaries.length / 12));
     return summaries
       .filter((_, i) => i % step === 0 || i === summaries.length - 1)
@@ -21,17 +20,21 @@ export function InterestPrincipalChart({ summaries }: Props) {
   }, [summaries]);
 
   return (
-    <ResponsiveContainer width="100%" height={240}>
+    <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 91%)" />
+        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.7} />
         <XAxis
           dataKey="month"
-          tick={{ fontSize: 11, fill: 'hsl(220 10% 46%)' }}
+          tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+          axisLine={{ stroke: 'hsl(var(--border))' }}
+          tickLine={false}
         />
         <YAxis
-          tick={{ fontSize: 11, fill: 'hsl(220 10% 46%)' }}
+          tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
           tickFormatter={(v) => `$${v}`}
-          width={50}
+          width={48}
+          axisLine={false}
+          tickLine={false}
         />
         <Tooltip
           formatter={(value: number, name: string) => [
@@ -40,16 +43,19 @@ export function InterestPrincipalChart({ summaries }: Props) {
           ]}
           contentStyle={{
             borderRadius: '8px',
-            border: '1px solid hsl(220 13% 91%)',
+            border: '1px solid hsl(var(--border))',
             fontSize: '12px',
+            backgroundColor: 'hsl(var(--card))',
+            boxShadow: '0 4px 12px -2px hsl(var(--foreground) / 0.08)',
           }}
+          labelStyle={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}
         />
         <Legend
-          wrapperStyle={{ fontSize: '12px' }}
+          wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
           formatter={(value) => (value === 'interest' ? 'Interest' : 'Principal')}
         />
-        <Bar dataKey="principal" fill="hsl(162 63% 41%)" radius={[2, 2, 0, 0]} />
-        <Bar dataKey="interest" fill="hsl(0 72% 51%)" radius={[2, 2, 0, 0]} />
+        <Bar dataKey="principal" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} />
+        <Bar dataKey="interest" fill="hsl(var(--destructive))" radius={[3, 3, 0, 0]} opacity={0.7} />
       </BarChart>
     </ResponsiveContainer>
   );
