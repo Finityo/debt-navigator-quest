@@ -62,11 +62,11 @@ export default function ExtraPaymentsPage() {
   const totalExtra = extraPayments.reduce((sum, p) => sum + p.extraAmount, 0);
 
   const PaymentForm = ({ onSave }: { onSave: () => void }) => (
-    <Card className="border-2 border-primary/20 bg-card">
-      <CardContent className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <Label className="text-xs">Month Number</Label>
+    <Card className="border-2 border-primary/15">
+      <CardContent className="p-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-4">
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Month Number</Label>
             <Input
               type="number"
               min={1}
@@ -75,12 +75,12 @@ export default function ExtraPaymentsPage() {
               onChange={(e) => setFormMonth(parseInt(e.target.value) || 1)}
               placeholder="1"
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-[11px] text-muted-foreground">
               {formMonth >= 1 ? `→ ${getDateForMonth(formMonth)}` : ''}
             </p>
           </div>
-          <div>
-            <Label className="text-xs">Extra Amount ($)</Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Extra Amount ($)</Label>
             <Input
               type="number"
               min={0}
@@ -104,17 +104,17 @@ export default function ExtraPaymentsPage() {
   );
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Extra Payments" description="Schedule additional payments to accelerate your payoff" />
 
-      <Card className="border bg-card mb-4">
+      <Card>
         <CardContent className="p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-muted">
+          <div className="p-2 rounded-lg bg-muted/80">
             <DollarSign className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">Total Scheduled Extra</p>
-            <p className="text-lg font-bold font-heading">{formatCurrency(totalExtra)}</p>
+            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Scheduled Extra</p>
+            <p className="text-xl font-bold font-heading font-tabular">{formatCurrency(totalExtra)}</p>
           </div>
           <span className="ml-auto text-sm text-muted-foreground">
             {extraPayments.length} payment{extraPayments.length !== 1 ? 's' : ''}
@@ -124,11 +124,15 @@ export default function ExtraPaymentsPage() {
 
       <div className="space-y-3">
         {sorted.length === 0 && !isAdding && (
-          <Card className="border border-dashed bg-card">
-            <CardContent className="p-8 text-center">
-              <Banknote className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-              <h3 className="font-heading font-semibold mb-1">No extra payments scheduled</h3>
-              <p className="text-sm text-muted-foreground">Add extra payments to accelerate your debt payoff.</p>
+          <Card className="border-dashed">
+            <CardContent className="py-10 px-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
+                <Banknote className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <h3 className="font-heading font-semibold mb-1.5">No extra payments scheduled</h3>
+              <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                Schedule extra payments to pay off your debt faster and save on interest.
+              </p>
             </CardContent>
           </Card>
         )}
@@ -137,25 +141,25 @@ export default function ExtraPaymentsPage() {
           editingMonth === ep.monthNumber ? (
             <PaymentForm key={ep.monthNumber} onSave={handleSaveEdit} />
           ) : (
-            <Card key={ep.monthNumber} className="border bg-card">
+            <Card key={ep.monthNumber} className="transition-card hover-lift">
               <CardContent className="p-4 flex items-center gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Month {ep.monthNumber}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-[11px] text-muted-foreground">
                       ({new Date(ep.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })})
                     </span>
                   </div>
-                  <p className="text-lg font-bold font-heading text-primary mt-0.5">
+                  <p className="text-lg font-bold font-heading font-tabular text-primary mt-0.5">
                     +{formatCurrency(ep.extraAmount)}
                   </p>
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  <Button variant="ghost" size="sm" onClick={() => startEdit(ep)}>
-                    <Edit2 className="w-4 h-4" />
+                <div className="flex gap-1 shrink-0">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => startEdit(ep)}>
+                    <Edit2 className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => removeExtraPayment(ep.monthNumber)} className="text-destructive hover:text-destructive">
-                    <Trash2 className="w-4 h-4" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => removeExtraPayment(ep.monthNumber)}>
+                    <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
               </CardContent>
@@ -166,7 +170,7 @@ export default function ExtraPaymentsPage() {
         {isAdding ? (
           <PaymentForm onSave={handleAdd} />
         ) : (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed">
+          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-11">
             <Plus className="w-4 h-4 mr-2" /> Add Extra Payment
           </Button>
         )}
