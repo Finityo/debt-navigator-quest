@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
+import Hero from "@/components/Hero";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
 import PlanPage from "@/pages/PlanPage";
