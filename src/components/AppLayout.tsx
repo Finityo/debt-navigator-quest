@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTheme } from 'next-themes';
 import {
   LayoutDashboard,
   CreditCard,
@@ -12,6 +13,8 @@ import {
   Menu,
   X,
   Banknote,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import finityoLogo from '@/assets/finityo-logo.png';
 
