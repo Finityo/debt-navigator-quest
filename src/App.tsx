@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
+import Hero from "@/components/Hero";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
 import PlanPage from "@/pages/PlanPage";
@@ -27,7 +28,8 @@ const App = () => (
         <BrowserRouter>
           <AppLayout>
             <Routes>
-              <Route path="/" element={<DashboardPage />} />
+              <Route path="/" element={<Hero />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/debts" element={<DebtsPage />} />
               <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
               <Route path="/plan" element={<PlanPage />} />
