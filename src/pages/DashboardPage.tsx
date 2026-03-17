@@ -31,13 +31,13 @@ export default function DashboardPage() {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Dashboard" description="Your debt freedom at a glance" />
 
       <ComputeBanner />
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
         <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
         <KpiCard
@@ -60,16 +60,16 @@ export default function DashboardPage() {
 
       {/* Charts */}
       {hasResult && planResult.monthlySummaries.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <Card>
-            <CardContent className="p-5">
-              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-4">Debt Balance Over Time</h3>
+            <CardContent className="p-6">
+              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-5">Debt Balance Over Time</h3>
               <DebtBalanceChart summaries={planResult.monthlySummaries} />
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-5">
-              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-4">Interest vs Principal</h3>
+            <CardContent className="p-6">
+              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-5">Interest vs Principal</h3>
               <InterestPrincipalChart summaries={planResult.monthlySummaries} />
             </CardContent>
           </Card>
@@ -77,12 +77,12 @@ export default function DashboardPage() {
       )}
 
       {/* Strategy + Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Card>
-          <CardContent className="p-5">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Strategy</p>
-            <p className="text-xl font-bold font-heading capitalize text-foreground">{settings.method}</p>
-            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+          <CardContent className="p-6">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Strategy</p>
+            <p className="text-2xl font-bold font-heading capitalize text-foreground">{settings.method}</p>
+            <p className="text-sm text-muted-foreground mt-2.5 leading-relaxed">
               {settings.method === 'avalanche'
                 ? 'Targeting highest APR first to minimize total interest paid.'
                 : 'Targeting smallest balance first for motivating quick wins.'}
@@ -91,16 +91,16 @@ export default function DashboardPage() {
         </Card>
 
         <Card>
-          <CardContent className="p-5">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Quick Actions</p>
-            <div className="flex flex-col gap-2">
-              <Button variant="outline" onClick={() => navigate('/debts')} className="w-full justify-between h-9 text-sm">
+          <CardContent className="p-6">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4">Quick Actions</p>
+            <div className="flex flex-col gap-2.5">
+              <Button variant="outline" onClick={() => navigate('/debts')} className="w-full justify-between h-10 text-sm">
                 Manage Debts <ArrowRight className="w-3.5 h-3.5" />
               </Button>
-              <Button variant="outline" onClick={() => navigate('/plan')} className="w-full justify-between h-9 text-sm">
+              <Button variant="outline" onClick={() => navigate('/plan')} className="w-full justify-between h-10 text-sm">
                 View Full Plan <ArrowRight className="w-3.5 h-3.5" />
               </Button>
-              <Button variant="outline" onClick={() => navigate('/settings')} className="w-full justify-between h-9 text-sm">
+              <Button variant="outline" onClick={() => navigate('/settings')} className="w-full justify-between h-10 text-sm">
                 Settings <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </div>
@@ -111,14 +111,14 @@ export default function DashboardPage() {
       {/* Payoff Order */}
       {hasResult && planResult.payoffOrder.length > 0 && (
         <Card>
-          <CardContent className="p-5">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">Payoff Order</p>
-            <div className="space-y-3">
+          <CardContent className="p-6">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5">Payoff Order</p>
+            <div className="space-y-3.5">
               {planResult.payoffOrder.map((po, i) => {
                 const summary = planResult.monthlySummaries.find((s) => s.monthNumber === po.monthNumber);
                 return (
-                  <div key={po.debtId} className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0">
+                  <div key={po.debtId} className="flex items-center gap-3.5">
+                    <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
                       {i + 1}
                     </span>
                     <span className="font-medium text-sm flex-1 truncate">{po.creditorName}</span>
@@ -147,19 +147,20 @@ function KpiCard({
   value: string;
   accent?: 'primary' | 'destructive';
 }) {
+  const iconBg = accent === 'destructive' ? 'bg-destructive/10' : accent === 'primary' ? 'bg-primary/10' : 'bg-muted';
   const iconColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-muted-foreground';
   const valueColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-foreground';
 
   return (
     <Card className="transition-card hover-lift">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 rounded-md bg-muted/80">
-            <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
+      <CardContent className="p-5">
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className={`p-2 rounded-lg ${iconBg}`}>
+            <Icon className={`w-4 h-4 ${iconColor}`} />
           </div>
-          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{label}</span>
         </div>
-        <p className={`text-xl font-bold font-heading font-tabular leading-none ${valueColor}`}>{value}</p>
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">{label}</p>
+        <p className={`text-2xl font-bold font-heading font-tabular leading-none tracking-tight ${valueColor}`}>{value}</p>
       </CardContent>
     </Card>
   );

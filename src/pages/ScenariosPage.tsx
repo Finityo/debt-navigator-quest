@@ -37,19 +37,19 @@ export default function ScenariosPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Scenarios" description="Compare different payoff strategies side by side" />
 
       <ComputeBanner />
 
       {debts.length > 0 && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           <Card>
-            <CardContent className="p-5">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-                <GitCompare className="w-3.5 h-3.5" /> Alternate Scenario
+            <CardContent className="p-6">
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5 flex items-center gap-2">
+                <GitCompare className="w-4 h-4" /> Alternate Scenario
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
                 <div className="space-y-1.5">
                   <Label className="text-xs font-medium text-muted-foreground">Method</Label>
                   <Select value={altMethod} onValueChange={(v) => setAltMethod(v as PayoffMethod)}>
@@ -85,11 +85,11 @@ export default function ScenariosPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-muted/60">
-                      <th className="text-left p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Metric</th>
-                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Baseline</th>
-                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Alternate</th>
-                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Δ</th>
+                    <tr className="border-b bg-muted/50">
+                      <th className="text-left px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Metric</th>
+                      <th className="text-right px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Baseline</th>
+                      <th className="text-right px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Alternate</th>
+                      <th className="text-right px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Δ</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -104,7 +104,7 @@ export default function ScenariosPage() {
           )}
 
           {planResult && altResult && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <ScenarioSummary title="Baseline" result={planResult} method={settings.method} />
               <ScenarioSummary title="Alternate" result={altResult} method={altMethod} />
             </div>
@@ -134,11 +134,11 @@ function CompareRow({
   const fmtDiff = isMonth ? (v: number) => `${v > 0 ? '+' : ''}${v}` : (v: number) => `${v > 0 ? '+' : ''}${formatCurrency(v)}`;
 
   return (
-    <tr className="border-b last:border-0 table-row-stripe">
-      <td className="p-3 font-medium">{label}</td>
-      <td className="p-3 text-right font-tabular">{fmt(baseline)}</td>
-      <td className="p-3 text-right font-tabular">{fmt(alt)}</td>
-      <td className={`p-3 text-right font-medium font-tabular ${better ? 'text-primary' : diff === 0 ? 'text-muted-foreground' : 'text-destructive'}`}>
+    <tr className="border-b border-border/50 last:border-0">
+      <td className="px-4 py-3.5 font-medium">{label}</td>
+      <td className="px-4 py-3.5 text-right font-tabular">{fmt(baseline)}</td>
+      <td className="px-4 py-3.5 text-right font-tabular">{fmt(alt)}</td>
+      <td className={`px-4 py-3.5 text-right font-semibold font-tabular ${better ? 'text-primary' : diff === 0 ? 'text-muted-foreground' : 'text-destructive'}`}>
         {diff === 0 ? '—' : fmtDiff(diff)}
       </td>
     </tr>
@@ -148,16 +148,16 @@ function CompareRow({
 function ScenarioSummary({ title, result, method }: { title: string; result: PlanResult; method: string }) {
   return (
     <Card>
-      <CardContent className="p-4">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{title}</p>
-        <div className="space-y-2 text-sm">
+      <CardContent className="p-5">
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4">{title}</p>
+        <div className="space-y-2.5 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Method</span>
-            <span className="capitalize font-medium">{method}</span>
+            <span className="capitalize font-semibold">{method}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Status</span>
-            <span className={`font-medium capitalize ${result.completionStatus === 'complete' ? 'text-primary' : 'text-destructive'}`}>
+            <span className={`font-semibold capitalize ${result.completionStatus === 'complete' ? 'text-primary' : 'text-destructive'}`}>
               {result.completionStatus}
             </span>
           </div>

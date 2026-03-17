@@ -4,11 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Finityo Design System — Clean financial app aesthetic */
+/* Finityo Design System — Premium financial app aesthetic */
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
+    --background: 216 18% 93%;
     --foreground: 220 25% 10%;
 
     --card: 0 0% 100%;
@@ -38,68 +38,70 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 220 13% 89%;
+    --input: 220 13% 89%;
     --ring: 162 63% 41%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 220 25% 10%;
+    --sidebar-background: 222 28% 9%;
     --sidebar-foreground: 220 10% 85%;
     --sidebar-primary: 162 63% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 16%;
-    --sidebar-accent-foreground: 220 10% 85%;
-    --sidebar-border: 220 20% 18%;
+    --sidebar-accent: 222 22% 14%;
+    --sidebar-accent-foreground: 220 10% 92%;
+    --sidebar-border: 222 20% 16%;
     --sidebar-ring: 162 63% 41%;
 
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'DM Sans', sans-serif;
 
-    --shadow-card: 0 1px 3px 0 hsl(220 25% 10% / 0.04), 0 1px 2px -1px hsl(220 25% 10% / 0.04);
-    --shadow-card-hover: 0 4px 12px -2px hsl(220 25% 10% / 0.08), 0 2px 4px -2px hsl(220 25% 10% / 0.04);
+    --shadow-card: 0 1px 3px 0 hsl(220 25% 10% / 0.06), 0 1px 2px -1px hsl(220 25% 10% / 0.06);
+    --shadow-card-hover: 0 8px 24px -6px hsl(220 25% 10% / 0.1), 0 2px 6px -2px hsl(220 25% 10% / 0.06);
+    --shadow-elevated: 0 4px 16px -4px hsl(220 25% 10% / 0.08);
   }
 
   .dark {
-    --background: 220 25% 7%;
+    --background: 222 28% 6%;
     --foreground: 220 10% 93%;
 
-    --card: 220 20% 10%;
+    --card: 222 22% 11%;
     --card-foreground: 220 10% 93%;
 
-    --popover: 220 20% 10%;
+    --popover: 222 22% 11%;
     --popover-foreground: 220 10% 93%;
 
     --primary: 162 63% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 20% 14%;
+    --secondary: 222 20% 15%;
     --secondary-foreground: 220 10% 93%;
 
-    --muted: 220 20% 14%;
+    --muted: 222 20% 15%;
     --muted-foreground: 220 10% 55%;
 
-    --accent: 220 20% 14%;
+    --accent: 222 20% 15%;
     --accent-foreground: 162 63% 55%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
+    --border: 222 18% 17%;
+    --input: 222 18% 17%;
     --ring: 162 63% 45%;
 
-    --sidebar-background: 220 25% 5%;
+    --sidebar-background: 222 30% 5%;
     --sidebar-foreground: 220 10% 85%;
     --sidebar-primary: 162 63% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 220 10% 85%;
-    --sidebar-border: 220 20% 12%;
+    --sidebar-accent: 222 22% 13%;
+    --sidebar-accent-foreground: 220 10% 92%;
+    --sidebar-border: 222 20% 12%;
     --sidebar-ring: 162 63% 45%;
 
-    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.2);
-    --shadow-card-hover: 0 4px 12px -2px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 1px 4px 0 hsl(0 0% 0% / 0.25);
+    --shadow-card-hover: 0 8px 24px -6px hsl(0 0% 0% / 0.35);
+    --shadow-elevated: 0 4px 16px -4px hsl(0 0% 0% / 0.3);
   }
 }
 
@@ -118,7 +120,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -130,12 +132,12 @@
 
   .hover-lift:hover {
     box-shadow: var(--shadow-card-hover);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   /* Finance-grade table rows */
   .table-row-stripe:nth-child(even) {
-    background-color: hsl(var(--muted) / 0.4);
+    background-color: hsl(var(--muted) / 0.35);
   }
 
   /* Smooth expand/collapse */

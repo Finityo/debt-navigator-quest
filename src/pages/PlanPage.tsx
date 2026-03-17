@@ -11,15 +11,15 @@ export default function PlanPage() {
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Plan" description="Monthly payoff breakdown and debt elimination order" />
 
       <ComputeBanner />
 
       {planResult && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Top summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <SummaryCard label="Total Paid" value={formatCurrency(planResult.totalPaid)} />
             <SummaryCard label="Interest Paid" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <SummaryCard
@@ -39,9 +39,9 @@ export default function PlanPage() {
 
           {/* Payoff Order */}
           <Card>
-            <CardContent className="p-5">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Payoff Order</p>
-              <div className="flex flex-wrap gap-2">
+            <CardContent className="p-6">
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4">Payoff Order</p>
+              <div className="flex flex-wrap gap-2.5">
                 {planResult.payoffOrder.map((po, i) => {
                   const summary = planResult.monthlySummaries.find(
                     (s) => s.monthNumber === po.monthNumber
@@ -49,7 +49,7 @@ export default function PlanPage() {
                   return (
                     <div
                       key={po.debtId}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-sm"
+                      className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-muted text-sm"
                     >
                       <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
                         {i + 1}
@@ -70,15 +70,15 @@ export default function PlanPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-muted/60">
-                    <th className="text-left p-3 font-medium text-muted-foreground w-8"></th>
-                    <th className="text-left p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Month</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Starting</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Interest</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Min Paid</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Extra</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Ending</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Events</th>
+                  <tr className="border-b bg-muted/50">
+                    <th className="text-left px-4 py-3.5 font-semibold text-muted-foreground w-8"></th>
+                    <th className="text-left px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Month</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Starting</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Interest</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Min Paid</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Extra</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Ending</th>
+                    <th className="text-left px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Events</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -123,9 +123,9 @@ function SummaryCard({
   const valueColor = accent === 'primary' ? 'text-primary' : accent === 'destructive' ? 'text-destructive' : 'text-foreground';
   return (
     <Card>
-      <CardContent className="p-4 text-center">
-        <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{label}</p>
-        <p className={`text-lg font-bold font-heading font-tabular mt-1.5 ${valueColor}`}>
+      <CardContent className="p-5 text-center">
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">{label}</p>
+        <p className={`text-2xl font-bold font-heading font-tabular mt-2 ${valueColor}`}>
           {value}
         </p>
       </CardContent>
@@ -151,29 +151,29 @@ function MonthRow({
   return (
     <>
       <tr
-        className={`border-b transition-colors cursor-pointer table-row-stripe ${
-          hasMilestone ? 'bg-primary/[0.03]' : 'hover:bg-muted/40'
+        className={`border-b border-border/50 transition-colors cursor-pointer ${
+          hasMilestone ? 'bg-primary/[0.04]' : 'hover:bg-muted/40'
         }`}
         onClick={onToggle}
       >
-        <td className="p-3">
+        <td className="px-4 py-3.5">
           {isExpanded ? (
-            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           ) : (
-            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
           )}
         </td>
-        <td className="p-3 font-medium whitespace-nowrap font-tabular">{formatDate(ms.date)}</td>
-        <td className="p-3 text-right font-tabular">{formatCurrency(ms.totalStartingDebt)}</td>
-        <td className="p-3 text-right font-tabular text-destructive/80">{formatCurrencyCents(ms.totalInterest)}</td>
-        <td className="p-3 text-right font-tabular">{formatCurrency(ms.totalMinimumPayments)}</td>
-        <td className="p-3 text-right font-tabular text-primary font-medium">
+        <td className="px-4 py-3.5 font-medium whitespace-nowrap font-tabular">{formatDate(ms.date)}</td>
+        <td className="px-4 py-3.5 text-right font-tabular">{formatCurrency(ms.totalStartingDebt)}</td>
+        <td className="px-4 py-3.5 text-right font-tabular text-destructive/70">{formatCurrencyCents(ms.totalInterest)}</td>
+        <td className="px-4 py-3.5 text-right font-tabular">{formatCurrency(ms.totalMinimumPayments)}</td>
+        <td className="px-4 py-3.5 text-right font-tabular text-primary font-semibold">
           {ms.totalExtraPayments > 0 ? formatCurrency(ms.totalExtraPayments) : '—'}
         </td>
-        <td className="p-3 text-right font-tabular font-medium">{formatCurrency(ms.totalEndingDebt)}</td>
-        <td className="p-3">
+        <td className="px-4 py-3.5 text-right font-tabular font-semibold">{formatCurrency(ms.totalEndingDebt)}</td>
+        <td className="px-4 py-3.5">
           {hasMilestone && (
-            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full whitespace-nowrap font-semibold">
               🎉 {ms.debtsPaidOffThisMonth.length} paid off
             </span>
           )}
@@ -182,21 +182,21 @@ function MonthRow({
       {isExpanded && snapshots.length > 0 && (
         <tr>
           <td colSpan={8} className="p-0">
-            <div className="bg-muted/30 px-4 sm:px-6 py-4 border-b animate-expand">
-              <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+            <div className="bg-muted/25 px-5 sm:px-7 py-5 border-b animate-expand">
+              <p className="text-xs font-semibold text-muted-foreground mb-3.5 uppercase tracking-widest">
                 Debt-by-debt breakdown — {formatDate(ms.date)}
               </p>
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 {snapshots
                   .filter((s) => s.startingBalance > 0 || s.paymentApplied > 0)
                   .map((s) => (
                     <div
                       key={s.debtId}
-                      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-3 py-2.5 ${
-                        s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-card border border-border/50'
+                      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-4 py-3 ${
+                        s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-card border border-border/40'
                       }`}
                     >
-                      <span className="font-medium min-w-[110px]">{s.creditorName}</span>
+                      <span className="font-semibold min-w-[110px]">{s.creditorName}</span>
                       <span className="text-muted-foreground font-tabular">
                         Start: {formatCurrencyCents(s.startingBalance)}
                       </span>
@@ -206,11 +206,11 @@ function MonthRow({
                       <span className="text-primary font-tabular">
                         −{formatCurrencyCents(s.paymentApplied)} paid
                       </span>
-                      <span className="font-tabular font-medium">
+                      <span className="font-tabular font-semibold">
                         End: {formatCurrencyCents(s.endingBalance)}
                       </span>
                       {s.isPaidOff && (
-                        <span className="text-primary font-semibold">✓ Paid Off</span>
+                        <span className="text-primary font-bold">✓ Paid Off</span>
                       )}
                     </div>
                   ))}

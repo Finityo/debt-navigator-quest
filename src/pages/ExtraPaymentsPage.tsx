@@ -63,8 +63,8 @@ export default function ExtraPaymentsPage() {
 
   const PaymentForm = ({ onSave }: { onSave: () => void }) => (
     <Card className="border-2 border-primary/15">
-      <CardContent className="p-5">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-4">
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Month Number</Label>
             <Input
@@ -90,7 +90,7 @@ export default function ExtraPaymentsPage() {
               placeholder="200"
             />
           </div>
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-2.5">
             <Button size="sm" onClick={onSave} disabled={formMonth < 1 || formAmount <= 0}>
               <Check className="w-4 h-4 mr-1" /> Save
             </Button>
@@ -104,17 +104,17 @@ export default function ExtraPaymentsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Extra Payments" description="Schedule additional payments to accelerate your payoff" />
 
       <Card>
-        <CardContent className="p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-muted/80">
+        <CardContent className="p-5 flex items-center gap-3.5">
+          <div className="p-2.5 rounded-lg bg-primary/10">
             <DollarSign className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Scheduled Extra</p>
-            <p className="text-xl font-bold font-heading font-tabular">{formatCurrency(totalExtra)}</p>
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Total Scheduled Extra</p>
+            <p className="text-2xl font-bold font-heading font-tabular mt-0.5">{formatCurrency(totalExtra)}</p>
           </div>
           <span className="ml-auto text-sm text-muted-foreground">
             {extraPayments.length} payment{extraPayments.length !== 1 ? 's' : ''}
@@ -122,14 +122,14 @@ export default function ExtraPaymentsPage() {
         </CardContent>
       </Card>
 
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {sorted.length === 0 && !isAdding && (
           <Card className="border-dashed">
-            <CardContent className="py-10 px-6 text-center">
+            <CardContent className="py-12 px-6 text-center">
               <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
                 <Banknote className="w-5 h-5 text-muted-foreground" />
               </div>
-              <h3 className="font-heading font-semibold mb-1.5">No extra payments scheduled</h3>
+              <h3 className="font-heading font-bold mb-2">No extra payments scheduled</h3>
               <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
                 Schedule extra payments to pay off your debt faster and save on interest.
               </p>
@@ -142,7 +142,7 @@ export default function ExtraPaymentsPage() {
             <PaymentForm key={ep.monthNumber} onSave={handleSaveEdit} />
           ) : (
             <Card key={ep.monthNumber} className="transition-card hover-lift">
-              <CardContent className="p-4 flex items-center gap-4">
+              <CardContent className="p-5 flex items-center gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Month {ep.monthNumber}</span>
@@ -150,7 +150,7 @@ export default function ExtraPaymentsPage() {
                       ({new Date(ep.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })})
                     </span>
                   </div>
-                  <p className="text-lg font-bold font-heading font-tabular text-primary mt-0.5">
+                  <p className="text-xl font-bold font-heading font-tabular text-primary mt-1">
                     +{formatCurrency(ep.extraAmount)}
                   </p>
                 </div>
@@ -170,7 +170,7 @@ export default function ExtraPaymentsPage() {
         {isAdding ? (
           <PaymentForm onSave={handleAdd} />
         ) : (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-11">
+          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12">
             <Plus className="w-4 h-4 mr-2" /> Add Extra Payment
           </Button>
         )}
