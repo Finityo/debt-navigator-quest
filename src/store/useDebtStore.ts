@@ -89,6 +89,7 @@ export const useDebtStore = create<DebtStore>()(
       planResult: null,
       validationErrors: emptyValidation(),
       computeStatus: 'idle',
+      _hasHydrated: false,
 
       addDebt: (debt) => {
         set((s) => ({ debts: [...s.debts, debt] }));
