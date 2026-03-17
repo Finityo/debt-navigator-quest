@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Debt, DebtType } from '@/types/debt';
-import { Plus, Trash2, Edit2, X, Check } from 'lucide-react';
+import { formatCurrency, formatPercent } from '@/utils/format';
+import { Plus, Trash2, Edit2, X, Check, CreditCard } from 'lucide-react';
 
 const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'credit_card', label: 'Credit Card' },
@@ -18,14 +19,6 @@ const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'medical', label: 'Medical' },
   { value: 'other', label: 'Other' },
 ];
-
-function formatCurrency(n: number) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
-}
-
-function formatPercent(apr: number) {
-  return `${(apr * 100).toFixed(1)}%`;
-}
 
 const emptyDebt = (): Partial<Debt> => ({
   creditorName: '',
@@ -42,13 +35,15 @@ export default function DebtsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<Debt>>(emptyDebt());
 
+  const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
+
   const handleSaveNew = () => {
     if (!form.creditorName || !form.balance) return;
     addDebt({
       id: `debt-${Date.now()}`,
       creditorName: form.creditorName!,
       balance: Number(form.balance),
-      apr: Number(form.apr) / 100, // user enters percentage, store as decimal
+      apr: Number(form.apr) / 100,
       minPayment: Number(form.minPayment),
       type: (form.type as DebtType) || 'other',
       startDate: new Date().toISOString().slice(0, 10),
@@ -156,7 +151,33 @@ export default function DebtsPage() {
     <div>
       <PageHeader title="Debts" description="Add and manage your debts" />
 
+      {/* Summary */}
+      <Card className="border bg-card mb-4">
+        <CardContent className="p-4 flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-muted">
+            <CreditCard className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Total Debt</p>
+            <p className="text-lg font-bold font-heading">{formatCurrency(totalDebt)}</p>
+          </div>
+          <span className="ml-auto text-sm text-muted-foreground">
+            {debts.length} debt{debts.length !== 1 ? 's' : ''}
+          </span>
+        </CardContent>
+      </Card>
+
       <div className="space-y-3">
+        {debts.length === 0 && !isAdding && (
+          <Card className="border border-dashed bg-card">
+            <CardContent className="p-8 text-center">
+              <CreditCard className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+              <h3 className="font-heading font-semibold mb-1">No debts yet</h3>
+              <p className="text-sm text-muted-foreground">Add your first debt to start building a payoff plan.</p>
+            </CardContent>
+          </Card>
+        )}
+
         {debts.map((debt) =>
           editingId === debt.id ? (
             <DebtForm key={debt.id} onSave={handleSaveEdit} onCancel={() => { setEditingId(null); setForm(emptyDebt()); }} />
