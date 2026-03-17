@@ -38,7 +38,7 @@ export default function Hero() {
 
       {/* CTA */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button size="lg" onClick={() => navigate("/plan")} className="px-8">
+        <Button size="lg" onClick={() => navigate("/dashboard")} className="px-8">
           Build My Plan
         </Button>
         <Button size="lg" variant="outline" onClick={() => navigate("/debts")}>

@@ -38,11 +38,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <PageHeader title="Dashboard" description="Your debt freedom at a glance" />
 
-      {/* Hero — shown only when no plan is computed */}
-      {!hasResult && <Hero />}
-
-      {/* Compute banner — only when plan exists or needs recompute */}
-      {hasResult && <ComputeBanner />}
+      <ComputeBanner />
 
       {/* KPI Grid — only when plan is computed */}
       {hasResult && (
