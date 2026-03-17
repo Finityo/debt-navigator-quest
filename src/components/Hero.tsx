@@ -9,7 +9,7 @@ export default function Hero() {
     <div className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center space-y-10 glass">
       {/* AMBIENT BACKGROUND GLOW */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full" />
+        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[hsl(var(--primary)/0.2)] blur-[120px] rounded-full" />
         <div className="absolute bottom-[-120px] right-1/3 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full" />
       </div>
 
