@@ -22,13 +22,13 @@ export default function ScenariosPage() {
 
   const runAltScenario = () => {
     if (debts.length === 0) return;
-    // Build alternate extra payments: existing + flat monthly extra
-    const altExtras = [...extraPayments];
+    // Build alternate extra payments: deep copy to avoid mutating store
+    const altExtras = extraPayments.map((e) => ({ ...e }));
     if (altExtraMonthly > 0) {
       for (let m = 1; m <= settings.monthsHorizon; m++) {
-        const existing = altExtras.find((e) => e.monthNumber === m);
-        if (existing) {
-          existing.extraAmount += altExtraMonthly;
+        const idx = altExtras.findIndex((e) => e.monthNumber === m);
+        if (idx >= 0) {
+          altExtras[idx] = { ...altExtras[idx], extraAmount: altExtras[idx].extraAmount + altExtraMonthly };
         } else {
           altExtras.push({
             monthNumber: m,

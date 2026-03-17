@@ -176,6 +176,9 @@ export const useDebtStore = create<DebtStore>()(
         planResult: state.planResult,
         computeStatus: state.computeStatus,
       }),
+      onRehydrateStorage: () => () => {
+        useDebtStore.setState({ _hasHydrated: true });
+      },
     }
   )
 );
