@@ -17,6 +17,7 @@ import {
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/debts', label: 'Debts', icon: CreditCard },
+  { to: '/extra-payments', label: 'Extra Payments', icon: Banknote },
   { to: '/plan', label: 'Plan', icon: Calculator },
   { to: '/timeline', label: 'Timeline', icon: CalendarDays },
   { to: '/scenarios', label: 'Scenarios', icon: GitCompare },
