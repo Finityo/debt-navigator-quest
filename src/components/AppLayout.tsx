@@ -31,7 +31,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 flex-col bg-sidebar border-r border-sidebar-border">
         <div className="p-6">
