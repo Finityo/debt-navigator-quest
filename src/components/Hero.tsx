@@ -9,7 +9,7 @@ export default function Hero() {
     <section className="flex flex-col items-center justify-center text-center py-16 md:py-24 px-4">
       {/* BRAND */}
       <div className="flex flex-col items-center gap-3 mb-10">
-        <img src={logo} alt="Finityo logo" className="w-14 h-14 opacity-90" />
+        <img src={logo} alt="Finityo logo" className="w-20 h-20 opacity-90" />
         <h1 className="text-2xl font-bold font-heading tracking-tight text-foreground leading-none">
           Finityo
         </h1>
