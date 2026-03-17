@@ -67,6 +67,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
+        <div className="px-3 pb-5 pt-2">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-lg text-[13px] font-medium text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent/50 transition-all duration-150"
+          >
+            {theme === 'dark' ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
       </aside>
 
       {/* Mobile header */}
