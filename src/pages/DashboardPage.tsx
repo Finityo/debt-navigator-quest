@@ -20,7 +20,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
-import finityoLogo from '@/assets/finityo-logo.png';
+import Hero from '@/components/Hero';
 
 export default function DashboardPage() {
   const { debts, settings, planResult, computeStatus } = useDebtStore();
@@ -39,40 +39,7 @@ export default function DashboardPage() {
       <PageHeader title="Dashboard" description="Your debt freedom at a glance" />
 
       {/* Hero — shown only when no plan is computed */}
-      {!hasResult && (
-        <div className="flex flex-col items-center text-center py-12 md:py-16 px-4">
-          <img src={finityoLogo} alt="Finityo" className="w-12 h-12 mb-6 opacity-90" />
-          <h2 className="text-3xl md:text-4xl font-bold font-heading tracking-tight text-foreground leading-tight max-w-lg">
-            Your path to becoming debt-free
-          </h2>
-          <p className="text-base text-muted-foreground mt-4 max-w-md leading-relaxed">
-            Build a clear payoff plan, track progress, and see exactly when you'll be debt-free.
-          </p>
-
-          <ul className="mt-8 space-y-3 text-left">
-            {[
-              'Track all debts in one place',
-              'Choose the best payoff strategy',
-              'See your payoff timeline instantly',
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-3 text-sm text-foreground/80">
-                <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-col sm:flex-row gap-3 mt-10">
-            <Button size="lg" onClick={() => navigate('/plan')} className="px-8">
-              Build My Plan
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate('/debts')}>
-              Manage Debts
-            </Button>
-          </div>
-        </div>
-      )}
+      {!hasResult && <Hero />}
 
       {/* Compute banner — only when plan exists or needs recompute */}
       {hasResult && <ComputeBanner />}
