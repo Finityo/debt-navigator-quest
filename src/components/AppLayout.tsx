@@ -82,6 +82,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-w-0">
         <header className="lg:hidden flex items-center justify-between px-4 py-3 border-b bg-card shadow-sm">
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2 rounded-lg hover:bg-muted transition-colors"
