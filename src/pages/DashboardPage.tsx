@@ -20,7 +20,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
-import finityoLogo from '@/assets/finityo-logo.png';
+import Hero from '@/components/Hero';
 
 export default function DashboardPage() {
   const { debts, settings, planResult, computeStatus } = useDebtStore();
