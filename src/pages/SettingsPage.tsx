@@ -1,13 +1,17 @@
 import { useDebtStore } from '@/store/useDebtStore';
+import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Moon, Sun } from 'lucide-react';
 import type { PayoffMethod } from '@/types/debt';
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useDebtStore();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="space-y-6">
@@ -57,6 +61,25 @@ export default function SettingsPage() {
             <p className="text-[11px] text-muted-foreground">
               Maximum number of months to project your payoff plan.
             </p>
+          </div>
+
+          {/* Appearance */}
+          <div className="border-t pt-5 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Appearance</Label>
+            <div className="flex items-center justify-between rounded-lg border p-3 mt-0.5">
+              <div className="flex items-center gap-2.5">
+                {theme === 'dark' ? (
+                  <Moon className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <Sun className="h-4 w-4 text-muted-foreground" />
+                )}
+                <span className="text-sm font-medium">Dark mode</span>
+              </div>
+              <Switch
+                checked={theme === 'dark'}
+                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
