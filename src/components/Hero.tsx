@@ -1,33 +1,66 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import logo from "@/assets/finityo-logo.png";
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+
+const ease = [0.25, 0.4, 0.25, 1] as const;
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.85 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease } },
+};
 
 export default function Hero() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center space-y-10 glass">
+    <motion.div
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+      className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center space-y-10 glass"
+    >
       {/* AMBIENT BACKGROUND GLOW */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[hsl(var(--primary)/0.2)] blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-120px] right-1/3 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full"
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.4, delay: 0.3 }}
+          className="absolute bottom-[-120px] right-1/3 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full"
+        />
       </div>
 
       {/* BRAND */}
-      <div className="flex flex-col items-center space-y-4">
+      <motion.div variants={scaleIn} className="flex flex-col items-center space-y-4">
         <div className="glass-strong p-5 rounded-2xl glow">
           <img src={logo} alt="Finityo logo" className="w-24 h-24" />
         </div>
-        <h1 className="text-3xl font-bold font-heading tracking-tight text-foreground">
+        <motion.h1 variants={fadeUp} className="text-3xl font-bold font-heading tracking-tight text-foreground">
           Finityo
-        </h1>
-        <p className="text-sm text-muted-foreground">
+        </motion.h1>
+        <motion.p variants={fadeUp} className="text-sm text-muted-foreground">
           Debt Freedom Engine
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       {/* HEADLINE */}
-      <div className="space-y-4 max-w-lg">
+      <motion.div variants={fadeUp} className="space-y-4 max-w-lg">
         <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
           Turn your debt into a clear, structured payoff plan
         </h2>
@@ -35,17 +68,17 @@ export default function Hero() {
           Finityo analyzes your balances, interest rates, and payments to build a precise strategy
           — so you know exactly what to pay, when to pay it, and when you'll be debt-free.
         </p>
-      </div>
+      </motion.div>
 
       {/* VALUE BULLETS */}
-      <div className="space-y-2 text-sm text-muted-foreground">
+      <motion.div variants={fadeUp} className="space-y-2 text-sm text-muted-foreground">
         <p>• Built-in Snowball &amp; Avalanche strategies</p>
         <p>• Real payoff timelines — not estimates</p>
         <p>• Track progress and eliminate guesswork</p>
-      </div>
+      </motion.div>
 
       {/* CTA */}
-      <div className="flex flex-col sm:flex-row gap-4 pt-2">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 pt-2">
         <Button
           size="lg"
           className="glass-strong glow hover:scale-[1.02] transition-all"
@@ -61,12 +94,12 @@ export default function Hero() {
         >
           View My Debts
         </Button>
-      </div>
+      </motion.div>
 
       {/* TRUST */}
-      <p className="text-xs text-muted-foreground">
+      <motion.p variants={fadeUp} className="text-xs text-muted-foreground">
         Takes less than 60 seconds • No spreadsheets • No guesswork
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 }
