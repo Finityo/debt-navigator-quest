@@ -12,6 +12,7 @@ import ScenariosPage from "@/pages/ScenariosPage";
 import SensitivityPage from "@/pages/SensitivityPage";
 import ActivityPage from "@/pages/ActivityPage";
 import SettingsPage from "@/pages/SettingsPage";
+import ExtraPaymentsPage from "@/pages/ExtraPaymentsPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/debts" element={<DebtsPage />} />
+            <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
             <Route path="/plan" element={<PlanPage />} />
             <Route path="/timeline" element={<TimelinePage />} />
             <Route path="/scenarios" element={<ScenariosPage />} />
