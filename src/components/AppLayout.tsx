@@ -97,6 +97,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
+          </div>
         </header>
 
         {/* Mobile nav overlay */}
