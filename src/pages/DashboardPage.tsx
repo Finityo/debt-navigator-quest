@@ -159,16 +159,14 @@ function KpiCard({
   const valueColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-foreground';
 
   return (
-    <Card className="transition-card hover-lift">
-      <CardContent className="p-5">
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className={`p-2 rounded-lg ${iconBg}`}>
-            <Icon className={`w-4 h-4 ${iconColor}`} />
-          </div>
+    <div className="glass-card p-5 hover:scale-[1.01] transition-all">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className={`p-2 rounded-lg ${iconBg}`}>
+          <Icon className={`w-4 h-4 ${iconColor}`} />
         </div>
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">{label}</p>
-        <p className={`text-2xl font-bold font-heading font-tabular leading-none tracking-tight ${valueColor}`}>{value}</p>
-      </CardContent>
-    </Card>
+      </div>
+      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">{label}</p>
+      <p className={`text-2xl font-bold font-heading font-tabular leading-none tracking-tight ${valueColor}`}>{value}</p>
+    </div>
   );
 }
