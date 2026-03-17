@@ -20,26 +20,28 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/debts" element={<DebtsPage />} />
-            <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
-            <Route path="/plan" element={<PlanPage />} />
-            <Route path="/timeline" element={<TimelinePage />} />
-            <Route path="/scenarios" element={<ScenariosPage />} />
-            <Route path="/sensitivity" element={<SensitivityPage />} />
-            <Route path="/activity" element={<ActivityPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AppLayout>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" storageKey="finityo-theme">
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppLayout>
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/debts" element={<DebtsPage />} />
+              <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
+              <Route path="/plan" element={<PlanPage />} />
+              <Route path="/timeline" element={<TimelinePage />} />
+              <Route path="/scenarios" element={<ScenariosPage />} />
+              <Route path="/sensitivity" element={<SensitivityPage />} />
+              <Route path="/activity" element={<ActivityPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppLayout>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
