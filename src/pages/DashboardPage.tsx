@@ -20,7 +20,6 @@ import {
   Clock,
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
-import { formatCurrency, formatDate } from '@/utils/format';
 
 export default function DashboardPage() {
   const { debts, settings, planResult, computeStatus } = useDebtStore();
