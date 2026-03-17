@@ -35,11 +35,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-background" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-[15.5rem] flex-col bg-sidebar border-r border-sidebar-border shrink-0">
-        <div className="px-6 pt-7 pb-6">
-          <h1 className="text-[22px] font-bold font-heading text-sidebar-primary tracking-tight leading-none">
-            Finityo
-          </h1>
-          <p className="text-[11px] text-sidebar-foreground/40 mt-1.5 font-medium tracking-wide uppercase">Debt Freedom Engine</p>
+        <div className="px-5 pt-7 pb-7 flex items-center gap-3">
+          <img src={finityoLogo} alt="Finityo" className="w-8 h-8" />
+          <div>
+            <h1 className="text-lg font-bold font-heading text-sidebar-primary tracking-tight leading-none">
+              Finityo
+            </h1>
+            <p className="text-[10px] text-sidebar-foreground/35 mt-1 font-medium tracking-wider uppercase">Debt Freedom Engine</p>
+          </div>
         </div>
         <nav className="flex-1 px-3 space-y-1">
           {navItems.map((item) => {
