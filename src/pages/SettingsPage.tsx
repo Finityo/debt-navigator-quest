@@ -14,11 +14,11 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Settings" description="Configure your payoff strategy" />
 
       <Card className="max-w-lg">
-        <CardContent className="p-5 space-y-5">
+        <CardContent className="p-6 space-y-6">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Payoff Method</Label>
             <Select
@@ -64,10 +64,10 @@ export default function SettingsPage() {
           </div>
 
           {/* Appearance */}
-          <div className="border-t pt-5 space-y-1.5">
+          <div className="border-t pt-6 space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Appearance</Label>
-            <div className="flex items-center justify-between rounded-lg border p-3 mt-0.5">
-              <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-between rounded-lg border p-4 mt-0.5">
+              <div className="flex items-center gap-3">
                 {theme === 'dark' ? (
                   <Moon className="h-4 w-4 text-muted-foreground" />
                 ) : (

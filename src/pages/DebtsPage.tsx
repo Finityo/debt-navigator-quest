@@ -81,8 +81,8 @@ export default function DebtsPage() {
 
   const DebtForm = ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => (
     <Card className="border-2 border-primary/15">
-      <CardContent className="p-5 space-y-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+      <CardContent className="p-6 space-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Creditor Name</Label>
             <Input
@@ -139,7 +139,7 @@ export default function DebtsPage() {
             />
           </div>
         </div>
-        <div className="flex gap-2 justify-end pt-1">
+        <div className="flex gap-2.5 justify-end pt-1">
           <Button variant="ghost" size="sm" onClick={onCancel}>
             <X className="w-4 h-4 mr-1" /> Cancel
           </Button>
@@ -152,18 +152,18 @@ export default function DebtsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Debts" description="Add and manage your debts" />
 
       {/* Summary */}
       <Card>
-        <CardContent className="p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-muted/80">
+        <CardContent className="p-5 flex items-center gap-3.5">
+          <div className="p-2.5 rounded-lg bg-primary/10">
             <CreditCard className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Debt</p>
-            <p className="text-xl font-bold font-heading font-tabular">{formatCurrency(totalDebt)}</p>
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Total Debt</p>
+            <p className="text-2xl font-bold font-heading font-tabular mt-0.5">{formatCurrency(totalDebt)}</p>
           </div>
           <span className="ml-auto text-sm text-muted-foreground">
             {debts.length} debt{debts.length !== 1 ? 's' : ''}
@@ -171,14 +171,14 @@ export default function DebtsPage() {
         </CardContent>
       </Card>
 
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {debts.length === 0 && !isAdding && (
           <Card className="border-dashed">
-            <CardContent className="py-10 px-6 text-center">
+            <CardContent className="py-12 px-6 text-center">
               <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
                 <CreditCard className="w-5 h-5 text-muted-foreground" />
               </div>
-              <h3 className="font-heading font-semibold mb-1.5">No debts yet</h3>
+              <h3 className="font-heading font-bold mb-2">No debts yet</h3>
               <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
                 Add your first debt to start building a personalized payoff plan.
               </p>
@@ -191,15 +191,15 @@ export default function DebtsPage() {
             <DebtForm key={debt.id} onSave={handleSaveEdit} onCancel={() => { setEditingId(null); setForm(emptyDebt()); }} />
           ) : (
             <Card key={debt.id} className="transition-card hover-lift">
-              <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+              <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-heading font-semibold text-sm truncate">{debt.creditorName}</h3>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <h3 className="font-heading font-bold text-[15px] truncate">{debt.creditorName}</h3>
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground capitalize font-medium">
                       {debt.type.replace('_', ' ')}
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
                     <span>Balance: <strong className="text-foreground font-tabular">{formatCurrency(debt.balance)}</strong></span>
                     <span>APR: <strong className="text-foreground font-tabular">{formatPercent(debt.apr)}</strong></span>
                     <span>Min: <strong className="text-foreground font-tabular">{formatCurrency(debt.minPayment)}/mo</strong></span>
@@ -221,7 +221,7 @@ export default function DebtsPage() {
         {isAdding ? (
           <DebtForm onSave={handleSaveNew} onCancel={() => { setIsAdding(false); setForm(emptyDebt()); }} />
         ) : (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-11">
+          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12">
             <Plus className="w-4 h-4 mr-2" /> Add Debt
           </Button>
         )}

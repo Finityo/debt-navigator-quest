@@ -45,19 +45,19 @@ export default function ActivityPage() {
   const totalLogged = paymentRecords.reduce((sum, r) => sum + r.amount, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Activity" description="Track actual payments you've made" />
 
       {/* Total logged */}
       {paymentRecords.length > 0 && (
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-muted/80">
+          <CardContent className="p-5 flex items-center gap-3.5">
+            <div className="p-2.5 rounded-lg bg-primary/10">
               <ClipboardList className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Logged</p>
-              <p className="text-xl font-bold font-heading font-tabular">{formatCurrency(totalLogged)}</p>
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Total Logged</p>
+              <p className="text-2xl font-bold font-heading font-tabular mt-0.5">{formatCurrency(totalLogged)}</p>
             </div>
             <span className="ml-auto text-sm text-muted-foreground">
               {paymentRecords.length} payment{paymentRecords.length !== 1 ? 's' : ''}
@@ -69,8 +69,8 @@ export default function ActivityPage() {
       {/* Add form */}
       {isAdding ? (
         <Card className="border-2 border-primary/15">
-          <CardContent className="p-5 space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+          <CardContent className="p-6 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
               <div className="space-y-1.5">
                 <Label className="text-xs font-medium text-muted-foreground">Debt</Label>
                 <Select value={formDebtId} onValueChange={setFormDebtId}>
@@ -110,7 +110,7 @@ export default function ActivityPage() {
                 />
               </div>
             </div>
-            <div className="flex gap-2 justify-end pt-1">
+            <div className="flex gap-2.5 justify-end pt-1">
               <Button variant="ghost" size="sm" onClick={resetForm}>
                 <X className="w-4 h-4 mr-1" /> Cancel
               </Button>
@@ -121,7 +121,7 @@ export default function ActivityPage() {
           </CardContent>
         </Card>
       ) : (
-        <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-11">
+        <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12">
           <Plus className="w-4 h-4 mr-2" /> Log Payment
         </Button>
       )}
@@ -129,26 +129,26 @@ export default function ActivityPage() {
       {/* Payment history */}
       {sorted.length === 0 && !isAdding ? (
         <Card className="border-dashed">
-          <CardContent className="py-10 px-6 text-center">
+          <CardContent className="py-12 px-6 text-center">
             <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
               <ClipboardList className="w-5 h-5 text-muted-foreground" />
             </div>
-            <h3 className="font-heading font-semibold mb-1.5">No payments logged yet</h3>
+            <h3 className="font-heading font-bold mb-2">No payments logged yet</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
               Log actual payments as you make them to track your real progress against the plan.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {sorted.map((record) => {
             const debt = debts.find((d) => d.id === record.debtId);
             return (
               <Card key={record.id} className="transition-card hover-lift">
-                <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-2">
+                <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-2">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-heading font-semibold text-sm">
+                      <span className="font-heading font-bold text-[15px]">
                         {debt?.creditorName ?? 'Unknown'}
                       </span>
                       <span className="text-[11px] text-muted-foreground font-tabular">
@@ -160,10 +160,10 @@ export default function ActivityPage() {
                       </span>
                     </div>
                     {record.note && (
-                      <p className="text-xs text-muted-foreground mt-0.5">{record.note}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{record.note}</p>
                     )}
                   </div>
-                  <span className="text-lg font-bold font-heading font-tabular text-primary shrink-0">
+                  <span className="text-xl font-bold font-heading font-tabular text-primary shrink-0">
                     {formatCurrency(record.amount)}
                   </span>
                 </CardContent>
