@@ -13,6 +13,7 @@ import {
   X,
   Banknote,
 } from 'lucide-react';
+import finityoLogo from '@/assets/finityo-logo.png';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
