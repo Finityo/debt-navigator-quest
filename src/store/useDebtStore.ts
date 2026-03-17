@@ -58,6 +58,7 @@ interface DebtStore {
   planResult: PlanResult | null;
   validationErrors: ValidationErrors;
   computeStatus: ComputeStatus;
+  _hasHydrated: boolean;
 
   addDebt: (debt: Debt) => void;
   updateDebt: (id: string, updates: Partial<Debt>) => void;
