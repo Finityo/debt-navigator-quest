@@ -58,6 +58,7 @@ interface DebtStore {
   planResult: PlanResult | null;
   validationErrors: ValidationErrors;
   computeStatus: ComputeStatus;
+  _hasHydrated: boolean;
 
   addDebt: (debt: Debt) => void;
   updateDebt: (id: string, updates: Partial<Debt>) => void;
@@ -89,6 +90,7 @@ export const useDebtStore = create<DebtStore>()(
       planResult: null,
       validationErrors: emptyValidation(),
       computeStatus: 'idle',
+      _hasHydrated: false,
 
       addDebt: (debt) => {
         set((s) => ({ debts: [...s.debts, debt] }));
@@ -174,6 +176,9 @@ export const useDebtStore = create<DebtStore>()(
         planResult: state.planResult,
         computeStatus: state.computeStatus,
       }),
+      onRehydrateStorage: () => () => {
+        useDebtStore.setState({ _hasHydrated: true });
+      },
     }
   )
 );
