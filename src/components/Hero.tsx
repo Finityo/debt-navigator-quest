@@ -47,7 +47,11 @@ export default function Hero() {
       </div>
 
       {/* TRUST LINE */}
-      <p className="text-xs text-muted-foreground/50 mt-10 tracking-wide">
+      <p className="text-lg font-medium text-foreground/80 mt-8 mb-4 max-w-md">
+        You'll know exactly when you're debt-free — before you even start.
+      </p>
+
+      <p className="text-xs text-muted-foreground/50 mt-6 tracking-wide">
         Takes less than 60 seconds • No spreadsheets • No guesswork
       </p>
     </section>
