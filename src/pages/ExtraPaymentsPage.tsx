@@ -5,12 +5,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { formatCurrency } from '@/utils/format';
 import type { ExtraPayment } from '@/types/debt';
-import { Plus, Trash2, Edit2, X, Check, DollarSign } from 'lucide-react';
-
-function formatCurrency(n: number) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
-}
+import { Plus, Trash2, Edit2, X, Check, DollarSign, Banknote } from 'lucide-react';
 
 export default function ExtraPaymentsPage() {
   const { extraPayments, addExtraPayment, updateExtraPayment, removeExtraPayment, settings } = useDebtStore();
@@ -29,20 +26,13 @@ export default function ExtraPaymentsPage() {
 
   const handleAdd = () => {
     if (formMonth < 1 || formAmount <= 0) return;
-    // Check if month already exists
     const existing = extraPayments.find((p) => p.monthNumber === formMonth);
     if (existing) {
       updateExtraPayment(formMonth, { extraAmount: formAmount });
     } else {
-      addExtraPayment({
-        monthNumber: formMonth,
-        date: getDateForMonth(formMonth),
-        extraAmount: formAmount,
-      });
+      addExtraPayment({ monthNumber: formMonth, date: getDateForMonth(formMonth), extraAmount: formAmount });
     }
-    setFormMonth(1);
-    setFormAmount(0);
-    setIsAdding(false);
+    resetForm();
   };
 
   const startEdit = (ep: ExtraPayment) => {
@@ -54,22 +44,15 @@ export default function ExtraPaymentsPage() {
   const handleSaveEdit = () => {
     if (editingMonth === null || formAmount <= 0) return;
     if (editingMonth !== formMonth) {
-      // Month number changed — remove old, add new
       removeExtraPayment(editingMonth);
-      addExtraPayment({
-        monthNumber: formMonth,
-        date: getDateForMonth(formMonth),
-        extraAmount: formAmount,
-      });
+      addExtraPayment({ monthNumber: formMonth, date: getDateForMonth(formMonth), extraAmount: formAmount });
     } else {
       updateExtraPayment(editingMonth, { extraAmount: formAmount });
     }
-    setEditingMonth(null);
-    setFormMonth(1);
-    setFormAmount(0);
+    resetForm();
   };
 
-  const cancelEdit = () => {
+  const resetForm = () => {
     setEditingMonth(null);
     setIsAdding(false);
     setFormMonth(1);
@@ -111,7 +94,7 @@ export default function ExtraPaymentsPage() {
             <Button size="sm" onClick={onSave} disabled={formMonth < 1 || formAmount <= 0}>
               <Check className="w-4 h-4 mr-1" /> Save
             </Button>
-            <Button variant="ghost" size="sm" onClick={cancelEdit}>
+            <Button variant="ghost" size="sm" onClick={resetForm}>
               <X className="w-4 h-4 mr-1" /> Cancel
             </Button>
           </div>
@@ -124,24 +107,32 @@ export default function ExtraPaymentsPage() {
     <div>
       <PageHeader title="Extra Payments" description="Schedule additional payments to accelerate your payoff" />
 
-      {/* Summary */}
       <Card className="border bg-card mb-4">
         <CardContent className="p-4 flex items-center gap-3">
           <div className="p-2 rounded-lg bg-muted">
             <DollarSign className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Total Scheduled Extra</p>
+            <p className="text-xs text-muted-foreground">Total Scheduled Extra</p>
             <p className="text-lg font-bold font-heading">{formatCurrency(totalExtra)}</p>
           </div>
-          <div className="ml-auto text-sm text-muted-foreground">
+          <span className="ml-auto text-sm text-muted-foreground">
             {extraPayments.length} payment{extraPayments.length !== 1 ? 's' : ''}
-          </div>
+          </span>
         </CardContent>
       </Card>
 
-      {/* List */}
       <div className="space-y-3">
+        {sorted.length === 0 && !isAdding && (
+          <Card className="border border-dashed bg-card">
+            <CardContent className="p-8 text-center">
+              <Banknote className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+              <h3 className="font-heading font-semibold mb-1">No extra payments scheduled</h3>
+              <p className="text-sm text-muted-foreground">Add extra payments to accelerate your debt payoff.</p>
+            </CardContent>
+          </Card>
+        )}
+
         {sorted.map((ep) =>
           editingMonth === ep.monthNumber ? (
             <PaymentForm key={ep.monthNumber} onSave={handleSaveEdit} />
@@ -163,12 +154,7 @@ export default function ExtraPaymentsPage() {
                   <Button variant="ghost" size="sm" onClick={() => startEdit(ep)}>
                     <Edit2 className="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeExtraPayment(ep.monthNumber)}
-                    className="text-destructive hover:text-destructive"
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => removeExtraPayment(ep.monthNumber)} className="text-destructive hover:text-destructive">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

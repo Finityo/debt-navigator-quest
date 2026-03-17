@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Debt, ExtraPayment, PlanSettings, PlanResult, PaymentRecord } from '@/types/debt';
 import { computeDebtPlan } from '@/lib/computeDebtPlan';
 import { sampleDebts, sampleSettings, sampleExtraPayments } from '@/data/sampleData';
@@ -6,7 +7,7 @@ import { sampleDebts, sampleSettings, sampleExtraPayments } from '@/data/sampleD
 // --- Validation ---
 
 export interface ValidationErrors {
-  debts: Record<string, string[]>; // debtId -> error messages
+  debts: Record<string, string[]>;
   settings: string[];
   extraPayments: string[];
 }
@@ -50,37 +51,23 @@ function validateExtraPayments(payments: ExtraPayment[]): string[] {
 // --- Store ---
 
 interface DebtStore {
-  // Inputs
   debts: Debt[];
   settings: PlanSettings;
   extraPayments: ExtraPayment[];
   paymentRecords: PaymentRecord[];
-
-  // Computed output
   planResult: PlanResult | null;
-
-  // Status
   validationErrors: ValidationErrors;
   computeStatus: ComputeStatus;
 
-  // Actions — Debts
   addDebt: (debt: Debt) => void;
   updateDebt: (id: string, updates: Partial<Debt>) => void;
   removeDebt: (id: string) => void;
-
-  // Actions — Settings
   updateSettings: (updates: Partial<PlanSettings>) => void;
-
-  // Actions — Extra Payments
   setExtraPayments: (payments: ExtraPayment[]) => void;
   addExtraPayment: (payment: ExtraPayment) => void;
   updateExtraPayment: (monthNumber: number, updates: Partial<ExtraPayment>) => void;
   removeExtraPayment: (monthNumber: number) => void;
-
-  // Actions — Payment Records
   addPaymentRecord: (record: PaymentRecord) => void;
-
-  // Actions — Compute
   validate: () => boolean;
   computePlan: () => void;
   clearPlan: () => void;
@@ -92,88 +79,101 @@ function markStale(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void) {
   }));
 }
 
-export const useDebtStore = create<DebtStore>((set, get) => ({
-  debts: sampleDebts,
-  settings: sampleSettings,
-  extraPayments: sampleExtraPayments,
-  paymentRecords: [],
-  planResult: null,
-  validationErrors: emptyValidation(),
-  computeStatus: 'idle',
+export const useDebtStore = create<DebtStore>()(
+  persist(
+    (set, get) => ({
+      debts: sampleDebts,
+      settings: sampleSettings,
+      extraPayments: sampleExtraPayments,
+      paymentRecords: [],
+      planResult: null,
+      validationErrors: emptyValidation(),
+      computeStatus: 'idle',
 
-  addDebt: (debt) => {
-    set((s) => ({ debts: [...s.debts, debt] }));
-    markStale(set);
-  },
-  updateDebt: (id, updates) => {
-    set((s) => ({
-      debts: s.debts.map((d) => (d.id === id ? { ...d, ...updates } : d)),
-    }));
-    markStale(set);
-  },
-  removeDebt: (id) => {
-    set((s) => ({ debts: s.debts.filter((d) => d.id !== id) }));
-    markStale(set);
-  },
+      addDebt: (debt) => {
+        set((s) => ({ debts: [...s.debts, debt] }));
+        markStale(set);
+      },
+      updateDebt: (id, updates) => {
+        set((s) => ({
+          debts: s.debts.map((d) => (d.id === id ? { ...d, ...updates } : d)),
+        }));
+        markStale(set);
+      },
+      removeDebt: (id) => {
+        set((s) => ({ debts: s.debts.filter((d) => d.id !== id) }));
+        markStale(set);
+      },
 
-  updateSettings: (updates) => {
-    set((s) => ({ settings: { ...s.settings, ...updates } }));
-    markStale(set);
-  },
+      updateSettings: (updates) => {
+        set((s) => ({ settings: { ...s.settings, ...updates } }));
+        markStale(set);
+      },
 
-  setExtraPayments: (payments) => {
-    set({ extraPayments: payments });
-    markStale(set);
-  },
-  addExtraPayment: (payment) => {
-    set((s) => ({ extraPayments: [...s.extraPayments, payment] }));
-    markStale(set);
-  },
-  updateExtraPayment: (monthNumber, updates) => {
-    set((s) => ({
-      extraPayments: s.extraPayments.map((p) =>
-        p.monthNumber === monthNumber ? { ...p, ...updates } : p
-      ),
-    }));
-    markStale(set);
-  },
-  removeExtraPayment: (monthNumber) => {
-    set((s) => ({
-      extraPayments: s.extraPayments.filter((p) => p.monthNumber !== monthNumber),
-    }));
-    markStale(set);
-  },
+      setExtraPayments: (payments) => {
+        set({ extraPayments: payments });
+        markStale(set);
+      },
+      addExtraPayment: (payment) => {
+        set((s) => ({ extraPayments: [...s.extraPayments, payment] }));
+        markStale(set);
+      },
+      updateExtraPayment: (monthNumber, updates) => {
+        set((s) => ({
+          extraPayments: s.extraPayments.map((p) =>
+            p.monthNumber === monthNumber ? { ...p, ...updates } : p
+          ),
+        }));
+        markStale(set);
+      },
+      removeExtraPayment: (monthNumber) => {
+        set((s) => ({
+          extraPayments: s.extraPayments.filter((p) => p.monthNumber !== monthNumber),
+        }));
+        markStale(set);
+      },
 
-  addPaymentRecord: (record) =>
-    set((s) => ({ paymentRecords: [...s.paymentRecords, record] })),
+      addPaymentRecord: (record) =>
+        set((s) => ({ paymentRecords: [...s.paymentRecords, record] })),
 
-  validate: () => {
-    const { debts, settings, extraPayments } = get();
-    const errors: ValidationErrors = {
-      debts: validateDebts(debts),
-      settings: validateSettings(settings),
-      extraPayments: validateExtraPayments(extraPayments),
-    };
-    const isValid =
-      Object.keys(errors.debts).length === 0 &&
-      errors.settings.length === 0 &&
-      errors.extraPayments.length === 0;
-    set({
-      validationErrors: errors,
-      computeStatus: isValid ? 'ready' : get().computeStatus,
-    });
-    return isValid;
-  },
+      validate: () => {
+        const { debts, settings, extraPayments } = get();
+        const errors: ValidationErrors = {
+          debts: validateDebts(debts),
+          settings: validateSettings(settings),
+          extraPayments: validateExtraPayments(extraPayments),
+        };
+        const isValid =
+          Object.keys(errors.debts).length === 0 &&
+          errors.settings.length === 0 &&
+          errors.extraPayments.length === 0;
+        set({
+          validationErrors: errors,
+          computeStatus: isValid ? 'ready' : get().computeStatus,
+        });
+        return isValid;
+      },
 
-  computePlan: () => {
-    const store = get();
-    // Run validation first
-    const isValid = store.validate();
-    if (!isValid) return;
+      computePlan: () => {
+        const store = get();
+        const isValid = store.validate();
+        if (!isValid) return;
+        const result = computeDebtPlan(store.debts, store.settings, store.extraPayments);
+        set({ planResult: result, computeStatus: 'computed' });
+      },
 
-    const result = computeDebtPlan(store.debts, store.settings, store.extraPayments);
-    set({ planResult: result, computeStatus: 'computed' });
-  },
-
-  clearPlan: () => set({ planResult: null, computeStatus: 'idle' }),
-}));
+      clearPlan: () => set({ planResult: null, computeStatus: 'idle' }),
+    }),
+    {
+      name: 'finityo-store',
+      partialize: (state) => ({
+        debts: state.debts,
+        settings: state.settings,
+        extraPayments: state.extraPayments,
+        paymentRecords: state.paymentRecords,
+        planResult: state.planResult,
+        computeStatus: state.computeStatus,
+      }),
+    }
+  )
+);

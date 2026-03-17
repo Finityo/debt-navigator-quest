@@ -4,6 +4,8 @@ import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { DebtBalanceChart } from '@/components/charts/DebtBalanceChart';
+import { InterestPrincipalChart } from '@/components/charts/InterestPrincipalChart';
 import {
   TrendingDown,
   DollarSign,
@@ -22,10 +24,8 @@ export default function DashboardPage() {
 
   const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
   const totalMinPayments = debts.reduce((sum, d) => sum + d.minPayment, 0);
-
   const hasResult = !!planResult;
 
-  // Derive payoff date from PlanResult only
   const payoffDate = planResult?.payoffMonth
     ? planResult.monthlySummaries[planResult.payoffMonth - 1]?.date
     : null;
@@ -36,65 +36,46 @@ export default function DashboardPage() {
 
       <ComputeBanner />
 
-      {/* KPI Grid — always show debt totals from inputs, engine outputs when available */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-        <KpiCard
-          icon={DollarSign}
-          iconColor="text-destructive"
-          label="Total Debt"
-          value={formatCurrency(totalDebt)}
-        />
-        <KpiCard
-          icon={TrendingDown}
-          iconColor="text-muted-foreground"
-          label="Monthly Minimums"
-          value={formatCurrency(totalMinPayments)}
-        />
+        <KpiCard icon={DollarSign} iconColor="text-destructive" label="Total Debt" value={formatCurrency(totalDebt)} />
+        <KpiCard icon={TrendingDown} iconColor="text-muted-foreground" label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
         <KpiCard
           icon={CalendarDays}
           iconColor="text-primary"
           label="Projected Payoff"
           value={payoffDate ? formatDate(payoffDate) : hasResult ? 'Beyond horizon' : '—'}
         />
-        <KpiCard
-          icon={Percent}
-          iconColor="text-destructive"
-          label="Total Interest"
-          value={hasResult ? formatCurrency(planResult.totalInterestPaid) : '—'}
-        />
-        <KpiCard
-          icon={Wallet}
-          iconColor="text-primary"
-          label="Total Paid"
-          value={hasResult ? formatCurrency(planResult.totalPaid) : '—'}
-        />
-        <KpiCard
-          icon={Target}
-          iconColor="text-primary"
-          label="Strategy"
-          value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'}
-        />
+        <KpiCard icon={Percent} iconColor="text-destructive" label="Total Interest" value={hasResult ? formatCurrency(planResult.totalInterestPaid) : '—'} />
+        <KpiCard icon={Wallet} iconColor="text-primary" label="Total Paid" value={hasResult ? formatCurrency(planResult.totalPaid) : '—'} />
+        <KpiCard icon={Target} iconColor="text-primary" label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
         <KpiCard
           icon={AlertCircle}
           iconColor={planResult?.completionStatus === 'complete' ? 'text-primary' : 'text-destructive'}
           label="Status"
-          value={
-            hasResult
-              ? planResult.completionStatus === 'complete'
-                ? 'Complete ✓'
-                : `${formatCurrency(planResult.remainingBalance)} remaining`
-              : '—'
-          }
+          value={hasResult ? (planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`) : '—'}
         />
-        <KpiCard
-          icon={CalendarDays}
-          iconColor="text-muted-foreground"
-          label="Horizon"
-          value={`${settings.monthsHorizon} months`}
-        />
+        <KpiCard icon={CalendarDays} iconColor="text-muted-foreground" label="Horizon" value={`${settings.monthsHorizon} months`} />
       </div>
 
-      {/* Strategy + Quick Actions */}
+      {/* Charts */}
+      {hasResult && planResult.monthlySummaries.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+          <Card className="border bg-card">
+            <CardContent className="p-4">
+              <h3 className="font-heading font-semibold text-sm mb-3">Debt Balance Over Time</h3>
+              <DebtBalanceChart summaries={planResult.monthlySummaries} />
+            </CardContent>
+          </Card>
+          <Card className="border bg-card">
+            <CardContent className="p-4">
+              <h3 className="font-heading font-semibold text-sm mb-3">Interest vs Principal</h3>
+              <InterestPrincipalChart summaries={planResult.monthlySummaries} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Quick Actions + Strategy */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <Card className="border bg-card">
           <CardContent className="p-5">
@@ -133,9 +114,7 @@ export default function DashboardPage() {
             <h3 className="font-heading font-semibold mb-3">Payoff Order</h3>
             <div className="space-y-2">
               {planResult.payoffOrder.map((po, i) => {
-                const summary = planResult.monthlySummaries.find(
-                  (s) => s.monthNumber === po.monthNumber
-                );
+                const summary = planResult.monthlySummaries.find((s) => s.monthNumber === po.monthNumber);
                 return (
                   <div key={po.debtId} className="flex items-center gap-3 text-sm">
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0">
@@ -155,8 +134,6 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-// --- KPI Card sub-component (presentation only) ---
 
 function KpiCard({
   icon: Icon,
