@@ -31,76 +31,77 @@ export default function DashboardPage() {
     : null;
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Dashboard" description="Your debt freedom at a glance" />
 
       <ComputeBanner />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-        <KpiCard icon={DollarSign} iconColor="text-destructive" label="Total Debt" value={formatCurrency(totalDebt)} />
-        <KpiCard icon={TrendingDown} iconColor="text-muted-foreground" label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
+      {/* KPI Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
+        <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
         <KpiCard
           icon={CalendarDays}
-          iconColor="text-primary"
           label="Projected Payoff"
           value={payoffDate ? formatDate(payoffDate) : hasResult ? 'Beyond horizon' : '—'}
+          accent="primary"
         />
-        <KpiCard icon={Percent} iconColor="text-destructive" label="Total Interest" value={hasResult ? formatCurrency(planResult.totalInterestPaid) : '—'} />
-        <KpiCard icon={Wallet} iconColor="text-primary" label="Total Paid" value={hasResult ? formatCurrency(planResult.totalPaid) : '—'} />
-        <KpiCard icon={Target} iconColor="text-primary" label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
+        <KpiCard icon={Percent} label="Total Interest" value={hasResult ? formatCurrency(planResult.totalInterestPaid) : '—'} accent="destructive" />
+        <KpiCard icon={Wallet} label="Total Paid" value={hasResult ? formatCurrency(planResult.totalPaid) : '—'} accent="primary" />
+        <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
         <KpiCard
           icon={AlertCircle}
-          iconColor={planResult?.completionStatus === 'complete' ? 'text-primary' : 'text-destructive'}
           label="Status"
           value={hasResult ? (planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`) : '—'}
+          accent={planResult?.completionStatus === 'complete' ? 'primary' : 'destructive'}
         />
-        <KpiCard icon={CalendarDays} iconColor="text-muted-foreground" label="Horizon" value={`${settings.monthsHorizon} months`} />
+        <KpiCard icon={CalendarDays} label="Horizon" value={`${settings.monthsHorizon} mo`} />
       </div>
 
       {/* Charts */}
       {hasResult && planResult.monthlySummaries.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-          <Card className="border bg-card">
-            <CardContent className="p-4">
-              <h3 className="font-heading font-semibold text-sm mb-3">Debt Balance Over Time</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card>
+            <CardContent className="p-5">
+              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-4">Debt Balance Over Time</h3>
               <DebtBalanceChart summaries={planResult.monthlySummaries} />
             </CardContent>
           </Card>
-          <Card className="border bg-card">
-            <CardContent className="p-4">
-              <h3 className="font-heading font-semibold text-sm mb-3">Interest vs Principal</h3>
+          <Card>
+            <CardContent className="p-5">
+              <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-4">Interest vs Principal</h3>
               <InterestPrincipalChart summaries={planResult.monthlySummaries} />
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Quick Actions + Strategy */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <Card className="border bg-card">
+      {/* Strategy + Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
           <CardContent className="p-5">
-            <h3 className="font-heading font-semibold mb-2">Strategy</h3>
-            <p className="text-lg font-medium capitalize text-primary">{settings.method}</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Strategy</p>
+            <p className="text-xl font-bold font-heading capitalize text-foreground">{settings.method}</p>
+            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
               {settings.method === 'avalanche'
-                ? 'Targeting highest APR first to minimize interest'
-                : 'Targeting smallest balance first for quick wins'}
+                ? 'Targeting highest APR first to minimize total interest paid.'
+                : 'Targeting smallest balance first for motivating quick wins.'}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border bg-card">
+        <Card>
           <CardContent className="p-5">
-            <h3 className="font-heading font-semibold mb-2">Quick Actions</h3>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Quick Actions</p>
             <div className="flex flex-col gap-2">
-              <Button variant="outline" onClick={() => navigate('/debts')} className="w-full justify-between">
-                Manage Debts <ArrowRight className="w-4 h-4" />
+              <Button variant="outline" onClick={() => navigate('/debts')} className="w-full justify-between h-9 text-sm">
+                Manage Debts <ArrowRight className="w-3.5 h-3.5" />
               </Button>
-              <Button variant="outline" onClick={() => navigate('/plan')} className="w-full justify-between">
-                View Plan <ArrowRight className="w-4 h-4" />
+              <Button variant="outline" onClick={() => navigate('/plan')} className="w-full justify-between h-9 text-sm">
+                View Full Plan <ArrowRight className="w-3.5 h-3.5" />
               </Button>
-              <Button variant="outline" onClick={() => navigate('/settings')} className="w-full justify-between">
-                Settings <ArrowRight className="w-4 h-4" />
+              <Button variant="outline" onClick={() => navigate('/settings')} className="w-full justify-between h-9 text-sm">
+                Settings <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </div>
           </CardContent>
@@ -109,20 +110,20 @@ export default function DashboardPage() {
 
       {/* Payoff Order */}
       {hasResult && planResult.payoffOrder.length > 0 && (
-        <Card className="mt-4 border bg-card">
+        <Card>
           <CardContent className="p-5">
-            <h3 className="font-heading font-semibold mb-3">Payoff Order</h3>
-            <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">Payoff Order</p>
+            <div className="space-y-3">
               {planResult.payoffOrder.map((po, i) => {
                 const summary = planResult.monthlySummaries.find((s) => s.monthNumber === po.monthNumber);
                 return (
-                  <div key={po.debtId} className="flex items-center gap-3 text-sm">
-                    <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0">
+                  <div key={po.debtId} className="flex items-center gap-3">
+                    <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0">
                       {i + 1}
                     </span>
-                    <span className="font-medium flex-1 truncate">{po.creditorName}</span>
-                    <span className="text-muted-foreground text-xs shrink-0">
-                      {summary ? formatDate(summary.date) : `Mo. ${po.monthNumber}`}
+                    <span className="font-medium text-sm flex-1 truncate">{po.creditorName}</span>
+                    <span className="text-xs text-muted-foreground font-tabular shrink-0">
+                      {summary ? formatDate(summary.date) : `Month ${po.monthNumber}`}
                     </span>
                   </div>
                 );
@@ -137,25 +138,28 @@ export default function DashboardPage() {
 
 function KpiCard({
   icon: Icon,
-  iconColor,
   label,
   value,
+  accent,
 }: {
   icon: React.ElementType;
-  iconColor: string;
   label: string;
   value: string;
+  accent?: 'primary' | 'destructive';
 }) {
+  const iconColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-muted-foreground';
+  const valueColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-foreground';
+
   return (
-    <Card className="border bg-card">
+    <Card className="transition-card hover-lift">
       <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="p-1.5 rounded-md bg-muted">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-1.5 rounded-md bg-muted/80">
             <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
           </div>
-          <span className="text-xs text-muted-foreground">{label}</span>
+          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{label}</span>
         </div>
-        <p className="text-lg font-bold font-heading leading-tight">{value}</p>
+        <p className={`text-xl font-bold font-heading font-tabular leading-none ${valueColor}`}>{value}</p>
       </CardContent>
     </Card>
   );

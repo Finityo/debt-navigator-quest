@@ -3,7 +3,6 @@ import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
@@ -12,17 +11,17 @@ export default function PlanPage() {
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Plan" description="Monthly payoff breakdown and debt elimination order" />
 
       <ComputeBanner />
 
       {planResult && (
-        <div className="space-y-6 mt-4">
+        <div className="space-y-6">
           {/* Top summary */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <SummaryCard label="Total Paid" value={formatCurrency(planResult.totalPaid)} />
-            <SummaryCard label="Interest Paid" value={formatCurrency(planResult.totalInterestPaid)} />
+            <SummaryCard label="Interest Paid" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <SummaryCard
               label="Payoff"
               value={
@@ -34,14 +33,14 @@ export default function PlanPage() {
             <SummaryCard
               label="Status"
               value={planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`}
-              highlight={planResult.completionStatus === 'complete'}
+              accent={planResult.completionStatus === 'complete' ? 'primary' : 'destructive'}
             />
           </div>
 
           {/* Payoff Order */}
-          <Card className="border bg-card">
-            <CardContent className="p-4">
-              <h3 className="font-heading font-semibold text-sm mb-3">Payoff Order</h3>
+          <Card>
+            <CardContent className="p-5">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Payoff Order</p>
               <div className="flex flex-wrap gap-2">
                 {planResult.payoffOrder.map((po, i) => {
                   const summary = planResult.monthlySummaries.find(
@@ -56,7 +55,7 @@ export default function PlanPage() {
                         {i + 1}
                       </span>
                       <span className="font-medium">{po.creditorName}</span>
-                      <span className="text-muted-foreground text-xs">
+                      <span className="text-muted-foreground text-xs font-tabular">
                         {summary ? formatDate(summary.date) : `Mo. ${po.monthNumber}`}
                       </span>
                     </div>
@@ -67,19 +66,19 @@ export default function PlanPage() {
           </Card>
 
           {/* Monthly Summaries Table */}
-          <Card className="bg-card border overflow-hidden">
+          <Card className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-muted/50">
+                  <tr className="border-b bg-muted/60">
                     <th className="text-left p-3 font-medium text-muted-foreground w-8"></th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Month</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Starting</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Interest</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Min Paid</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Extra</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Ending</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Events</th>
+                    <th className="text-left p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Month</th>
+                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Starting</th>
+                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Interest</th>
+                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Min Paid</th>
+                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Extra</th>
+                    <th className="text-right p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Ending</th>
+                    <th className="text-left p-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">Events</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -112,26 +111,21 @@ export default function PlanPage() {
   );
 }
 
-// --- Sub-components ---
-
 function SummaryCard({
   label,
   value,
-  highlight,
+  accent,
 }: {
   label: string;
   value: string;
-  highlight?: boolean;
+  accent?: 'primary' | 'destructive';
 }) {
+  const valueColor = accent === 'primary' ? 'text-primary' : accent === 'destructive' ? 'text-destructive' : 'text-foreground';
   return (
-    <Card className="bg-card border">
+    <Card>
       <CardContent className="p-4 text-center">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p
-          className={`text-lg font-bold font-heading mt-1 ${
-            highlight ? 'text-primary' : ''
-          }`}
-        >
+        <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{label}</p>
+        <p className={`text-lg font-bold font-heading font-tabular mt-1.5 ${valueColor}`}>
           {value}
         </p>
       </CardContent>
@@ -157,8 +151,8 @@ function MonthRow({
   return (
     <>
       <tr
-        className={`border-b hover:bg-muted/30 transition-colors cursor-pointer ${
-          hasMilestone ? 'bg-primary/5' : ''
+        className={`border-b transition-colors cursor-pointer table-row-stripe ${
+          hasMilestone ? 'bg-primary/[0.03]' : 'hover:bg-muted/40'
         }`}
         onClick={onToggle}
       >
@@ -169,17 +163,17 @@ function MonthRow({
             <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
           )}
         </td>
-        <td className="p-3 font-medium whitespace-nowrap">{formatDate(ms.date)}</td>
-        <td className="p-3 text-right">{formatCurrency(ms.totalStartingDebt)}</td>
-        <td className="p-3 text-right text-destructive">{formatCurrencyCents(ms.totalInterest)}</td>
-        <td className="p-3 text-right">{formatCurrency(ms.totalMinimumPayments)}</td>
-        <td className="p-3 text-right text-primary font-medium">
+        <td className="p-3 font-medium whitespace-nowrap font-tabular">{formatDate(ms.date)}</td>
+        <td className="p-3 text-right font-tabular">{formatCurrency(ms.totalStartingDebt)}</td>
+        <td className="p-3 text-right font-tabular text-destructive/80">{formatCurrencyCents(ms.totalInterest)}</td>
+        <td className="p-3 text-right font-tabular">{formatCurrency(ms.totalMinimumPayments)}</td>
+        <td className="p-3 text-right font-tabular text-primary font-medium">
           {ms.totalExtraPayments > 0 ? formatCurrency(ms.totalExtraPayments) : '—'}
         </td>
-        <td className="p-3 text-right">{formatCurrency(ms.totalEndingDebt)}</td>
+        <td className="p-3 text-right font-tabular font-medium">{formatCurrency(ms.totalEndingDebt)}</td>
         <td className="p-3">
           {hasMilestone && (
-            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full whitespace-nowrap">
+            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               🎉 {ms.debtsPaidOffThisMonth.length} paid off
             </span>
           )}
@@ -188,9 +182,9 @@ function MonthRow({
       {isExpanded && snapshots.length > 0 && (
         <tr>
           <td colSpan={8} className="p-0">
-            <div className="bg-muted/20 px-6 py-3 border-b">
-              <p className="text-xs font-medium text-muted-foreground mb-2">
-                Debt-by-debt for {formatDate(ms.date)}
+            <div className="bg-muted/30 px-4 sm:px-6 py-4 border-b animate-expand">
+              <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+                Debt-by-debt breakdown — {formatDate(ms.date)}
               </p>
               <div className="grid gap-2">
                 {snapshots
@@ -198,21 +192,21 @@ function MonthRow({
                   .map((s) => (
                     <div
                       key={s.debtId}
-                      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-md px-3 py-2 ${
-                        s.isPaidOff ? 'bg-primary/10' : 'bg-card'
+                      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-3 py-2.5 ${
+                        s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-card border border-border/50'
                       }`}
                     >
-                      <span className="font-medium min-w-[120px]">{s.creditorName}</span>
-                      <span className="text-muted-foreground">
+                      <span className="font-medium min-w-[110px]">{s.creditorName}</span>
+                      <span className="text-muted-foreground font-tabular">
                         Start: {formatCurrencyCents(s.startingBalance)}
                       </span>
-                      <span className="text-destructive">
+                      <span className="text-destructive/70 font-tabular">
                         +{formatCurrencyCents(s.interestAccrued)} int
                       </span>
-                      <span className="text-primary">
+                      <span className="text-primary font-tabular">
                         −{formatCurrencyCents(s.paymentApplied)} paid
                       </span>
-                      <span>
+                      <span className="font-tabular font-medium">
                         End: {formatCurrencyCents(s.endingBalance)}
                       </span>
                       {s.isPaidOff && (

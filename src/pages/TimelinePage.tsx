@@ -9,18 +9,20 @@ export default function TimelinePage() {
   const { planResult, debts } = useDebtStore();
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Timeline" description="Payoff milestones and debt elimination sequence" />
 
       <ComputeBanner />
 
       {planResult && planResult.payoffOrder.length > 0 && (
-        <div className="mt-4">
+        <div className="space-y-6">
           {/* Summary bar */}
-          <Card className="border bg-card mb-6">
+          <Card>
             <CardContent className="p-4 flex flex-wrap gap-4 items-center">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+                  <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                </div>
                 <span className="text-sm text-muted-foreground">
                   {planResult.completionStatus === 'complete'
                     ? `All debts eliminated in ${planResult.payoffMonth} months`
@@ -28,7 +30,7 @@ export default function TimelinePage() {
                 </span>
               </div>
               {planResult.payoffMonth && (
-                <span className="text-sm font-medium text-primary ml-auto">
+                <span className="text-sm font-semibold text-primary ml-auto">
                   Debt-free by{' '}
                   {formatDateFull(
                     planResult.monthlySummaries[planResult.payoffMonth - 1]?.date ?? ''
@@ -39,9 +41,9 @@ export default function TimelinePage() {
           </Card>
 
           {/* Timeline */}
-          <div className="relative ml-4">
+          <div className="relative ml-4 sm:ml-6">
             {/* Vertical line */}
-            <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-border" />
+            <div className="absolute left-3.5 top-2 bottom-2 w-px bg-border" />
 
             <div className="space-y-0">
               {planResult.payoffOrder.map((milestone, i) => {
@@ -54,45 +56,40 @@ export default function TimelinePage() {
                 const gapMonths = milestone.monthNumber - prevMonth;
 
                 return (
-                  <div key={milestone.debtId} className="relative pl-10 pb-6">
+                  <div key={milestone.debtId} className="relative pl-12 pb-8">
                     {/* Dot */}
-                    <div className="absolute left-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold border-2 border-background">
+                    <div className="absolute left-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold border-[3px] border-background shadow-sm">
                       {i + 1}
                     </div>
 
-                    <Card className="border bg-card">
+                    <Card className="transition-card hover-lift">
                       <CardContent className="p-4">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                            <h3 className="font-heading font-semibold">
+                            <h3 className="font-heading font-semibold text-sm">
                               {milestone.creditorName}
                             </h3>
                           </div>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="text-xs text-muted-foreground font-tabular">
                             {summary ? formatDate(summary.date) : `Month ${milestone.monthNumber}`}
                           </span>
                         </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
-                          <span>Month {milestone.monthNumber}</span>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2.5 text-xs text-muted-foreground">
+                          <span className="font-tabular">Month {milestone.monthNumber}</span>
                           {gapMonths > 0 && i > 0 && (
-                            <span>{gapMonths} months after previous payoff</span>
+                            <span>{gapMonths} month{gapMonths !== 1 ? 's' : ''} after previous</span>
                           )}
                           {debt && (
                             <span>
-                              Original balance: {formatCurrency(debt.balance)}
+                              Original: <span className="font-medium text-foreground font-tabular">{formatCurrency(debt.balance)}</span>
                             </span>
                           )}
                         </div>
-                        {/* Remaining debt at this point */}
                         {summary && (
-                          <div className="mt-2 text-xs">
-                            <span className="text-muted-foreground">
-                              Remaining total debt:{' '}
-                            </span>
-                            <span className="font-medium">
-                              {formatCurrency(summary.totalEndingDebt)}
-                            </span>
+                          <div className="mt-2.5 pt-2.5 border-t border-border/50 text-xs">
+                            <span className="text-muted-foreground">Remaining total: </span>
+                            <span className="font-medium font-tabular">{formatCurrency(summary.totalEndingDebt)}</span>
                           </div>
                         )}
                       </CardContent>
@@ -103,20 +100,19 @@ export default function TimelinePage() {
 
               {/* Completion marker */}
               {planResult.completionStatus === 'complete' && (
-                <div className="relative pl-10 pb-2">
-                  <div className="absolute left-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center border-2 border-background">
-                    <Trophy className="w-3.5 h-3.5" />
+                <div className="relative pl-12 pb-2">
+                  <div className="absolute left-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center border-[3px] border-background shadow-sm">
+                    <Trophy className="w-3 h-3" />
                   </div>
-                  <Card className="border-2 border-primary bg-accent">
+                  <Card className="border-primary/20 bg-accent">
                     <CardContent className="p-4">
-                      <h3 className="font-heading font-semibold text-primary">
-                        Debt Free! 🎉
+                      <h3 className="font-heading font-semibold text-primary text-sm">
+                        🎉 Debt Free!
                       </h3>
-                      <p className="text-sm text-accent-foreground mt-1">
+                      <p className="text-sm text-accent-foreground mt-1.5 leading-relaxed">
                         All {debts.length} debts eliminated by month{' '}
-                        {planResult.payoffMonth}.{' '}
-                        Total interest paid:{' '}
-                        {formatCurrency(planResult.totalInterestPaid)}.
+                        {planResult.payoffMonth}. Total interest paid:{' '}
+                        <span className="font-medium font-tabular">{formatCurrency(planResult.totalInterestPaid)}</span>.
                       </p>
                     </CardContent>
                   </Card>
@@ -124,19 +120,18 @@ export default function TimelinePage() {
               )}
 
               {planResult.completionStatus === 'incomplete' && (
-                <div className="relative pl-10 pb-2">
-                  <div className="absolute left-0 w-7 h-7 rounded-full bg-muted text-muted-foreground flex items-center justify-center border-2 border-background">
-                    <Clock className="w-3.5 h-3.5" />
+                <div className="relative pl-12 pb-2">
+                  <div className="absolute left-0 w-7 h-7 rounded-full bg-muted text-muted-foreground flex items-center justify-center border-[3px] border-background">
+                    <Clock className="w-3 h-3" />
                   </div>
-                  <Card className="border border-dashed bg-card">
+                  <Card className="border-dashed">
                     <CardContent className="p-4">
-                      <h3 className="font-heading font-semibold text-muted-foreground">
+                      <h3 className="font-heading font-semibold text-muted-foreground text-sm">
                         Beyond Horizon
                       </h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {formatCurrency(planResult.remainingBalance)} remaining after{' '}
-                        {planResult.monthlySummaries.length} months. Increase your horizon
-                        or add extra payments.
+                      <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+                        <span className="font-medium font-tabular">{formatCurrency(planResult.remainingBalance)}</span> remaining after{' '}
+                        {planResult.monthlySummaries.length} months. Consider increasing your horizon or adding extra payments.
                       </p>
                     </CardContent>
                   </Card>

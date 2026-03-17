@@ -42,28 +42,27 @@ export default function SensitivityPage() {
   };
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Sensitivity" description="How extra payments affect your payoff timeline" />
 
       <ComputeBanner />
 
       {debts.length > 0 && (
-        <div className="space-y-6 mt-4">
-          <Card className="border bg-card">
+        <div className="space-y-6">
+          <Card>
             <CardContent className="p-5">
-              <h3 className="font-heading font-semibold mb-3 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" /> Extra Payment Sensitivity
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-xs">Monthly Extra Amounts (comma-separated)</Label>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+                <BarChart3 className="w-3.5 h-3.5" /> Extra Payment Sensitivity
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Monthly Extra Amounts (comma-separated)</Label>
                   <Input
                     value={extraAmounts}
                     onChange={(e) => setExtraAmounts(e.target.value)}
-                    className="mt-1"
                     placeholder="0,100,200,300,500"
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-[11px] text-muted-foreground">
                     Added on top of your existing extra payment schedule.
                   </p>
                 </div>
@@ -77,27 +76,31 @@ export default function SensitivityPage() {
           </Card>
 
           {results.length === 0 && (
-            <Card className="border border-dashed bg-card">
-              <CardContent className="p-8 text-center">
-                <TrendingDown className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-                <h3 className="font-heading font-semibold mb-1">No analysis run yet</h3>
-                <p className="text-sm text-muted-foreground">Enter extra payment amounts and run analysis to see the impact.</p>
+            <Card className="border-dashed">
+              <CardContent className="py-10 px-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
+                  <TrendingDown className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <h3 className="font-heading font-semibold mb-1.5">No analysis run yet</h3>
+                <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                  Enter extra payment amounts and run analysis to see the impact on your payoff.
+                </p>
               </CardContent>
             </Card>
           )}
 
           {results.length > 0 && (
-            <Card className="border bg-card overflow-hidden">
+            <Card className="overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="text-left p-3 font-medium text-muted-foreground">Extra/mo</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Total Interest</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Total Paid</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Payoff Month</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Interest Saved</th>
-                      <th className="text-center p-3 font-medium text-muted-foreground">Status</th>
+                    <tr className="border-b bg-muted/60">
+                      <th className="text-left p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Extra/mo</th>
+                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Total Interest</th>
+                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Total Paid</th>
+                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Payoff Mo</th>
+                      <th className="text-right p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Interest Saved</th>
+                      <th className="text-center p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -105,18 +108,18 @@ export default function SensitivityPage() {
                       const baseline = results[0]?.result;
                       const saved = baseline ? baseline.totalInterestPaid - row.result.totalInterestPaid : 0;
                       return (
-                        <tr key={row.extra} className="border-b last:border-0 hover:bg-muted/30">
-                          <td className="p-3 font-medium">{formatCurrency(row.extra)}</td>
-                          <td className="p-3 text-right">{formatCurrency(row.result.totalInterestPaid)}</td>
-                          <td className="p-3 text-right">{formatCurrency(row.result.totalPaid)}</td>
-                          <td className="p-3 text-right font-medium">
+                        <tr key={row.extra} className="border-b last:border-0 table-row-stripe">
+                          <td className="p-3 font-medium font-tabular">{formatCurrency(row.extra)}</td>
+                          <td className="p-3 text-right font-tabular">{formatCurrency(row.result.totalInterestPaid)}</td>
+                          <td className="p-3 text-right font-tabular">{formatCurrency(row.result.totalPaid)}</td>
+                          <td className="p-3 text-right font-medium font-tabular">
                             {row.result.payoffMonth ?? `>${settings.monthsHorizon}`}
                           </td>
-                          <td className={`p-3 text-right ${saved > 0 ? 'text-primary font-medium' : ''}`}>
+                          <td className={`p-3 text-right font-tabular ${saved > 0 ? 'text-primary font-medium' : ''}`}>
                             {i === 0 ? '—' : saved > 0 ? formatCurrency(saved) : '—'}
                           </td>
                           <td className="p-3 text-center">
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                               row.result.completionStatus === 'complete'
                                 ? 'bg-primary/10 text-primary'
                                 : 'bg-destructive/10 text-destructive'

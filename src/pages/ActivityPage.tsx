@@ -42,19 +42,39 @@ export default function ActivityPage() {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
+  const totalLogged = paymentRecords.reduce((sum, r) => sum + r.amount, 0);
+
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Activity" description="Track actual payments you've made" />
+
+      {/* Total logged */}
+      {paymentRecords.length > 0 && (
+        <Card>
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-muted/80">
+              <ClipboardList className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Logged</p>
+              <p className="text-xl font-bold font-heading font-tabular">{formatCurrency(totalLogged)}</p>
+            </div>
+            <span className="ml-auto text-sm text-muted-foreground">
+              {paymentRecords.length} payment{paymentRecords.length !== 1 ? 's' : ''}
+            </span>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Add form */}
       {isAdding ? (
-        <Card className="border-2 border-primary/20 bg-card mb-4">
-          <CardContent className="p-4 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-xs">Debt</Label>
+        <Card className="border-2 border-primary/15">
+          <CardContent className="p-5 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground">Debt</Label>
                 <Select value={formDebtId} onValueChange={setFormDebtId}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Select debt" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Select debt" /></SelectTrigger>
                   <SelectContent>
                     {debts.map((d) => (
                       <SelectItem key={d.id} value={d.id}>{d.creditorName}</SelectItem>
@@ -62,38 +82,35 @@ export default function ActivityPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label className="text-xs">Date</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground">Date</Label>
                 <Input
                   type="date"
                   value={formDate}
                   onChange={(e) => setFormDate(e.target.value)}
-                  className="mt-1"
                 />
               </div>
-              <div>
-                <Label className="text-xs">Amount ($)</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground">Amount ($)</Label>
                 <Input
                   type="number"
                   min={0}
                   step={10}
                   value={formAmount || ''}
                   onChange={(e) => setFormAmount(parseFloat(e.target.value) || 0)}
-                  className="mt-1"
                   placeholder="100"
                 />
               </div>
-              <div>
-                <Label className="text-xs">Note</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground">Note</Label>
                 <Input
                   value={formNote}
                   onChange={(e) => setFormNote(e.target.value)}
-                  className="mt-1"
                   placeholder="Optional note"
                 />
               </div>
             </div>
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-2 justify-end pt-1">
               <Button variant="ghost" size="sm" onClick={resetForm}>
                 <X className="w-4 h-4 mr-1" /> Cancel
               </Button>
@@ -104,18 +121,20 @@ export default function ActivityPage() {
           </CardContent>
         </Card>
       ) : (
-        <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed mb-4">
+        <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-11">
           <Plus className="w-4 h-4 mr-2" /> Log Payment
         </Button>
       )}
 
       {/* Payment history */}
-      {sorted.length === 0 ? (
-        <Card className="border bg-card">
-          <CardContent className="p-8 text-center">
-            <ClipboardList className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-            <h3 className="font-heading font-semibold mb-1">No payments logged</h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+      {sorted.length === 0 && !isAdding ? (
+        <Card className="border-dashed">
+          <CardContent className="py-10 px-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
+              <ClipboardList className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <h3 className="font-heading font-semibold mb-1.5">No payments logged yet</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
               Log actual payments as you make them to track your real progress against the plan.
             </p>
           </CardContent>
@@ -125,14 +144,14 @@ export default function ActivityPage() {
           {sorted.map((record) => {
             const debt = debts.find((d) => d.id === record.debtId);
             return (
-              <Card key={record.id} className="border bg-card">
+              <Card key={record.id} className="transition-card hover-lift">
                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-2">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-heading font-semibold text-sm">
                         {debt?.creditorName ?? 'Unknown'}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-[11px] text-muted-foreground font-tabular">
                         {new Date(record.date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -144,7 +163,7 @@ export default function ActivityPage() {
                       <p className="text-xs text-muted-foreground mt-0.5">{record.note}</p>
                     )}
                   </div>
-                  <span className="text-lg font-bold font-heading text-primary shrink-0">
+                  <span className="text-lg font-bold font-heading font-tabular text-primary shrink-0">
                     {formatCurrency(record.amount)}
                   </span>
                 </CardContent>
