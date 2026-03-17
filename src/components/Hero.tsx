@@ -31,7 +31,7 @@ export default function Hero() {
 
       {/* VALUE BULLETS */}
       <div className="flex flex-col items-start gap-2.5 text-sm text-foreground/80 mb-10">
-        <p>• Snowball &amp; Avalanche strategies built-in</p>
+        <p>• Built-in Snowball &amp; Avalanche strategies</p>
         <p>• Real payoff timelines — not estimates</p>
         <p>• Track progress and eliminate guesswork</p>
       </div>
