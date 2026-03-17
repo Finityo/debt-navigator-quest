@@ -33,24 +33,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-64 flex-col bg-sidebar border-r border-sidebar-border">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold font-heading text-sidebar-primary tracking-tight">
+      <aside className="hidden lg:flex w-60 flex-col bg-sidebar border-r border-sidebar-border shrink-0">
+        <div className="p-5 pb-4">
+          <h1 className="text-xl font-bold font-heading text-sidebar-primary tracking-tight">
             Finityo
           </h1>
-          <p className="text-xs text-sidebar-foreground/60 mt-1">Debt Freedom Engine</p>
+          <p className="text-[11px] text-sidebar-foreground/50 mt-0.5 font-medium">Debt Freedom Engine</p>
         </div>
-        <nav className="flex-1 px-3 space-y-1">
+        <nav className="flex-1 px-3 space-y-0.5">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
                   active
                     ? 'bg-sidebar-accent text-sidebar-primary'
-                    : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+                    : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
                 }`}
               >
                 <item.icon className="w-4 h-4" />
@@ -62,18 +62,22 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile header */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <header className="lg:hidden flex items-center justify-between px-4 py-3 border-b bg-card">
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-muted">
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Toggle navigation"
+          >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </header>
 
         {/* Mobile nav overlay */}
         {mobileOpen && (
-          <div className="lg:hidden absolute inset-0 z-50 bg-background/95 backdrop-blur-sm pt-16">
-            <nav className="px-4 space-y-1">
+          <div className="lg:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur-sm pt-16">
+            <nav className="px-4 space-y-0.5">
               {navItems.map((item) => {
                 const active = location.pathname === item.to;
                 return (
@@ -97,7 +101,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Page content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-6xl w-full mx-auto">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-5xl w-full mx-auto">
           {children}
         </main>
       </div>
