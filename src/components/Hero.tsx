@@ -36,13 +36,13 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2 }}
-          className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full"
+          className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-primary/10 blur-[140px] rounded-full"
         />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.4, delay: 0.3 }}
-          className="absolute bottom-[-120px] right-1/3 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full"
+          className="absolute bottom-[-120px] right-1/3 w-[300px] h-[300px] bg-blue-500/[0.08] blur-[140px] rounded-full"
         />
       </div>
 
@@ -61,7 +61,7 @@ export default function Hero() {
 
       {/* HEADLINE */}
       <motion.div variants={fadeUp} className="space-y-4 max-w-lg">
-        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.08)]">
           Turn your debt into a clear, structured payoff plan
         </h2>
         <p className="text-muted-foreground leading-relaxed">
@@ -81,7 +81,7 @@ export default function Hero() {
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 pt-2">
         <Button
           size="lg"
-          className="glass-strong glow hover:scale-[1.02] transition-all"
+          className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/dashboard")}
         >
           Build My Plan
@@ -89,7 +89,7 @@ export default function Hero() {
         <Button
           variant="outline"
           size="lg"
-          className="glass hover:bg-accent"
+          className="glass hover:bg-accent/10 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/debts")}
         >
           View My Debts

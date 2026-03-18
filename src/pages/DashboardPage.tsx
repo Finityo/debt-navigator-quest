@@ -159,7 +159,7 @@ function KpiCard({
   const valueColor = accent === 'destructive' ? 'text-destructive' : accent === 'primary' ? 'text-primary' : 'text-foreground';
 
   return (
-    <div className="glass-card p-5 hover:scale-[1.01] transition-all">
+    <div className="glass-card p-5 hover:scale-[1.01] hover:translate-y-[-2px] transition-all duration-200">
       <div className="flex items-center gap-2.5 mb-4">
         <div className={`p-2 rounded-lg ${iconBg}`}>
           <Icon className={`w-4 h-4 ${iconColor}`} />

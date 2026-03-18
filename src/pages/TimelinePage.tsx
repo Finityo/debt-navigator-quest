@@ -55,6 +55,8 @@ export default function TimelinePage() {
                   i > 0 ? planResult.payoffOrder[i - 1].monthNumber : 0;
                 const gapMonths = milestone.monthNumber - prevMonth;
 
+                const isNext = i === 0;
+
                 return (
                   <div key={milestone.debtId} className="relative pl-14 pb-10">
                     {/* Dot */}
@@ -62,7 +64,7 @@ export default function TimelinePage() {
                       {i + 1}
                     </div>
 
-                    <Card className="transition-card hover-lift">
+                    <Card className={`transition-card hover-lift hover:scale-[1.01] hover:translate-y-[-2px] transition-all duration-200 ${isNext ? 'border-primary/20 shadow-[0_0_30px_hsl(var(--primary)/0.1)]' : ''}`}>
                       <CardContent className="p-5">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
                           <div className="flex items-center gap-2.5">
