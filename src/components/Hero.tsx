@@ -36,13 +36,13 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2 }}
-          className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full"
+          className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-primary/10 blur-[140px] rounded-full"
         />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.4, delay: 0.3 }}
-          className="absolute bottom-[-120px] right-1/3 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full"
+          className="absolute bottom-[-120px] right-1/3 w-[300px] h-[300px] bg-blue-500/[0.08] blur-[140px] rounded-full"
         />
       </div>
 
