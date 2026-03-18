@@ -61,7 +61,7 @@ export default function Hero() {
 
       {/* HEADLINE */}
       <motion.div variants={fadeUp} className="space-y-4 max-w-lg">
-        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.08)]">
           Turn your debt into a clear, structured payoff plan
         </h2>
         <p className="text-muted-foreground leading-relaxed">
