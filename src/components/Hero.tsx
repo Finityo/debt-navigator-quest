@@ -81,7 +81,7 @@ export default function Hero() {
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 pt-2">
         <Button
           size="lg"
-          className="glass-strong glow hover:scale-[1.02] transition-all"
+          className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/dashboard")}
         >
           Build My Plan
@@ -89,7 +89,7 @@ export default function Hero() {
         <Button
           variant="outline"
           size="lg"
-          className="glass hover:bg-accent"
+          className="glass hover:bg-accent/10 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/debts")}
         >
           View My Debts
