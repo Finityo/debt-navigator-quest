@@ -75,6 +75,9 @@ export default function PlaidConnect() {
         const normalized = normalizePlaidDebts(data.debts || []);
         normalized.forEach((debt) => addDebt(debt));
 
+        // Auto-trigger plan recalculation with new debts
+        computePlan();
+
         setSuccess(true);
         setErrorMsg(null);
         toast.success(`${normalized.length} debt(s) imported successfully`);
