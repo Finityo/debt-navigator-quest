@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Debt, DebtType } from '@/types/debt';
 import { formatCurrency, formatPercent } from '@/utils/format';
-import { Plus, Trash2, Edit2, X, Check, CreditCard } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, CreditCard, Landmark } from 'lucide-react';
+import PlaidConnect from '@/components/PlaidConnect';
 
 const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'credit_card', label: 'Credit Card' },
