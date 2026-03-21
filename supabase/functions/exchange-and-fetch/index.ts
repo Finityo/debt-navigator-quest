@@ -134,17 +134,8 @@ serve(async (req) => {
       });
     }
 
-    // Return accounts alongside debts so client can detect unmatched accounts
-    const accountsSummary = (accounts || []).map((a: any) => ({
-      account_id: a.account_id,
-      name: a.name || a.official_name || "Unknown Account",
-      type: a.type,
-      subtype: a.subtype,
-      balances: a.balances,
-    }));
-
     return new Response(
-      JSON.stringify({ debts, accounts: accountsSummary }),
+      JSON.stringify({ debts }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
