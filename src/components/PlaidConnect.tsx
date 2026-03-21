@@ -3,7 +3,7 @@ import { usePlaidLink, PlaidLinkOptionsWithLinkToken } from 'react-plaid-link';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useDebtStore } from '@/store/useDebtStore';
-import type { Debt, DebtType } from '@/types/debt';
+import type { DebtType } from '@/types/debt';
 import { toast } from 'sonner';
 
 function mapPlaidType(type: string): DebtType {
