@@ -30,7 +30,7 @@ serve(async (req) => {
         client_id: PLAID_CLIENT_ID,
         secret: PLAID_SECRET,
         user: { client_user_id: "finityo-user" },
-        client_name: "Finityo",
+        client_name: "Debt Navigator Quest",
         products: ["liabilities"],
         country_codes: ["US"],
         language: "en",
