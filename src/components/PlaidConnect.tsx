@@ -45,6 +45,7 @@ export default function PlaidConnect() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const addDebt = useDebtStore((s) => s.addDebt);
+  const computePlan = useDebtStore((s) => s.computePlan);
 
   const fetchLinkToken = useCallback(async () => {
     try {
