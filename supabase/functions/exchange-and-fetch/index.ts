@@ -19,7 +19,8 @@ serve(async (req) => {
       throw new Error("Plaid credentials not configured");
     }
 
-    const PLAID_ENV = "sandbox";
+    // Production mode – switch back to sandbox via env var if testing
+    const PLAID_ENV = Deno.env.get("PLAID_ENV") || "production";
     const PLAID_BASE_URL = `https://${PLAID_ENV}.plaid.com`;
 
     const { public_token } = await req.json();
