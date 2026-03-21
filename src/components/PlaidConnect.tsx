@@ -72,9 +72,7 @@ export default function PlaidConnect() {
         });
         if (error) throw error;
 
-        const debts = data.debts || [];
-        const accounts = data.accounts || [];
-        const normalized = normalizePlaidDebts(debts);
+        const normalized = normalizePlaidDebts(data.debts || []);
 
         if (normalized.length > 0) {
           normalized.forEach((debt) => addDebt(debt));
@@ -82,40 +80,8 @@ export default function PlaidConnect() {
           setSuccess(true);
           setErrorMsg(null);
           toast.success(`${normalized.length} debt(s) imported successfully`);
-        } else if (accounts.length > 0) {
-          // Accounts were linked but no liabilities returned — likely business/commercial
-          const unmatchedAccounts = accounts.filter(
-            (a: any) => !debts.some((d: any) => d.account_id === a.account_id)
-          );
-
-          for (const acct of unmatchedAccounts) {
-            const balance = acct.balances?.current || 0;
-            if (balance > 0) {
-              const prefilled: Debt = {
-                id: `manual-${acct.account_id}-${Date.now()}`,
-                creditorName: acct.name || 'Unknown',
-                balance,
-                apr: 0,
-                minPayment: 0,
-                type: mapPlaidType(acct.subtype || acct.type || ''),
-                startDate: new Date().toISOString().slice(0, 10),
-                notes: `Pre-filled from linked account (${acct.subtype || acct.type}). Please set APR & min payment.`,
-              };
-              addDebt(prefilled);
-            }
-          }
-
-          toast.warning(
-            'Business credit card detected – Liabilities supports personal debts only. ' +
-            (unmatchedAccounts.length > 0
-              ? `${unmatchedAccounts.length} account(s) pre-filled — please set APR & minimum payment manually.`
-              : 'Add your debts manually.'),
-            { duration: 8000 }
-          );
-          setSuccess(false);
-          setErrorMsg(null);
         } else {
-          toast.info('No debt accounts found at this institution.');
+          toast.info('No eligible debt accounts found at this institution.');
         }
       } catch (err) {
         console.error(err);
