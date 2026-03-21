@@ -20,7 +20,7 @@ serve(async (req) => {
     }
 
     // Sandbox mode – switch to production via env var when ready
-    const PLAID_ENV = Deno.env.get("PLAID_ENV") || "sandbox";
+    const PLAID_ENV = Deno.env.get("PLAID_ENV") || "production";
     const PLAID_BASE_URL = `https://${PLAID_ENV}.plaid.com`;
 
     const response = await fetch(`${PLAID_BASE_URL}/link/token/create`, {
