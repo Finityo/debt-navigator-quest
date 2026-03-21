@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Debt, DebtType } from '@/types/debt';
 import { formatCurrency, formatPercent } from '@/utils/format';
-import { Plus, Trash2, Edit2, X, Check, CreditCard } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, CreditCard, Landmark } from 'lucide-react';
+import PlaidConnect from '@/components/PlaidConnect';
 
 const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'credit_card', label: 'Credit Card' },
@@ -155,6 +156,21 @@ export default function DebtsPage() {
     <div className="space-y-8">
       <PageHeader title="Debts" description="Add and manage your debts" />
 
+      {/* Bank Import Section */}
+      <Card className="border border-primary/20 bg-accent/30">
+        <CardContent className="p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-primary/10">
+              <Landmark className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-heading font-bold text-base">Connect Bank to Auto-Import Debts</h2>
+              <p className="text-xs text-muted-foreground">Securely pull your credit cards, student loans &amp; mortgages in seconds.</p>
+            </div>
+          </div>
+          <PlaidConnect />
+        </CardContent>
+      </Card>
       {/* Summary */}
       <Card>
         <CardContent className="p-5 flex items-center gap-3.5">

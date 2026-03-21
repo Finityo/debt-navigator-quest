@@ -45,6 +45,7 @@ export default function PlaidConnect() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const addDebt = useDebtStore((s) => s.addDebt);
+  const computePlan = useDebtStore((s) => s.computePlan);
 
   const fetchLinkToken = useCallback(async () => {
     try {
@@ -73,6 +74,9 @@ export default function PlaidConnect() {
 
         const normalized = normalizePlaidDebts(data.debts || []);
         normalized.forEach((debt) => addDebt(debt));
+
+        // Auto-trigger plan recalculation with new debts
+        computePlan();
 
         setSuccess(true);
         setErrorMsg(null);
