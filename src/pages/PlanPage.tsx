@@ -39,6 +39,9 @@ export default function PlanPage() {
             />
           </div>
 
+          {/* Snowball vs Avalanche Comparison */}
+          <MethodComparison />
+
           {/* Payoff Order */}
           <Card>
             <CardContent className="p-6">
