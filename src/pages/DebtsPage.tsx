@@ -8,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Debt, DebtType } from '@/types/debt';
 import { formatCurrency, formatPercent } from '@/utils/format';
-import { Plus, Trash2, Edit2, X, Check, CreditCard, Landmark } from 'lucide-react';
+import { Plus, X, Check, CreditCard, Landmark } from 'lucide-react';
 import PlaidConnect from '@/components/PlaidConnect';
+import ManualDebtForm from '@/components/ManualDebtForm';
+import DebtCard from '@/components/DebtCard';
 
 const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'credit_card', label: 'Credit Card' },
@@ -38,22 +40,6 @@ export default function DebtsPage() {
 
   const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
 
-  const handleSaveNew = () => {
-    if (!form.creditorName || !form.balance) return;
-    addDebt({
-      id: `debt-${Date.now()}`,
-      creditorName: form.creditorName!,
-      balance: Number(form.balance),
-      apr: Number(form.apr) / 100,
-      minPayment: Number(form.minPayment),
-      type: (form.type as DebtType) || 'other',
-      startDate: new Date().toISOString().slice(0, 10),
-      notes: form.notes || '',
-    });
-    setForm(emptyDebt());
-    setIsAdding(false);
-  };
-
   const startEdit = (debt: Debt) => {
     setEditingId(debt.id);
     setForm({
@@ -80,7 +66,7 @@ export default function DebtsPage() {
     setForm(emptyDebt());
   };
 
-  const DebtForm = ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => (
+  const EditForm = ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => (
     <Card className="border-2 border-primary/15">
       <CardContent className="p-6 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
@@ -171,6 +157,7 @@ export default function DebtsPage() {
           <PlaidConnect />
         </CardContent>
       </Card>
+
       {/* Summary */}
       <Card>
         <CardContent className="p-5 flex items-center gap-3.5">
@@ -187,58 +174,45 @@ export default function DebtsPage() {
         </CardContent>
       </Card>
 
+      {/* Manual Add Form */}
+      {isAdding && (
+        <ManualDebtForm onClose={() => setIsAdding(false)} />
+      )}
+
       <div className="space-y-3.5">
         {debts.length === 0 && !isAdding && (
-          <Card className="border-dashed">
-            <CardContent className="py-12 px-6 text-center">
-              <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-4">
-                <CreditCard className="w-5 h-5 text-muted-foreground" />
+          <Card className="glass-card border-dashed border-primary/20 shadow-xl">
+            <CardContent className="py-14 px-6 text-center space-y-5">
+              <div className="w-14 h-14 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-heading font-bold mb-2">No debts yet</h3>
-              <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                Add your first debt to start building a personalized payoff plan.
-              </p>
+              <div>
+                <h3 className="font-heading font-bold text-lg mb-1.5">No debts yet</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                  Add your first debt manually or connect your bank above to get started with a personalized payoff plan.
+                </p>
+              </div>
+              <Button
+                onClick={() => setIsAdding(true)}
+                className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
+              >
+                <Plus className="w-4 h-4 mr-2" /> Add Your First Debt
+              </Button>
             </CardContent>
           </Card>
         )}
 
         {debts.map((debt) =>
           editingId === debt.id ? (
-            <DebtForm key={debt.id} onSave={handleSaveEdit} onCancel={() => { setEditingId(null); setForm(emptyDebt()); }} />
+            <EditForm key={debt.id} onSave={handleSaveEdit} onCancel={() => { setEditingId(null); setForm(emptyDebt()); }} />
           ) : (
-            <Card key={debt.id} className="transition-card hover-lift">
-              <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <h3 className="font-heading font-bold text-[15px] truncate">{debt.creditorName}</h3>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground capitalize font-medium">
-                      {debt.type.replace('_', ' ')}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
-                    <span>Balance: <strong className="text-foreground font-tabular">{formatCurrency(debt.balance)}</strong></span>
-                    <span>APR: <strong className="text-foreground font-tabular">{formatPercent(debt.apr)}</strong></span>
-                    <span>Min: <strong className="text-foreground font-tabular">{formatCurrency(debt.minPayment)}/mo</strong></span>
-                  </div>
-                </div>
-                <div className="flex gap-1 shrink-0">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => startEdit(debt)}>
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => removeDebt(debt.id)}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <DebtCard key={debt.id} debt={debt} onEdit={startEdit} onRemove={removeDebt} />
           )
         )}
 
-        {isAdding ? (
-          <DebtForm onSave={handleSaveNew} onCancel={() => { setIsAdding(false); setForm(emptyDebt()); }} />
-        ) : (
+        {debts.length > 0 && !isAdding && (
           <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12">
-            <Plus className="w-4 h-4 mr-2" /> Add Debt
+            <Plus className="w-4 h-4 mr-2" /> Add Manual Debt
           </Button>
         )}
       </div>
