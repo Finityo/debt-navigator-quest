@@ -7,12 +7,13 @@ import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format'
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function PlanPage() {
-  const { planResult, debts } = useDebtStore();
+  const { planResult, debts, settings } = useDebtStore();
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
+  const methodLabel = settings.method === 'avalanche' ? 'Avalanche' : 'Snowball';
 
   return (
     <div className="space-y-8">
-      <PageHeader title="Plan" description="Monthly payoff breakdown and debt elimination order" />
+      <PageHeader title={`Plan — ${methodLabel}`} description={`Monthly payoff breakdown using ${methodLabel} method`} />
 
       <ComputeBanner />
 
