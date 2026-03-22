@@ -190,7 +190,7 @@ export function runEngine(
 
     for (const debt of activeDebts) {
       // Only include debts that were active this month
-      if (debt.isPaidOff && debt.paidOffMonth !== month) continue;
+      // keep all debts for consistent reporting
 
       const paymentApplied = round2(debt.monthMinPaid + debt.monthExtraApplied);
 
