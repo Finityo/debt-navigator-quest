@@ -39,6 +39,7 @@ const App = () => (
               <Route path="/sensitivity" element={<SensitivityPage />} />
               <Route path="/activity" element={<ActivityPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/install" element={<InstallPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppLayout>
