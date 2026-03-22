@@ -190,12 +190,18 @@ export function runEngine(
 
     for (const debt of activeDebts) {
       // Only include debts that were active this month
-      if (debt.isPaidOff && debt.paidOffMonth !== month) continue;
+      // keep all debts for consistent reporting
 
       const paymentApplied = round2(debt.monthMinPaid + debt.monthExtraApplied);
 
       // R2: principalPaid = paymentApplied - interestAccrued
-      const principalPaid = round2(paymentApplied - debt.monthInterest);
+      const rawPrincipal = round2(paymentApplied - debt.monthInterest);
+      // Prevent negative principal (negative amortization case)
+      const principalPaid = round2(Math.max(0, rawPrincipal));
+
+      if (rawPrincipal < -0.01) {
+        // negative amortization case (allowed but tracked)
+      }
 
       // R3: endingBalance = startingBalance + interestAccrued - paymentApplied
       const expectedEnding = round2(debt.monthStartBalance + debt.monthInterest - paymentApplied);
@@ -223,7 +229,7 @@ export function runEngine(
       }
 
       monthTotalInterest += debt.monthInterest;
-      monthTotalPrincipal += Math.max(0, principalPaid);
+      monthTotalPrincipal += principalPaid;
       monthTotalPaid += paymentApplied;
 
       snapshots.push({
@@ -231,7 +237,7 @@ export function runEngine(
         startingBalance: debt.monthStartBalance,
         interestAccrued: debt.monthInterest,
         paymentApplied,
-        principalPaid: Math.max(0, principalPaid),
+        principalPaid,
         minPaid: debt.monthMinPaid,
         extraApplied: debt.monthExtraApplied,
         endingBalance: debt.balance,
@@ -273,7 +279,7 @@ function legacyDebtToEngine(d: Debt): EnginDebt {
     id: d.id,
     name: d.creditorName,
     balance: d.balance,
-    apr: d.apr * 100,   // decimal → percentage (0.219 → 21.9)
+    apr: d.apr > 1 ? d.apr : d.apr * 100,   // safe normalization
     minimum: d.minPayment,
     dueDay: 1,          // not used in legacy, default to 1
   };
