@@ -279,7 +279,7 @@ function legacyDebtToEngine(d: Debt): EnginDebt {
     id: d.id,
     name: d.creditorName,
     balance: d.balance,
-    apr: d.apr * 100,   // decimal → percentage (0.219 → 21.9)
+    apr: d.apr > 1 ? d.apr : d.apr * 100,   // safe normalization
     minimum: d.minPayment,
     dueDay: 1,          // not used in legacy, default to 1
   };
