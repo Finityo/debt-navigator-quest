@@ -185,12 +185,12 @@ export function computeDebtPlan(
     let monthTotalPrincipal = 0;
 
     for (const debt of activeDebts) {
+      // Skip debts already paid off in a prior month (no duplicates)
+      if (debt.isPaidOff && debt.paidOffMonth !== month) continue;
+
       const totalPaid = round2(debt.monthMinPaid + debt.monthExtraApplied);
       const principalPaid = round2(totalPaid - debt.monthInterest);
-
-      if (!debt.isPaidOff || debt.paidOffMonth === month) {
-        monthTotalPrincipal += Math.max(0, principalPaid);
-      }
+      monthTotalPrincipal += Math.max(0, principalPaid);
 
       allSnapshots.push({
         monthNumber: month,
