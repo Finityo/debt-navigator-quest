@@ -303,7 +303,7 @@ export function computeDebtPlan(
   }
 
   // Convert & run
-  const engineDebts = debts.map(legacyDebtToEngine);
+  const engineDebts = normalizeDebtInput(debts);
   const engineResult = runEngine(
     engineDebts,
     settings.method,

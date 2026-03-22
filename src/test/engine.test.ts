@@ -324,3 +324,51 @@ describe('Legacy adapter — computeDebtPlan', () => {
     }
   });
 });
+
+// ─── Milestone 2 — Input Normalization Tests ──────────
+
+describe('Input normalization', () => {
+  it('converts decimal APR to percentage', () => {
+    const input = [{ id: '1', balance: 1000, apr: 0.2, minimum: 50 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].apr).toBe(20);
+  });
+
+  it('keeps percentage APR unchanged', () => {
+    const input = [{ id: '1', balance: 1000, apr: 20, minimum: 50 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].apr).toBe(20);
+  });
+
+  it('defaults missing minimum to 0', () => {
+    const input = [{ id: '1', balance: 1000, apr: 20 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].minimum).toBe(0);
+  });
+
+  it('throws on negative balance', () => {
+    expect(() =>
+      normalizeDebtInput([{ id: '1', balance: -100, apr: 20 }])
+    ).toThrow();
+  });
+
+  it('rounds all numeric inputs', () => {
+    const input = [{ id: '1', balance: 1000.555, apr: 20.123, minimum: 50.789 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].balance).toBe(1000.56);
+    expect(result[0].apr).toBe(20.12);
+    expect(result[0].minimum).toBe(50.79);
+  });
+
+  it('reads creditorName when name is missing', () => {
+    const input = [{ id: '1', creditorName: 'Chase', balance: 500, apr: 15, minimum: 25 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].name).toBe('Chase');
+  });
+
+  it('reads minPayment when minimum is missing', () => {
+    const input = [{ id: '1', balance: 500, apr: 15, minPayment: 30 }];
+    const result = normalizeDebtInput(input);
+    expect(result[0].minimum).toBe(30);
+  });
+});
