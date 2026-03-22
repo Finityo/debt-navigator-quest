@@ -276,16 +276,7 @@ export function runEngine(
 // runs the engine, then maps back to the old PlanResult shape
 // so the UI/store continues to work unchanged.
 
-function legacyDebtToEngine(d: Debt): EnginDebt {
-  return {
-    id: d.id,
-    name: d.creditorName,
-    balance: d.balance,
-    apr: d.apr > 1 ? d.apr : d.apr * 100,   // safe normalization
-    minimum: d.minPayment,
-    dueDay: 1,          // not used in legacy, default to 1
-  };
-}
+// legacyDebtToEngine removed — normalizeDebtInput handles all conversion
 
 export function computeDebtPlan(
   debts: Debt[],
