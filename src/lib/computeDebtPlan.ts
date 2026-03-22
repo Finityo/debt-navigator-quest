@@ -229,7 +229,7 @@ export function runEngine(
       }
 
       monthTotalInterest += debt.monthInterest;
-      monthTotalPrincipal += Math.max(0, principalPaid);
+      monthTotalPrincipal += principalPaid;
       monthTotalPaid += paymentApplied;
 
       snapshots.push({
