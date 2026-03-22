@@ -115,6 +115,7 @@ export function computeDebtPlan(
 
   let cumulativeInterest = 0;
   let cumulativePaid = 0;
+  let freedMinimums = 0;
   // Sequential date: starts at startDate, increments by 1 month each iteration
   const currentDate = parseStartDate(settings.startDate);
 
