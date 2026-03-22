@@ -12,6 +12,7 @@ import { Plus, X, Check, CreditCard, Landmark } from 'lucide-react';
 import PlaidConnect from '@/components/PlaidConnect';
 import ManualDebtForm from '@/components/ManualDebtForm';
 import DebtCard from '@/components/DebtCard';
+import CsvImportExport from '@/components/CsvImportExport';
 
 const debtTypes: { value: DebtType; label: string }[] = [
   { value: 'credit_card', label: 'Credit Card' },
