@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
+import { MethodComparison } from '@/components/plan/MethodComparison';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
 import { ChevronDown, ChevronRight } from 'lucide-react';
@@ -37,6 +38,9 @@ export default function PlanPage() {
               accent={planResult.completionStatus === 'complete' ? 'primary' : 'destructive'}
             />
           </div>
+
+          {/* Snowball vs Avalanche Comparison */}
+          <MethodComparison />
 
           {/* Payoff Order */}
           <Card>
