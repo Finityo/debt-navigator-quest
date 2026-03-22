@@ -37,6 +37,8 @@ import type {
   MonthlyPlanSummary,
 } from '@/types/debt';
 
+import { normalizeDebtInput } from './normalizeDebtInput';
+
 // ─── Helpers ───────────────────────────────────────────
 
 function round2(n: number): number {
