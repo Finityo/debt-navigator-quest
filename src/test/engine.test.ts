@@ -7,6 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { runEngine } from '@/lib/computeDebtPlan';
 import { computeDebtPlan } from '@/lib/computeDebtPlan';
+import { normalizeDebtInput } from '@/lib/normalizeDebtInput';
 import type { EnginDebt } from '@/types/plan';
 import type { Debt, PlanSettings, ExtraPayment } from '@/types/debt';
 
