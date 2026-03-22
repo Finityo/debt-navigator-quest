@@ -75,6 +75,7 @@ export default function PlanPage() {
                     <th className="text-left px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Month</th>
                     <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Starting</th>
                     <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Interest</th>
+                    <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Principal</th>
                     <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Min Paid</th>
                     <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Extra</th>
                     <th className="text-right px-4 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-widest">Ending</th>
@@ -94,7 +95,6 @@ export default function PlanPage() {
                         ms={ms}
                         isExpanded={isExpanded}
                         snapshots={snapshots}
-                        debts={debts}
                         onToggle={() =>
                           setExpandedMonth(isExpanded ? null : ms.monthNumber)
                         }
@@ -137,13 +137,11 @@ function MonthRow({
   ms,
   isExpanded,
   snapshots,
-  debts,
   onToggle,
 }: {
   ms: import('@/types/debt').MonthlyPlanSummary;
   isExpanded: boolean;
   snapshots: import('@/types/debt').MonthlyDebtSnapshot[];
-  debts: import('@/types/debt').Debt[];
   onToggle: () => void;
 }) {
   const hasMilestone = ms.debtsPaidOffThisMonth.length > 0;
@@ -166,6 +164,7 @@ function MonthRow({
         <td className="px-4 py-3.5 font-medium whitespace-nowrap font-tabular">{formatDate(ms.date)}</td>
         <td className="px-4 py-3.5 text-right font-tabular">{formatCurrency(ms.totalStartingDebt)}</td>
         <td className="px-4 py-3.5 text-right font-tabular text-destructive/70">{formatCurrencyCents(ms.totalInterest)}</td>
+        <td className="px-4 py-3.5 text-right font-tabular text-primary/80">{formatCurrencyCents(ms.totalPrincipal)}</td>
         <td className="px-4 py-3.5 text-right font-tabular">{formatCurrency(ms.totalMinimumPayments)}</td>
         <td className="px-4 py-3.5 text-right font-tabular text-primary font-semibold">
           {ms.totalExtraPayments > 0 ? formatCurrency(ms.totalExtraPayments) : '—'}
@@ -181,7 +180,7 @@ function MonthRow({
       </tr>
       {isExpanded && snapshots.length > 0 && (
         <tr>
-          <td colSpan={8} className="p-0">
+          <td colSpan={9} className="p-0">
             <div className="bg-muted/25 px-5 sm:px-7 py-5 border-b animate-expand">
               <p className="text-xs font-semibold text-muted-foreground mb-3.5 uppercase tracking-widest">
                 Debt-by-debt breakdown — {formatDate(ms.date)}
@@ -203,8 +202,14 @@ function MonthRow({
                       <span className="text-destructive/70 font-tabular">
                         +{formatCurrencyCents(s.interestAccrued)} int
                       </span>
+                      <span className="text-primary/80 font-tabular">
+                        −{formatCurrencyCents(s.principalPaid)} principal
+                      </span>
+                      <span className="text-muted-foreground font-tabular">
+                        Min: {formatCurrencyCents(s.minPaid)}
+                      </span>
                       <span className="text-primary font-tabular">
-                        −{formatCurrencyCents(s.paymentApplied)} paid
+                        Extra: {formatCurrencyCents(s.extraApplied)}
                       </span>
                       <span className="font-tabular font-semibold">
                         End: {formatCurrencyCents(s.endingBalance)}

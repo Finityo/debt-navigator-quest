@@ -3,7 +3,6 @@
 // ============================================
 //
 // SINGLE SOURCE OF TRUTH for all debt payoff calculations.
-// No other file should contain debt math.
 //
 // Algorithm (per month):
 //   1. For each active debt: accrue interest (APR / 12)
@@ -35,7 +34,8 @@ interface ActiveDebt {
   // Per-month tracking (reset each iteration)
   monthStartBalance: number;
   monthInterest: number;
-  monthPayment: number;
+  monthMinPaid: number;
+  monthExtraApplied: number;
 }
 
 // --- Helpers ---
@@ -58,6 +58,8 @@ function addMonths(dateStr: string, months: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+const MAX_MONTHS = 600;
+
 // --- Main Engine ---
 
 export function computeDebtPlan(
@@ -65,7 +67,6 @@ export function computeDebtPlan(
   settings: PlanSettings,
   extraPayments: ExtraPayment[] = []
 ): PlanResult {
-  // Edge case: no debts
   if (debts.length === 0) {
     return {
       monthlySummaries: [],
@@ -79,7 +80,9 @@ export function computeDebtPlan(
     };
   }
 
-  // Build extra payment lookup: monthNumber -> total extra for that month
+  const horizon = Math.min(settings.monthsHorizon, MAX_MONTHS);
+
+  // Build extra payment lookup
   const extraByMonth = new Map<number, number>();
   for (const ep of extraPayments) {
     extraByMonth.set(ep.monthNumber, (extraByMonth.get(ep.monthNumber) ?? 0) + ep.extraAmount);
@@ -96,7 +99,8 @@ export function computeDebtPlan(
     paidOffMonth: null,
     monthStartBalance: 0,
     monthInterest: 0,
-    monthPayment: 0,
+    monthMinPaid: 0,
+    monthExtraApplied: 0,
   }));
 
   const allSnapshots: MonthlyDebtSnapshot[] = [];
@@ -107,8 +111,7 @@ export function computeDebtPlan(
   let cumulativePaid = 0;
   let freedMinimums = 0;
 
-  for (let month = 1; month <= settings.monthsHorizon; month++) {
-    // Early exit: all debts already paid
+  for (let month = 1; month <= horizon; month++) {
     if (activeDebts.every((d) => d.isPaidOff)) break;
 
     const monthDate = addMonths(settings.startDate, month - 1);
@@ -117,14 +120,17 @@ export function computeDebtPlan(
     let monthTotalExtraPayments = 0;
     const paidOffThisMonth: string[] = [];
 
-    // --- STEP 1: Record starting balances & accrue interest ---
+    // Reset per-month tracking
     for (const debt of activeDebts) {
       debt.monthStartBalance = debt.balance;
       debt.monthInterest = 0;
-      debt.monthPayment = 0;
+      debt.monthMinPaid = 0;
+      debt.monthExtraApplied = 0;
+    }
 
+    // --- STEP 1: Accrue interest ---
+    for (const debt of activeDebts) {
       if (debt.isPaidOff) continue;
-
       const interest = round2(debt.balance * (debt.apr / 12));
       debt.balance = round2(debt.balance + interest);
       debt.monthInterest = interest;
@@ -135,15 +141,14 @@ export function computeDebtPlan(
     // --- STEP 2: Apply minimum payments ---
     for (const debt of activeDebts) {
       if (debt.isPaidOff) continue;
-
       const minPay = round2(Math.min(debt.minPayment, debt.balance));
       debt.balance = round2(debt.balance - minPay);
-      debt.monthPayment += minPay;
+      debt.monthMinPaid = minPay;
       monthTotalMinPayments += minPay;
       cumulativePaid += minPay;
     }
 
-    // --- STEP 3: Calculate extra payment pool ---
+    // --- STEP 3: Extra payment pool (user extra + freed minimums from prior payoffs) ---
     const userExtra = extraByMonth.get(month) ?? 0;
     let extraPool = userExtra + freedMinimums;
 
@@ -151,10 +156,9 @@ export function computeDebtPlan(
     const sorted = sortByStrategy(activeDebts, settings.method);
     for (const debt of sorted) {
       if (debt.isPaidOff || extraPool <= 0) continue;
-
       const extraApplied = round2(Math.min(extraPool, debt.balance));
       debt.balance = round2(debt.balance - extraApplied);
-      debt.monthPayment += extraApplied;
+      debt.monthExtraApplied += extraApplied;
       extraPool = round2(extraPool - extraApplied);
       monthTotalExtraPayments += extraApplied;
       cumulativePaid += extraApplied;
@@ -163,9 +167,7 @@ export function computeDebtPlan(
     // --- STEP 5: Mark payoffs & free minimums ---
     for (const debt of activeDebts) {
       if (debt.isPaidOff) continue;
-
       if (debt.balance <= 0.005) {
-        // Clamp any rounding dust to zero
         debt.balance = 0;
         debt.isPaidOff = true;
         debt.paidOffMonth = month;
@@ -180,23 +182,34 @@ export function computeDebtPlan(
     }
 
     // --- STEP 6: Record snapshots ---
-    const totalStartingDebt = round2(
-      activeDebts.reduce((sum, d) => sum + (d.isPaidOff && d.paidOffMonth !== month ? 0 : d.monthStartBalance), 0)
-    );
+    let monthTotalPrincipal = 0;
 
     for (const debt of activeDebts) {
+      const totalPaid = round2(debt.monthMinPaid + debt.monthExtraApplied);
+      const principalPaid = round2(totalPaid - debt.monthInterest);
+
+      if (!debt.isPaidOff || debt.paidOffMonth === month) {
+        monthTotalPrincipal += Math.max(0, principalPaid);
+      }
+
       allSnapshots.push({
         monthNumber: month,
         debtId: debt.id,
         creditorName: debt.creditorName,
         startingBalance: debt.monthStartBalance,
         interestAccrued: debt.monthInterest,
-        paymentApplied: round2(debt.monthPayment),
+        principalPaid: Math.max(0, principalPaid),
+        minPaid: debt.monthMinPaid,
+        extraApplied: debt.monthExtraApplied,
+        paymentApplied: totalPaid,
         endingBalance: debt.balance,
         isPaidOff: debt.isPaidOff,
       });
     }
 
+    const totalStartingDebt = round2(
+      activeDebts.reduce((sum, d) => sum + (d.isPaidOff && d.paidOffMonth !== month ? 0 : d.monthStartBalance), 0)
+    );
     const monthTotalPaid = round2(monthTotalMinPayments + monthTotalExtraPayments);
     const totalEndingDebt = round2(
       activeDebts.filter((d) => !d.isPaidOff).reduce((sum, d) => sum + d.balance, 0)
@@ -207,6 +220,7 @@ export function computeDebtPlan(
       date: monthDate,
       totalStartingDebt,
       totalInterest: round2(monthTotalInterest),
+      totalPrincipal: round2(monthTotalPrincipal),
       totalMinimumPayments: round2(monthTotalMinPayments),
       totalExtraPayments: round2(monthTotalExtraPayments),
       totalPaid: monthTotalPaid,

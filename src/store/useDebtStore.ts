@@ -74,10 +74,16 @@ interface DebtStore {
   clearPlan: () => void;
 }
 
-function markStale(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void) {
-  set((s) => ({
-    computeStatus: s.computeStatus === 'computed' ? 'stale' : s.computeStatus,
-  }));
+function autoRecompute(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void, get: () => DebtStore) {
+  // Defer to next microtask so the state update that triggered this has settled
+  queueMicrotask(() => {
+    const store = get();
+    const isValid = store.validate();
+    if (isValid) {
+      const result = computeDebtPlan(store.debts, store.settings, store.extraPayments);
+      set(() => ({ planResult: result, computeStatus: 'computed' }));
+    }
+  });
 }
 
 export const useDebtStore = create<DebtStore>()(
@@ -94,31 +100,31 @@ export const useDebtStore = create<DebtStore>()(
 
       addDebt: (debt) => {
         set((s) => ({ debts: [...s.debts, debt] }));
-        markStale(set);
+        autoRecompute(set, get);
       },
       updateDebt: (id, updates) => {
         set((s) => ({
           debts: s.debts.map((d) => (d.id === id ? { ...d, ...updates } : d)),
         }));
-        markStale(set);
+        autoRecompute(set, get);
       },
       removeDebt: (id) => {
         set((s) => ({ debts: s.debts.filter((d) => d.id !== id) }));
-        markStale(set);
+        autoRecompute(set, get);
       },
 
       updateSettings: (updates) => {
         set((s) => ({ settings: { ...s.settings, ...updates } }));
-        markStale(set);
+        autoRecompute(set, get);
       },
 
       setExtraPayments: (payments) => {
         set({ extraPayments: payments });
-        markStale(set);
+        autoRecompute(set, get);
       },
       addExtraPayment: (payment) => {
         set((s) => ({ extraPayments: [...s.extraPayments, payment] }));
-        markStale(set);
+        autoRecompute(set, get);
       },
       updateExtraPayment: (monthNumber, updates) => {
         set((s) => ({
@@ -126,13 +132,13 @@ export const useDebtStore = create<DebtStore>()(
             p.monthNumber === monthNumber ? { ...p, ...updates } : p
           ),
         }));
-        markStale(set);
+        autoRecompute(set, get);
       },
       removeExtraPayment: (monthNumber) => {
         set((s) => ({
           extraPayments: s.extraPayments.filter((p) => p.monthNumber !== monthNumber),
         }));
-        markStale(set);
+        autoRecompute(set, get);
       },
 
       addPaymentRecord: (record) =>
