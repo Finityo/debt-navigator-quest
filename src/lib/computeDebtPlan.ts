@@ -237,7 +237,7 @@ export function runEngine(
         startingBalance: debt.monthStartBalance,
         interestAccrued: debt.monthInterest,
         paymentApplied,
-        principalPaid: Math.max(0, principalPaid),
+        principalPaid,
         minPaid: debt.monthMinPaid,
         extraApplied: debt.monthExtraApplied,
         endingBalance: debt.balance,
