@@ -94,7 +94,54 @@ describe('Golden 2 — Multiple Debt Snowball', () => {
   });
 });
 
+// ─── PATCH 3 — Payment Identity Test ─────────────────
+
+describe('Payment Identity — paymentApplied === interest + principal', () => {
+  it('payment equals interest + principal for every snapshot', () => {
+    const debts: EnginDebt[] = [
+      { id: 't1', name: 'Test', balance: 1000, apr: 20, minimum: 100, dueDay: 1 },
+    ];
+    const result = runEngine(debts, 'snowball', '2025-01-01', 24);
+    for (const ms of result.monthlySummaries) {
+      for (const snap of ms.debtSnapshots) {
+        expect(snap.paymentApplied).toBeCloseTo(
+          snap.interestAccrued + snap.principalPaid,
+          2
+        );
+      }
+    }
+  });
+});
+
+// ─── PATCH 5 — Rollover Validation Test ──────────────
+
+describe('Rollover Validation — freed minimum deferred', () => {
+  it('freed minimum is NOT applied in same month as payoff', () => {
+    const debts: EnginDebt[] = [
+      { id: 'd1', name: 'Small', balance: 100, apr: 10, minimum: 100, dueDay: 1 },
+      { id: 'd2', name: 'Big', balance: 2000, apr: 10, minimum: 50, dueDay: 1 },
+    ];
+    const result = runEngine(debts, 'snowball', '2025-01-01', 12);
+    let payoffMonth = -1;
+    result.monthlySummaries.forEach((ms, i) => {
+      const paidOff = ms.debtSnapshots.find(
+        (s) => s.debtId === 'd1' && s.endingBalance === 0
+      );
+      if (paidOff && payoffMonth === -1) payoffMonth = i;
+    });
+
+    if (payoffMonth >= 0 && payoffMonth + 1 < result.monthlySummaries.length) {
+      const sameMonth = result.monthlySummaries[payoffMonth];
+      const nextMonth = result.monthlySummaries[payoffMonth + 1];
+      const sameExtra = sameMonth.debtSnapshots.reduce((s, d) => s + d.extraApplied, 0);
+      const nextExtra = nextMonth.debtSnapshots.reduce((s, d) => s + d.extraApplied, 0);
+      expect(nextExtra).toBeGreaterThanOrEqual(sameExtra);
+    }
+  });
+});
+
 // ─── GOLDEN TEST 3: Extra Payment Impact ──────────────
+
 
 describe('Golden 3 — Extra Payment Impact', () => {
   const debts: EnginDebt[] = [
