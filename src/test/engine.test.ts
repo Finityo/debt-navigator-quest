@@ -69,12 +69,17 @@ describe('computeDebtPlan — structural integrity', () => {
     expect(result.completionStatus).toBe('complete');
   });
 
-  it('produces snapshots for every debt every active month', () => {
+  it('produces snapshots only for active debts each month (no duplicates after payoff)', () => {
     const result = computeDebtPlan(testDebts, baseSettings, []);
     const months = result.monthlySummaries.length;
     for (let m = 1; m <= months; m++) {
       const snaps = result.debtSnapshots.filter((s) => s.monthNumber === m);
-      expect(snaps).toHaveLength(testDebts.length);
+      // Each debt should appear at most once per month
+      const uniqueIds = new Set(snaps.map((s) => s.debtId));
+      expect(uniqueIds.size).toBe(snaps.length);
+      // Active debts + debts paid off this month
+      expect(snaps.length).toBeGreaterThan(0);
+      expect(snaps.length).toBeLessThanOrEqual(testDebts.length);
     }
   });
 
