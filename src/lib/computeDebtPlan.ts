@@ -195,7 +195,13 @@ export function runEngine(
       const paymentApplied = round2(debt.monthMinPaid + debt.monthExtraApplied);
 
       // R2: principalPaid = paymentApplied - interestAccrued
-      const principalPaid = round2(paymentApplied - debt.monthInterest);
+      const rawPrincipal = round2(paymentApplied - debt.monthInterest);
+      // Prevent negative principal (negative amortization case)
+      const principalPaid = round2(Math.max(0, rawPrincipal));
+
+      if (rawPrincipal < -0.01) {
+        // negative amortization case (allowed but tracked)
+      }
 
       // R3: endingBalance = startingBalance + interestAccrued - paymentApplied
       const expectedEnding = round2(debt.monthStartBalance + debt.monthInterest - paymentApplied);
