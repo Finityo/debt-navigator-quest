@@ -15,6 +15,7 @@ import SensitivityPage from "@/pages/SensitivityPage";
 import ActivityPage from "@/pages/ActivityPage";
 import SettingsPage from "@/pages/SettingsPage";
 import ExtraPaymentsPage from "@/pages/ExtraPaymentsPage";
+import InstallPage from "@/pages/InstallPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
