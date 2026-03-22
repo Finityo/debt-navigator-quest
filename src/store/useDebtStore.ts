@@ -74,15 +74,34 @@ interface DebtStore {
   clearPlan: () => void;
 }
 
+function buildValidatedPlanState(
+  debts: Debt[],
+  settings: PlanSettings,
+  extraPayments: ExtraPayment[]
+): Pick<DebtStore, 'validationErrors' | 'planResult' | 'computeStatus'> {
+  const validationErrors: ValidationErrors = {
+    debts: validateDebts(debts),
+    settings: validateSettings(settings),
+    extraPayments: validateExtraPayments(extraPayments),
+  };
+
+  const isValid =
+    Object.keys(validationErrors.debts).length === 0 &&
+    validationErrors.settings.length === 0 &&
+    validationErrors.extraPayments.length === 0;
+
+  return {
+    validationErrors,
+    planResult: isValid ? computeDebtPlan(debts, settings, extraPayments) : null,
+    computeStatus: isValid ? 'computed' : 'idle',
+  };
+}
+
 function autoRecompute(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void, get: () => DebtStore) {
   // Defer to next microtask so the state update that triggered this has settled
   queueMicrotask(() => {
     const store = get();
-    const isValid = store.validate();
-    if (isValid) {
-      const result = computeDebtPlan(store.debts, store.settings, store.extraPayments);
-      set(() => ({ planResult: result, computeStatus: 'computed' }));
-    }
+    set(() => buildValidatedPlanState(store.debts, store.settings, store.extraPayments));
   });
 }
 
@@ -179,11 +198,15 @@ export const useDebtStore = create<DebtStore>()(
         settings: state.settings,
         extraPayments: state.extraPayments,
         paymentRecords: state.paymentRecords,
-        planResult: state.planResult,
-        computeStatus: state.computeStatus,
       }),
       onRehydrateStorage: () => () => {
-        useDebtStore.setState({ _hasHydrated: true });
+        queueMicrotask(() => {
+          const store = useDebtStore.getState();
+          useDebtStore.setState({
+            ...buildValidatedPlanState(store.debts, store.settings, store.extraPayments),
+            _hasHydrated: true,
+          });
+        });
       },
     }
   )
