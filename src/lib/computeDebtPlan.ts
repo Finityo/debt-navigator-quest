@@ -115,12 +115,14 @@ export function computeDebtPlan(
 
   let cumulativeInterest = 0;
   let cumulativePaid = 0;
-  let freedMinimums = 0;
+  // Sequential date: starts at startDate, increments by 1 month each iteration
+  const currentDate = parseStartDate(settings.startDate);
 
   for (let month = 1; month <= horizon; month++) {
     if (activeDebts.every((d) => d.isPaidOff)) break;
 
-    const monthDate = addMonths(settings.startDate, month - 1);
+    const monthDate = formatDateISO(currentDate);
+    currentDate.setMonth(currentDate.getMonth() + 1);
     let monthTotalInterest = 0;
     let monthTotalMinPayments = 0;
     let monthTotalExtraPayments = 0;
