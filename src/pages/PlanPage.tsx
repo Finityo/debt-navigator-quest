@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
@@ -8,9 +8,13 @@ import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format'
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function PlanPage() {
-  const { planResult, debts, settings } = useDebtStore();
+  const { planResult, debts, settings, computePlan, _hasHydrated } = useDebtStore();
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
   const methodLabel = settings.method === 'avalanche' ? 'Avalanche' : 'Snowball';
+
+  useEffect(() => {
+    if (_hasHydrated) computePlan();
+  }, [_hasHydrated, computePlan]);
 
   return (
     <div className="space-y-8">
