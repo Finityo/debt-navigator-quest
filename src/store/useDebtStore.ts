@@ -74,10 +74,16 @@ interface DebtStore {
   clearPlan: () => void;
 }
 
-function markStale(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void) {
-  set((s) => ({
-    computeStatus: s.computeStatus === 'computed' ? 'stale' : s.computeStatus,
-  }));
+function autoRecompute(set: (fn: (s: DebtStore) => Partial<DebtStore>) => void, get: () => DebtStore) {
+  // Defer to next microtask so the state update that triggered this has settled
+  queueMicrotask(() => {
+    const store = get();
+    const isValid = store.validate();
+    if (isValid) {
+      const result = computeDebtPlan(store.debts, store.settings, store.extraPayments);
+      set(() => ({ planResult: result, computeStatus: 'computed' }));
+    }
+  });
 }
 
 export const useDebtStore = create<DebtStore>()(

@@ -41,6 +41,9 @@ export interface MonthlyDebtSnapshot {
   creditorName: string;
   startingBalance: number;
   interestAccrued: number;
+  principalPaid: number;
+  minPaid: number;
+  extraApplied: number;
   paymentApplied: number;
   endingBalance: number;
   isPaidOff: boolean;
@@ -51,6 +54,7 @@ export interface MonthlyPlanSummary {
   date: string; // ISO date string for this month
   totalStartingDebt: number;
   totalInterest: number;
+  totalPrincipal: number;
   totalMinimumPayments: number;
   totalExtraPayments: number;
   totalPaid: number;
