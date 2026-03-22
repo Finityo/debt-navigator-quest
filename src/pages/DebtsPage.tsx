@@ -159,6 +159,9 @@ export default function DebtsPage() {
         </CardContent>
       </Card>
 
+      {/* CSV Import/Export */}
+      <CsvImportExport />
+
       {/* Summary */}
       <Card>
         <CardContent className="p-5 flex items-center gap-3.5">
