@@ -113,7 +113,7 @@ export default function TourOverlay() {
 
   if (!isActive || !step) return null;
 
-  const isCentered = !step.target || !targetBox;
+  const isCentered = !step.targetId || !targetBox;
 
   return (
     <>
