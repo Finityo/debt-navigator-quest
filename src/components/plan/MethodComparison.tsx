@@ -74,7 +74,7 @@ export function MethodComparison() {
 
         <TabsContent value="side-by-side">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-            <div data-tour="snowball-option">
+            <div id="snowball-toggle">
             <MethodCard
               label="Snowball"
               description="Smallest balance first"
