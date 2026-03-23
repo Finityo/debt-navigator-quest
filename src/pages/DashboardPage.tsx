@@ -43,29 +43,37 @@ export default function DashboardPage() {
       {hasResult && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div data-tour="dashboard-total-debt">
             <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
+            </div>
+            <div data-tour="dashboard-monthly-minimums">
             <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
+            </div>
+            <div data-tour="dashboard-payoff-date">
             <KpiCard
               icon={CalendarDays}
               label="Projected Payoff"
               value={payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
               accent="primary"
             />
+            </div>
             <KpiCard icon={Percent} label="Total Interest" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <KpiCard icon={Wallet} label="Total Paid" value={formatCurrency(planResult.totalPaid)} accent="primary" />
             <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
+            <div data-tour="dashboard-active-debts">
             <KpiCard
               icon={AlertCircle}
               label="Status"
               value={planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`}
               accent={planResult.completionStatus === 'complete' ? 'primary' : 'destructive'}
             />
+            </div>
             <KpiCard icon={Clock} label="Horizon" value={`${settings.monthsHorizon} mo`} />
           </div>
 
           {/* Charts */}
           {planResult.monthlySummaries.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5" data-tour="dashboard-progress">
               <Card>
                 <CardContent className="p-6">
                   <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-5">Debt Balance Over Time</h3>

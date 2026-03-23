@@ -74,6 +74,7 @@ export function MethodComparison() {
 
         <TabsContent value="side-by-side">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div data-tour="snowball-option">
             <MethodCard
               label="Snowball"
               description="Smallest balance first"
@@ -83,6 +84,8 @@ export function MethodComparison() {
               isWinnerSpeed={speedWinner === 'snowball'}
               horizon={settings.monthsHorizon}
             />
+            </div>
+            <div data-tour="avalanche-option">
             <MethodCard
               label="Avalanche"
               description="Highest APR first"
@@ -92,6 +95,7 @@ export function MethodComparison() {
               isWinnerSpeed={speedWinner === 'avalanche'}
               horizon={settings.monthsHorizon}
             />
+            </div>
           </div>
         </TabsContent>
 
