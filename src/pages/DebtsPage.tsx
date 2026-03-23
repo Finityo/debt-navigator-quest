@@ -199,7 +199,7 @@ export default function DebtsPage() {
               <Button
                 onClick={() => setIsAdding(true)}
                 className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
-                data-tour="manual-add-debt"
+                data-tour="manual-add-debt" id="add-debt-btn"
               >
                 <Plus className="w-4 h-4 mr-2" /> Add Your First Debt
               </Button>
