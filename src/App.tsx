@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
+import { OnboardingProvider } from "@/onboarding/OnboardingProvider";
 import Hero from "@/components/Hero";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
@@ -27,22 +28,24 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<Hero />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/debts" element={<DebtsPage />} />
-              <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
-              <Route path="/plan" element={<PlanPage />} />
-              <Route path="/timeline" element={<TimelinePage />} />
-              <Route path="/scenarios" element={<ScenariosPage />} />
-              <Route path="/sensitivity" element={<SensitivityPage />} />
-              <Route path="/activity" element={<ActivityPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/install" element={<InstallPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
+          <OnboardingProvider>
+            <AppLayout>
+              <Routes>
+                <Route path="/" element={<Hero />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/debts" element={<DebtsPage />} />
+                <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
+                <Route path="/plan" element={<PlanPage />} />
+                <Route path="/timeline" element={<TimelinePage />} />
+                <Route path="/scenarios" element={<ScenariosPage />} />
+                <Route path="/sensitivity" element={<SensitivityPage />} />
+                <Route path="/activity" element={<ActivityPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/install" element={<InstallPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AppLayout>
+          </OnboardingProvider>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
