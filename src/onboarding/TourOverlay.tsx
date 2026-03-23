@@ -171,7 +171,7 @@ export default function TourOverlay() {
             {/* Content */}
             <div className="px-5 py-4">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {step.content}
+                {step.description}
               </p>
             </div>
 
