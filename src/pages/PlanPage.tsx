@@ -28,6 +28,7 @@ export default function PlanPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <SummaryCard label="Total Paid" value={formatCurrency(planResult.totalPaid)} />
             <SummaryCard label="Interest Paid" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
+            <div data-tour="payoff-date">
             <SummaryCard
               label="Payoff"
               value={
@@ -36,6 +37,7 @@ export default function PlanPage() {
                   : 'Incomplete'
               }
             />
+            </div>
             <SummaryCard
               label="Status"
               value={planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`}
