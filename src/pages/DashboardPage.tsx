@@ -43,14 +43,20 @@ export default function DashboardPage() {
       {hasResult && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div data-tour="dashboard-total-debt">
             <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
+            </div>
+            <div data-tour="dashboard-monthly-minimums">
             <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
+            </div>
+            <div data-tour="dashboard-payoff-date">
             <KpiCard
               icon={CalendarDays}
               label="Projected Payoff"
               value={payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
               accent="primary"
             />
+            </div>
             <KpiCard icon={Percent} label="Total Interest" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <KpiCard icon={Wallet} label="Total Paid" value={formatCurrency(planResult.totalPaid)} accent="primary" />
             <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
