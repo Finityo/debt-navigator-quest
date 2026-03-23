@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { onboardingSteps } from './onboardingSteps';
+import { ONBOARDING_STEPS } from './onboardingSteps';
 import { useOnboarding } from './OnboardingProvider';
 import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
