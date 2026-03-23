@@ -46,7 +46,9 @@ export default function PlanPage() {
           </div>
 
           {/* Snowball vs Avalanche Comparison */}
+          <div data-tour="snowball-option">
           <MethodComparison />
+          </div>
 
           {/* Payoff Order */}
           <Card>
