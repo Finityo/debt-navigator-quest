@@ -72,7 +72,7 @@ export function OnboardingTour() {
 
   if (!isActive || !step || isNavigating) return null;
 
-  const isCentered = !step.target || !tooltipPos;
+  const isCentered = !step.targetId || !tooltipPos;
 
   return (
     <>
