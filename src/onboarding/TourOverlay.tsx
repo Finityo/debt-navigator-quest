@@ -31,7 +31,7 @@ export default function TourOverlay() {
     if (!isActive) return;
 
     const updatePosition = () => {
-      if (!step?.target) {
+      if (!step?.targetId) {
         setTargetBox(null);
         return;
       }
