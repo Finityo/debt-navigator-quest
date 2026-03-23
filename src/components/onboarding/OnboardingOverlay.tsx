@@ -1,18 +1,29 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
-import { X, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 type Placement = "top" | "bottom" | "left" | "right" | "center";
 
 export default function OnboardingOverlay() {
   const { currentStep, next, prev, skip, hasSeen } = useOnboardingStore();
   const step = ONBOARDING_STEPS[currentStep];
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [mode, setMode] = useState<"anchored" | "sheet" | "center">("center");
+
+  // Auto-navigate to the step's route
+  useEffect(() => {
+    if (!step || hasSeen) return;
+    if (step.route && location.pathname !== step.route) {
+      navigate(step.route);
+    }
+  }, [step, hasSeen, location.pathname, navigate]);
 
   useEffect(() => {
     if (!step) return;
@@ -29,7 +40,7 @@ export default function OnboardingOverlay() {
         el.classList.remove("ring-2", "ring-primary", "ring-offset-2", "relative", "z-[60]");
       }
     };
-  }, [step]);
+  }, [step, location.pathname]);
 
   useLayoutEffect(() => {
     if (!step) return;
@@ -60,7 +71,6 @@ export default function OnboardingOverlay() {
     const margin = 16;
     const gap = 12;
 
-    // Force bottom-sheet on smaller screens or short viewports
     const isSmallScreen = vw < 768 || vh < 700;
     if (isSmallScreen) {
       setMode("sheet");
@@ -86,7 +96,6 @@ export default function OnboardingOverlay() {
       left = rect.right + gap;
     }
 
-    // If anchored box would clip badly, fall back to sheet
     const wouldClip =
       top < margin ||
       left < margin ||
@@ -101,28 +110,17 @@ export default function OnboardingOverlay() {
 
     setMode("anchored");
     setStyle({ top, left, transform: "none" });
-  }, [step, currentStep]);
+  }, [step, currentStep, location.pathname]);
 
   if (hasSeen || !step) return null;
 
   const showArrow = mode === "anchored" && step.placement !== "center";
   const isLast = currentStep >= ONBOARDING_STEPS.length - 1;
 
-  const stepIndicator = (
-    <div className="flex items-center gap-1">
-      {ONBOARDING_STEPS.map((_, i) => (
-        <div
-          key={i}
-          className={`h-1.5 rounded-full transition-all duration-200 ${
-            i === currentStep
-              ? "w-4 bg-primary"
-              : i < currentStep
-              ? "w-1.5 bg-primary/40"
-              : "w-1.5 bg-muted-foreground/20"
-          }`}
-        />
-      ))}
-    </div>
+  const stepCounter = (
+    <span className="text-xs text-muted-foreground whitespace-nowrap">
+      {currentStep + 1} / {ONBOARDING_STEPS.length}
+    </span>
   );
 
   const controls = (
@@ -142,6 +140,21 @@ export default function OnboardingOverlay() {
     </div>
   );
 
+  const cardContent = (
+    <>
+      <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
+        {step.title}
+      </h3>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+        {step.description}
+      </p>
+      <div className="flex items-center justify-between gap-3">
+        {stepCounter}
+        {controls}
+      </div>
+    </>
+  );
+
   return (
     <div className="fixed inset-0 z-[9998]" onClick={skip}>
       {/* dim layer */}
@@ -154,16 +167,7 @@ export default function OnboardingOverlay() {
           style={style}
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
-            {step.title}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-            {step.description}
-          </p>
-          <div className="flex items-center justify-between gap-3">
-            {stepIndicator}
-            {controls}
-          </div>
+          {cardContent}
         </div>
       )}
 
@@ -178,16 +182,7 @@ export default function OnboardingOverlay() {
           {showArrow && (
             <div className="absolute -top-2 left-6 w-4 h-4 rotate-45 bg-card border-l border-t border-border" />
           )}
-          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
-            {step.title}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-            {step.description}
-          </p>
-          <div className="flex items-center justify-between gap-3">
-            {stepIndicator}
-            {controls}
-          </div>
+          {cardContent}
         </div>
       )}
 
@@ -198,16 +193,7 @@ export default function OnboardingOverlay() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="w-10 h-1 rounded-full bg-muted-foreground/20 mx-auto mb-4" />
-          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
-            {step.title}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-            {step.description}
-          </p>
-          <div className="flex items-center justify-between gap-3">
-            {stepIndicator}
-            {controls}
-          </div>
+          {cardContent}
         </div>
       )}
     </div>
