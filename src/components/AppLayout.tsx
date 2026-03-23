@@ -151,7 +151,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Onboarding Tour */}
-      <OnboardingTour />
+      <TourOverlay />
     </div>
   );
 }
