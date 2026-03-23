@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { onboardingSteps } from "./onboardingSteps";
+import { ONBOARDING_STEPS } from "./onboardingSteps";
 import { useOnboarding } from "./OnboardingProvider";
 import { X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,8 +22,8 @@ export default function TourOverlay() {
   } = useOnboarding();
 
   const [targetBox, setTargetBox] = useState<BoxPosition | null>(null);
-  const step = onboardingSteps[currentStepIndex];
-  const totalSteps = onboardingSteps.length;
+  const step = ONBOARDING_STEPS[currentStepIndex];
+  const totalSteps = ONBOARDING_STEPS.length;
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === totalSteps - 1;
 
@@ -31,12 +31,12 @@ export default function TourOverlay() {
     if (!isActive) return;
 
     const updatePosition = () => {
-      if (!step?.target) {
+      if (!step?.targetId) {
         setTargetBox(null);
         return;
       }
 
-      const el = document.querySelector(step.target) as HTMLElement | null;
+      const el = document.getElementById(step.targetId!) as HTMLElement | null;
       if (!el) {
         setTargetBox(null);
         return;
@@ -63,7 +63,7 @@ export default function TourOverlay() {
   }, [isActive, step, currentStepIndex]);
 
   const popoverStyle = useMemo((): React.CSSProperties => {
-    if (!targetBox || !step?.target) {
+    if (!targetBox || !step?.targetId) {
       // Centered modal
       return {
         position: "fixed",
@@ -113,14 +113,14 @@ export default function TourOverlay() {
 
   if (!isActive || !step) return null;
 
-  const isCentered = !step.target || !targetBox;
+  const isCentered = !step.targetId || !targetBox;
 
   return (
     <>
       {/* Backdrop */}
       <div className="fixed inset-0 z-[9998]" onClick={skipTour}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-        {targetBox && step.target && (
+        {targetBox && step.targetId && (
           <div
             className="absolute rounded-lg ring-2 ring-primary ring-offset-2 ring-offset-transparent"
             style={{
@@ -171,7 +171,7 @@ export default function TourOverlay() {
             {/* Content */}
             <div className="px-5 py-4">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {step.content}
+                {step.description}
               </p>
             </div>
 
@@ -179,7 +179,7 @@ export default function TourOverlay() {
             <div className="px-5 pb-5 flex items-center justify-between gap-3">
               {/* Progress dots */}
               <div className="flex items-center gap-1">
-                {onboardingSteps.map((_, i) => (
+                {ONBOARDING_STEPS.map((_, i) => (
                   <div
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-200 ${

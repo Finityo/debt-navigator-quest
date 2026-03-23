@@ -144,7 +144,7 @@ export default function DebtsPage() {
       <PageHeader title="Debts" description="Add and manage your debts" />
 
       {/* Bank Import Section */}
-      <Card className="border border-primary/20 bg-accent/30" data-tour="connect-accounts">
+      <Card className="border border-primary/20 bg-accent/30" id="connect-accounts-btn">
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg bg-primary/10">
@@ -199,7 +199,7 @@ export default function DebtsPage() {
               <Button
                 onClick={() => setIsAdding(true)}
                 className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
-                data-tour="manual-add-debt"
+                data-tour="manual-add-debt" id="add-debt-btn"
               >
                 <Plus className="w-4 h-4 mr-2" /> Add Your First Debt
               </Button>
@@ -216,7 +216,7 @@ export default function DebtsPage() {
         )}
 
         {debts.length > 0 && !isAdding && (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12" data-tour="manual-add-debt">
+          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12" id="add-debt-btn">
             <Plus className="w-4 h-4 mr-2" /> Add Manual Debt
           </Button>
         )}

@@ -43,13 +43,13 @@ export default function DashboardPage() {
       {hasResult && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div data-tour="dashboard-total-debt">
+            <div id="total-debt-card">
             <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
             </div>
-            <div data-tour="dashboard-monthly-minimums">
+            <div id="monthly-payment-card">
             <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
             </div>
-            <div data-tour="dashboard-payoff-date">
+            <div>
             <KpiCard
               icon={CalendarDays}
               label="Projected Payoff"
@@ -60,7 +60,7 @@ export default function DashboardPage() {
             <KpiCard icon={Percent} label="Total Interest" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <KpiCard icon={Wallet} label="Total Paid" value={formatCurrency(planResult.totalPaid)} accent="primary" />
             <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
-            <div data-tour="dashboard-active-debts">
+            <div>
             <KpiCard
               icon={AlertCircle}
               label="Status"
@@ -73,7 +73,7 @@ export default function DashboardPage() {
 
           {/* Charts */}
           {planResult.monthlySummaries.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5" data-tour="dashboard-progress">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5" id="progress-card">
               <Card>
                 <CardContent className="p-6">
                   <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-5">Debt Balance Over Time</h3>

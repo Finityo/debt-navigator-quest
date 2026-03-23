@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { onboardingSteps } from './onboardingSteps';
+import { ONBOARDING_STEPS } from './onboardingSteps';
 import { useOnboarding } from './OnboardingProvider';
 import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,8 @@ export function OnboardingTour() {
   const [isNavigating, setIsNavigating] = useState(false);
   const resizeRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const step = onboardingSteps[currentStepIndex];
-  const totalSteps = onboardingSteps.length;
+  const step = ONBOARDING_STEPS[currentStepIndex];
+  const totalSteps = ONBOARDING_STEPS.length;
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === totalSteps - 1;
 
@@ -34,12 +34,12 @@ export function OnboardingTour() {
       if (location.pathname !== step.route) return;
       setIsNavigating(false);
 
-      if (!step.target) {
+      if (!step.targetId) {
         setTooltipPos(null);
         return;
       }
 
-      const el = document.querySelector(step.target);
+      const el = step.targetId ? document.getElementById(step.targetId) : null;
       if (el) {
         const rect = el.getBoundingClientRect();
         setTooltipPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
@@ -58,8 +58,8 @@ export function OnboardingTour() {
     const handleResize = () => {
       clearTimeout(resizeRef.current);
       resizeRef.current = setTimeout(() => {
-        if (!step?.target) return;
-        const el = document.querySelector(step.target);
+        if (!step?.targetId) return;
+        const el = document.getElementById(step.targetId);
         if (el) {
           const rect = el.getBoundingClientRect();
           setTooltipPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
@@ -72,14 +72,14 @@ export function OnboardingTour() {
 
   if (!isActive || !step || isNavigating) return null;
 
-  const isCentered = !step.target || !tooltipPos;
+  const isCentered = !step.targetId || !tooltipPos;
 
   return (
     <>
       {/* Backdrop overlay */}
       <div className="fixed inset-0 z-[9998]" onClick={skipTour}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-        {tooltipPos && step.target && (
+        {tooltipPos && step.targetId && (
           <div
             className="absolute rounded-lg ring-2 ring-primary ring-offset-2 ring-offset-transparent"
             style={{
@@ -137,7 +137,7 @@ export function OnboardingTour() {
             {/* Content */}
             <div className="px-5 py-4">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {step.content}
+                {step.description}
               </p>
             </div>
 
@@ -145,7 +145,7 @@ export function OnboardingTour() {
             <div className="px-5 pb-5 flex items-center justify-between gap-3">
               {/* Progress dots */}
               <div className="flex items-center gap-1">
-                {onboardingSteps.map((_, i) => (
+                {ONBOARDING_STEPS.map((_, i) => (
                   <div
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-200 ${

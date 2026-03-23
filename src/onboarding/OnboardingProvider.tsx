@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { onboardingSteps } from "./onboardingSteps";
+import { ONBOARDING_STEPS } from "./onboardingSteps";
 
 type OnboardingContextType = {
   isActive: boolean;
@@ -46,8 +46,8 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const goToStep = useCallback((index: number) => {
-    const bounded = Math.max(0, Math.min(index, onboardingSteps.length - 1));
-    const step = onboardingSteps[bounded];
+    const bounded = Math.max(0, Math.min(index, ONBOARDING_STEPS.length - 1));
+    const step = ONBOARDING_STEPS[bounded];
     setCurrentStepIndex(bounded);
     localStorage.setItem(STORAGE_KEYS.stepIndex, String(bounded));
 
@@ -63,7 +63,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   }, [goToStep]);
 
   const nextStep = useCallback(() => {
-    if (currentStepIndex >= onboardingSteps.length - 1) {
+    if (currentStepIndex >= ONBOARDING_STEPS.length - 1) {
       setHasCompleted(true);
       setIsActive(false);
       localStorage.setItem(STORAGE_KEYS.completed, "true");
