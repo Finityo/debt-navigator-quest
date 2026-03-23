@@ -119,6 +119,7 @@ export default function PlaidConnect() {
   return (
     <div className="glass-card p-6 space-y-4">
       <Button
+        id="connect-accounts-btn"
         size="lg"
         onClick={() => open()}
         disabled={!ready || loading}

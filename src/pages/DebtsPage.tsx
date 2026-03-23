@@ -144,7 +144,7 @@ export default function DebtsPage() {
       <PageHeader title="Debts" description="Add and manage your debts" />
 
       {/* Bank Import Section */}
-      <Card className="border border-primary/20 bg-accent/30" id="connect-accounts-btn">
+      <Card className="border border-primary/20 bg-accent/30">
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg bg-primary/10">
