@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -8,36 +8,88 @@ export default function OnboardingOverlay() {
   const { currentStep, next, prev, skip, hasSeen } = useOnboardingStore();
   const step = ONBOARDING_STEPS[currentStep];
 
-  const [position, setPosition] = useState({ top: 100, left: 100 });
+  const [style, setStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
-    if (!step?.targetId) return;
+    if (!step) return;
 
-    const el = document.getElementById(step.targetId);
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 10,
-        left: rect.left,
+    // CENTER MODE (WELCOME / MODAL STEPS)
+    if (step.placement === "center" || !step.targetId) {
+      setStyle({
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       });
+      return;
     }
+
+    const el = document.getElementById(step.targetId) as HTMLElement;
+    if (!el) return;
+
+    // Scroll into view
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Highlight element
+    el.classList.add("ring-2", "ring-primary", "ring-offset-2");
+
+    const rect = el.getBoundingClientRect();
+    const padding = 12;
+    const boxWidth = 320;
+    const boxHeight = 180;
+
+    let top = rect.top;
+    let left = rect.left;
+
+    switch (step.placement) {
+      case "top":
+        top = rect.top - boxHeight - padding;
+        left = rect.left;
+        break;
+      case "bottom":
+        top = rect.bottom + padding;
+        left = rect.left;
+        break;
+      case "left":
+        top = rect.top;
+        left = rect.left - boxWidth - padding;
+        break;
+      case "right":
+        top = rect.top;
+        left = rect.right + padding;
+        break;
+    }
+
+    // Prevent overflow
+    top = Math.max(16, Math.min(top, window.innerHeight - boxHeight));
+    left = Math.max(16, Math.min(left, window.innerWidth - boxWidth));
+
+    setStyle({ top, left });
+
+    // Cleanup highlight
+    return () => {
+      el.classList.remove("ring-2", "ring-primary", "ring-offset-2");
+    };
   }, [step]);
 
   if (hasSeen || !step) return null;
 
-  const isCentered = !step.targetId;
+  const isCentered = step.placement === "center" || !step.targetId;
 
   return (
     <div className="fixed inset-0 z-[9998]" onClick={skip}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
       <div
-        className={`fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl overflow-hidden ${
-          isCentered ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" : ""
-        }`}
-        style={!isCentered ? { top: position.top, left: position.left } : undefined}
+        className="fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl overflow-hidden"
+        style={style}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* ARROW POINTER */}
+        {!isCentered && (
+          <div className="absolute -top-2 left-6 w-4 h-4 rotate-45 bg-card border-l border-t border-border" />
+        )}
+
+        {/* CONTENT */}
         <div className="px-5 pt-5 pb-0 flex items-start justify-between gap-2">
           <h3 className="font-heading font-bold text-base text-foreground leading-tight">
             {step.title}
@@ -56,6 +108,7 @@ export default function OnboardingOverlay() {
           </p>
         </div>
 
+        {/* CONTROLS */}
         <div className="px-5 pb-5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-1">
             {ONBOARDING_STEPS.map((_, i) => (
