@@ -43,7 +43,7 @@ export default function DashboardPage() {
       {hasResult && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div data-tour="dashboard-total-debt">
+            <div id="total-debt-card">
             <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
             </div>
             <div data-tour="dashboard-monthly-minimums">
