@@ -13,8 +13,8 @@ export function OnboardingTour() {
   const [isNavigating, setIsNavigating] = useState(false);
   const resizeRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const step = onboardingSteps[currentStepIndex];
-  const totalSteps = onboardingSteps.length;
+  const step = ONBOARDING_STEPS[currentStepIndex];
+  const totalSteps = ONBOARDING_STEPS.length;
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === totalSteps - 1;
 
