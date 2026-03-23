@@ -131,7 +131,7 @@ export default function CsvImportExport() {
             size="sm"
             onClick={downloadTemplate}
             className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
-            data-tour="export-template"
+            id="export-btn"
           >
             <Download className="w-4 h-4 mr-1.5" /> Download Template
           </Button>
