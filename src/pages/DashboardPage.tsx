@@ -60,12 +60,14 @@ export default function DashboardPage() {
             <KpiCard icon={Percent} label="Total Interest" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
             <KpiCard icon={Wallet} label="Total Paid" value={formatCurrency(planResult.totalPaid)} accent="primary" />
             <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
+            <div data-tour="dashboard-active-debts">
             <KpiCard
               icon={AlertCircle}
               label="Status"
               value={planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`}
               accent={planResult.completionStatus === 'complete' ? 'primary' : 'destructive'}
             />
+            </div>
             <KpiCard icon={Clock} label="Horizon" value={`${settings.monthsHorizon} mo`} />
           </div>
 
