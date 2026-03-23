@@ -77,7 +77,7 @@ export default function PlanPage() {
           </Card>
 
           {/* Monthly Summaries Table */}
-          <Card className="overflow-hidden" data-tour="monthly-breakdown">
+          <Card className="overflow-hidden" id="monthly-table">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

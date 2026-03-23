@@ -73,7 +73,7 @@ export default function DashboardPage() {
 
           {/* Charts */}
           {planResult.monthlySummaries.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5" data-tour="dashboard-progress">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5" id="progress-card">
               <Card>
                 <CardContent className="p-6">
                   <h3 className="font-heading font-semibold text-sm text-muted-foreground mb-5">Debt Balance Over Time</h3>

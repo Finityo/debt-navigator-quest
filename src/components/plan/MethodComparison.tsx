@@ -85,7 +85,7 @@ export function MethodComparison() {
               horizon={settings.monthsHorizon}
             />
             </div>
-            <div data-tour="avalanche-option">
+            <div id="avalanche-toggle">
             <MethodCard
               label="Avalanche"
               description="Highest APR first"

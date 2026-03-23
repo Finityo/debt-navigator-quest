@@ -140,7 +140,7 @@ export default function CsvImportExport() {
             variant="outline"
             onClick={() => fileRef.current?.click()}
             className="hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
-            data-tour="import-template"
+            id="import-btn"
           >
             <Upload className="w-4 h-4 mr-1.5" /> Upload Filled Template
           </Button>
