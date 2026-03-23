@@ -34,7 +34,7 @@ export function OnboardingTour() {
       if (location.pathname !== step.route) return;
       setIsNavigating(false);
 
-      if (!step.target) {
+      if (!step.targetId) {
         setTooltipPos(null);
         return;
       }
