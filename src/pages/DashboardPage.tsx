@@ -49,7 +49,7 @@ export default function DashboardPage() {
             <div id="monthly-payment-card">
             <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
             </div>
-            <div data-tour="dashboard-payoff-date">
+            <div>
             <KpiCard
               icon={CalendarDays}
               label="Projected Payoff"
