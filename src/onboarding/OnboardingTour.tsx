@@ -1,63 +1,34 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { onboardingSteps, type TourStep } from './onboardingSteps';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { onboardingSteps } from './onboardingSteps';
+import { useOnboarding } from './OnboardingProvider';
 import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOUR_STORAGE_KEY = 'finityo-tour-completed';
-
-export function useOnboardingTour() {
-  const [active, setActive] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
-
-  const start = useCallback(() => {
-    setStepIndex(0);
-    setActive(true);
-  }, []);
-
-  const finish = useCallback(() => {
-    setActive(false);
-    setStepIndex(0);
-    localStorage.setItem(TOUR_STORAGE_KEY, 'true');
-  }, []);
-
-  const hasCompleted = localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
-
-  return { active, stepIndex, setStepIndex, start, finish, hasCompleted };
-}
-
-interface TourProps {
-  active: boolean;
-  stepIndex: number;
-  setStepIndex: (i: number) => void;
-  onFinish: () => void;
-}
-
-export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: TourProps) {
-  const navigate = useNavigate();
+export function OnboardingTour() {
+  const { isActive, currentStepIndex, nextStep, prevStep, skipTour } = useOnboarding();
   const location = useLocation();
   const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
   const resizeRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const step = onboardingSteps[stepIndex];
+  const step = onboardingSteps[currentStepIndex];
   const totalSteps = onboardingSteps.length;
-  const isFirst = stepIndex === 0;
-  const isLast = stepIndex === totalSteps - 1;
+  const isFirst = currentStepIndex === 0;
+  const isLast = currentStepIndex === totalSteps - 1;
 
-  // Navigate to step route if needed
+  // Detect navigation state
   useEffect(() => {
-    if (!active || !step) return;
+    if (!isActive || !step) return;
     if (location.pathname !== step.route) {
       setIsNavigating(true);
-      navigate(step.route);
     }
-  }, [active, step, location.pathname, navigate]);
+  }, [isActive, step, location.pathname]);
 
-  // After navigation, wait for DOM to settle then position tooltip
+  // Position tooltip after navigation settles
   useEffect(() => {
-    if (!active || !step) return;
+    if (!isActive || !step) return;
 
     const position = () => {
       if (location.pathname !== step.route) return;
@@ -77,14 +48,13 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
       }
     };
 
-    // Small delay to let the page render
     const timer = setTimeout(position, 300);
     return () => clearTimeout(timer);
-  }, [active, step, stepIndex, location.pathname]);
+  }, [isActive, step, currentStepIndex, location.pathname]);
 
   // Reposition on resize
   useEffect(() => {
-    if (!active) return;
+    if (!isActive) return;
     const handleResize = () => {
       clearTimeout(resizeRef.current);
       resizeRef.current = setTimeout(() => {
@@ -98,29 +68,16 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [active, step]);
+  }, [isActive, step]);
 
-  const next = () => {
-    if (isLast) {
-      onFinish();
-    } else {
-      setStepIndex(stepIndex + 1);
-    }
-  };
-
-  const prev = () => {
-    if (!isFirst) setStepIndex(stepIndex - 1);
-  };
-
-  if (!active || !step || isNavigating) return null;
+  if (!isActive || !step || isNavigating) return null;
 
   const isCentered = !step.target || !tooltipPos;
 
   return (
     <>
       {/* Backdrop overlay */}
-      <div className="fixed inset-0 z-[9998]" onClick={onFinish}>
-        {/* Dark overlay with spotlight cutout */}
+      <div className="fixed inset-0 z-[9998]" onClick={skipTour}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
         {tooltipPos && step.target && (
           <div
@@ -170,7 +127,7 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
                 </h3>
               </div>
               <button
-                onClick={onFinish}
+                onClick={skipTour}
                 className="p-1 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <X className="w-4 h-4" />
@@ -192,9 +149,9 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
                   <div
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-200 ${
-                      i === stepIndex
+                      i === currentStepIndex
                         ? 'w-4 bg-primary'
-                        : i < stepIndex
+                        : i < currentStepIndex
                         ? 'w-1.5 bg-primary/40'
                         : 'w-1.5 bg-muted-foreground/20'
                     }`}
@@ -205,12 +162,12 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
               {/* Navigation buttons */}
               <div className="flex items-center gap-2">
                 {!isFirst && (
-                  <Button variant="ghost" size="sm" onClick={prev} className="h-8 px-3 text-xs">
+                  <Button variant="ghost" size="sm" onClick={prevStep} className="h-8 px-3 text-xs">
                     <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                     Back
                   </Button>
                 )}
-                <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
+                <Button size="sm" onClick={nextStep} className="h-8 px-4 text-xs font-semibold">
                   {isLast ? 'Get Started' : 'Next'}
                   {!isLast && <ChevronRight className="w-3.5 h-3.5 ml-1" />}
                 </Button>
@@ -220,7 +177,7 @@ export function OnboardingTour({ active, stepIndex, setStepIndex, onFinish }: To
             {/* Step counter */}
             <div className="px-5 pb-3">
               <p className="text-[10px] text-muted-foreground/50 font-medium text-right">
-                {stepIndex + 1} / {totalSteps}
+                {currentStepIndex + 1} / {totalSteps}
               </p>
             </div>
           </div>

@@ -18,7 +18,8 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import finityoLogo from '@/assets/finityo-logo.png';
-import { OnboardingTour, useOnboardingTour } from '@/onboarding/OnboardingTour';
+import { OnboardingTour } from '@/onboarding/OnboardingTour';
+import { useOnboarding } from '@/onboarding/OnboardingProvider';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -36,7 +37,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const tour = useOnboardingTour();
+  const { startTour } = useOnboarding();
 
   return (
     <div className="flex min-h-screen bg-background" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
@@ -72,7 +73,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
         <div className="px-3 pb-5 pt-2 space-y-1">
           <button
-            onClick={tour.start}
+            onClick={startTour}
             className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-lg text-[13px] font-medium text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent/50 transition-all duration-150"
           >
             <HelpCircle className="w-[18px] h-[18px]" />
@@ -94,7 +95,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
           <div className="flex items-center gap-1">
             <button
-              onClick={tour.start}
+              onClick={startTour}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label="Start app tour"
             >
@@ -150,12 +151,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Onboarding Tour */}
-      <OnboardingTour
-        active={tour.active}
-        stepIndex={tour.stepIndex}
-        setStepIndex={tour.setStepIndex}
-        onFinish={tour.finish}
-      />
+      <OnboardingTour />
     </div>
   );
 }
