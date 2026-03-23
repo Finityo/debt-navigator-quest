@@ -39,7 +39,7 @@ export function OnboardingTour() {
         return;
       }
 
-      const el = document.querySelector(step.target);
+      const el = step.targetId ? document.getElementById(step.targetId) : null;
       if (el) {
         const rect = el.getBoundingClientRect();
         setTooltipPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
