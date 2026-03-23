@@ -215,7 +215,7 @@ export default function DebtsPage() {
         )}
 
         {debts.length > 0 && !isAdding && (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12">
+          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12" data-tour="manual-add-debt">
             <Plus className="w-4 h-4 mr-2" /> Add Manual Debt
           </Button>
         )}
