@@ -179,7 +179,7 @@ export default function TourOverlay() {
             <div className="px-5 pb-5 flex items-center justify-between gap-3">
               {/* Progress dots */}
               <div className="flex items-center gap-1">
-                {onboardingSteps.map((_, i) => (
+                {ONBOARDING_STEPS.map((_, i) => (
                   <div
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-200 ${

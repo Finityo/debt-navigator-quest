@@ -63,7 +63,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   }, [goToStep]);
 
   const nextStep = useCallback(() => {
-    if (currentStepIndex >= onboardingSteps.length - 1) {
+    if (currentStepIndex >= ONBOARDING_STEPS.length - 1) {
       setHasCompleted(true);
       setIsActive(false);
       localStorage.setItem(STORAGE_KEYS.completed, "true");
