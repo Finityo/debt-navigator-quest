@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft } from "lucide-react";
+
+type Placement = "top" | "bottom" | "left" | "right" | "center";
 
 export default function OnboardingOverlay() {
   const { currentStep, next, prev, skip, hasSeen } = useOnboardingStore();
@@ -10,151 +12,204 @@ export default function OnboardingOverlay() {
 
   const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
+  const [mode, setMode] = useState<"anchored" | "sheet" | "center">("center");
 
   useEffect(() => {
     if (!step) return;
 
-    // CENTER MODAL
+    const el = step.targetId ? document.getElementById(step.targetId) : null;
+
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      el.classList.add("ring-2", "ring-primary", "ring-offset-2", "relative", "z-[60]");
+    }
+
+    return () => {
+      if (el) {
+        el.classList.remove("ring-2", "ring-primary", "ring-offset-2", "relative", "z-[60]");
+      }
+    };
+  }, [step]);
+
+  useLayoutEffect(() => {
+    if (!step) return;
+
     if (step.placement === "center" || !step.targetId) {
+      setMode("center");
       setStyle({
-        top: "50%",
         left: "50%",
+        top: "50%",
         transform: "translate(-50%, -50%)",
       });
       return;
     }
 
     const el = document.getElementById(step.targetId);
-    if (!el) return;
+    const box = boxRef.current;
 
-    // Scroll into view
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    // Highlight
-    el.classList.add("ring-2", "ring-primary", "ring-offset-2");
+    if (!el || !box) {
+      setMode("sheet");
+      setStyle({});
+      return;
+    }
 
     const rect = el.getBoundingClientRect();
-    const padding = 12;
+    const boxRect = box.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const margin = 16;
+    const gap = 12;
 
-    // Wait for render to measure actual height
-    requestAnimationFrame(() => {
-      if (!boxRef.current) return;
+    // Force bottom-sheet on smaller screens or short viewports
+    const isSmallScreen = vw < 768 || vh < 700;
+    if (isSmallScreen) {
+      setMode("sheet");
+      setStyle({});
+      return;
+    }
 
-      const box = boxRef.current.getBoundingClientRect();
+    let top = 0;
+    let left = 0;
+    const placement = (step.placement || "bottom") as Placement;
 
-      let top = rect.top;
-      let left = rect.left;
+    if (placement === "top") {
+      top = rect.top - boxRect.height - gap;
+      left = rect.left + rect.width / 2 - boxRect.width / 2;
+    } else if (placement === "bottom") {
+      top = rect.bottom + gap;
+      left = rect.left + rect.width / 2 - boxRect.width / 2;
+    } else if (placement === "left") {
+      top = rect.top + rect.height / 2 - boxRect.height / 2;
+      left = rect.left - boxRect.width - gap;
+    } else {
+      top = rect.top + rect.height / 2 - boxRect.height / 2;
+      left = rect.right + gap;
+    }
 
-      switch (step.placement) {
-        case "top":
-          top = rect.top - box.height - padding;
-          left = rect.left;
-          break;
-        case "bottom":
-          top = rect.bottom + padding;
-          left = rect.left;
-          break;
-        case "left":
-          top = rect.top;
-          left = rect.left - box.width - padding;
-          break;
-        case "right":
-          top = rect.top;
-          left = rect.right + padding;
-          break;
-      }
+    // If anchored box would clip badly, fall back to sheet
+    const wouldClip =
+      top < margin ||
+      left < margin ||
+      top + boxRect.height > vh - margin ||
+      left + boxRect.width > vw - margin;
 
-      // Keep inside viewport
-      const margin = 16;
+    if (wouldClip) {
+      setMode("sheet");
+      setStyle({});
+      return;
+    }
 
-      if (top + box.height > window.innerHeight - margin) {
-        top = window.innerHeight - box.height - margin;
-      }
-      if (top < margin) top = margin;
-
-      if (left + box.width > window.innerWidth - margin) {
-        left = window.innerWidth - box.width - margin;
-      }
-      if (left < margin) left = margin;
-
-      setStyle({ top, left });
-    });
-
-    return () => {
-      el.classList.remove("ring-2", "ring-primary", "ring-offset-2");
-    };
-  }, [step]);
+    setMode("anchored");
+    setStyle({ top, left, transform: "none" });
+  }, [step, currentStep]);
 
   if (hasSeen || !step) return null;
 
-  const isCentered = step.placement === "center" || !step.targetId;
+  const showArrow = mode === "anchored" && step.placement !== "center";
+  const isLast = currentStep >= ONBOARDING_STEPS.length - 1;
+
+  const stepIndicator = (
+    <div className="flex items-center gap-1">
+      {ONBOARDING_STEPS.map((_, i) => (
+        <div
+          key={i}
+          className={`h-1.5 rounded-full transition-all duration-200 ${
+            i === currentStep
+              ? "w-4 bg-primary"
+              : i < currentStep
+              ? "w-1.5 bg-primary/40"
+              : "w-1.5 bg-muted-foreground/20"
+          }`}
+        />
+      ))}
+    </div>
+  );
+
+  const controls = (
+    <div className="flex items-center gap-2">
+      {currentStep > 0 && (
+        <Button variant="ghost" size="sm" onClick={prev} className="h-8 px-3 text-xs">
+          <ChevronLeft className="w-3.5 h-3.5 mr-1" />
+          Back
+        </Button>
+      )}
+      <Button variant="ghost" size="sm" onClick={skip} className="h-8 px-3 text-xs">
+        Skip
+      </Button>
+      <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
+        {isLast ? "Get Started" : "Next →"}
+      </Button>
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 z-[9998]" onClick={skip}>
+      {/* dim layer */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
-      <div
-        ref={boxRef}
-        className="fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl overflow-hidden"
-        style={style}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* ARROW */}
-        {!isCentered && (
-          <div className="absolute -top-2 left-6 w-4 h-4 rotate-45 bg-card border-l border-t border-border" />
-        )}
-
-        <div className="px-5 pt-5 pb-0 flex items-start justify-between gap-2">
-          <h3 className="font-heading font-bold text-base text-foreground leading-tight">
+      {/* CENTER MODE */}
+      {mode === "center" && (
+        <div
+          className="fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl p-5"
+          style={style}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
             {step.title}
           </h3>
-          <button
-            onClick={skip}
-            className="p-1 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="px-5 py-4">
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
             {step.description}
           </p>
-        </div>
-
-        {/* CONTROLS */}
-        <div className="px-5 pb-5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-1">
-            {ONBOARDING_STEPS.map((_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-200 ${
-                  i === currentStep
-                    ? "w-4 bg-primary"
-                    : i < currentStep
-                    ? "w-1.5 bg-primary/40"
-                    : "w-1.5 bg-muted-foreground/20"
-                }`}
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            {currentStep > 0 && (
-              <Button variant="ghost" size="sm" onClick={prev} className="h-8 px-3 text-xs">
-                <ChevronLeft className="w-3.5 h-3.5 mr-1" />
-                Back
-              </Button>
-            )}
-            <Button variant="ghost" size="sm" onClick={skip} className="h-8 px-3 text-xs">
-              Skip
-            </Button>
-            <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
-              {currentStep >= ONBOARDING_STEPS.length - 1 ? "Get Started" : "Next →"}
-            </Button>
+          <div className="flex items-center justify-between gap-3">
+            {stepIndicator}
+            {controls}
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ANCHORED MODE */}
+      {mode === "anchored" && (
+        <div
+          ref={boxRef}
+          className="fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl p-5"
+          style={style}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {showArrow && (
+            <div className="absolute -top-2 left-6 w-4 h-4 rotate-45 bg-card border-l border-t border-border" />
+          )}
+          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
+            {step.title}
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+            {step.description}
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            {stepIndicator}
+            {controls}
+          </div>
+        </div>
+      )}
+
+      {/* MOBILE / FALLBACK SHEET MODE */}
+      {mode === "sheet" && (
+        <div
+          className="fixed z-[10000] bottom-0 left-0 right-0 bg-card border-t border-border shadow-2xl rounded-t-2xl p-5 pb-8"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="w-10 h-1 rounded-full bg-muted-foreground/20 mx-auto mb-4" />
+          <h3 className="font-heading font-bold text-base text-foreground leading-tight mb-3">
+            {step.title}
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+            {step.description}
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            {stepIndicator}
+            {controls}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
