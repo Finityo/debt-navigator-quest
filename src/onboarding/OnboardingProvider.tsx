@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { onboardingSteps } from "./onboardingSteps";
+import { ONBOARDING_STEPS } from "./onboardingSteps";
 
 type OnboardingContextType = {
   isActive: boolean;
