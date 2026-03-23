@@ -1,0 +1,27 @@
+import { create } from "zustand";
+
+type OnboardingState = {
+  currentStep: number;
+  hasSeen: boolean;
+  start: () => void;
+  next: () => void;
+  prev: () => void;
+  skip: () => void;
+  reset: () => void;
+};
+
+export const useOnboardingStore = create<OnboardingState>((set) => ({
+  currentStep: 0,
+  hasSeen: false,
+  start: () => set({ currentStep: 0, hasSeen: false }),
+  next: () =>
+    set((state) => ({
+      currentStep: state.currentStep + 1,
+    })),
+  prev: () =>
+    set((state) => ({
+      currentStep: Math.max(0, state.currentStep - 1),
+    })),
+  skip: () => set({ hasSeen: true }),
+  reset: () => set({ currentStep: 0, hasSeen: false }),
+}));
