@@ -58,8 +58,8 @@ export function OnboardingTour() {
     const handleResize = () => {
       clearTimeout(resizeRef.current);
       resizeRef.current = setTimeout(() => {
-        if (!step?.target) return;
-        const el = document.querySelector(step.target);
+        if (!step?.targetId) return;
+        const el = document.getElementById(step.targetId);
         if (el) {
           const rect = el.getBoundingClientRect();
           setTooltipPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
