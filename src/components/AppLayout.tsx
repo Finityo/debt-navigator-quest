@@ -18,7 +18,7 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import finityoLogo from '@/assets/finityo-logo.png';
-import { OnboardingTour } from '@/onboarding/OnboardingTour';
+import TourOverlay from '@/onboarding/TourOverlay';
 import { useOnboarding } from '@/onboarding/OnboardingProvider';
 
 const navItems = [
@@ -151,7 +151,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Onboarding Tour */}
-      <OnboardingTour />
+      <TourOverlay />
     </div>
   );
 }
