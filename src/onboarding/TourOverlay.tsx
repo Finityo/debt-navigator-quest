@@ -63,7 +63,7 @@ export default function TourOverlay() {
   }, [isActive, step, currentStepIndex]);
 
   const popoverStyle = useMemo((): React.CSSProperties => {
-    if (!targetBox || !step?.target) {
+    if (!targetBox || !step?.targetId) {
       // Centered modal
       return {
         position: "fixed",
