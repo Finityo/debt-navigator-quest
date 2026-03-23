@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,13 @@ export default function OnboardingOverlay() {
   const { currentStep, next, prev, skip, hasSeen } = useOnboardingStore();
   const step = ONBOARDING_STEPS[currentStep];
 
+  const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
     if (!step) return;
 
-    // CENTER MODE (WELCOME / MODAL STEPS)
+    // CENTER MODAL
     if (step.placement === "center" || !step.targetId) {
       setStyle({
         top: "50%",
@@ -23,49 +24,62 @@ export default function OnboardingOverlay() {
       return;
     }
 
-    const el = document.getElementById(step.targetId) as HTMLElement;
+    const el = document.getElementById(step.targetId);
     if (!el) return;
 
     // Scroll into view
     el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-    // Highlight element
+    // Highlight
     el.classList.add("ring-2", "ring-primary", "ring-offset-2");
 
     const rect = el.getBoundingClientRect();
     const padding = 12;
-    const boxWidth = 320;
-    const boxHeight = 180;
 
-    let top = rect.top;
-    let left = rect.left;
+    // Wait for render to measure actual height
+    requestAnimationFrame(() => {
+      if (!boxRef.current) return;
 
-    switch (step.placement) {
-      case "top":
-        top = rect.top - boxHeight - padding;
-        left = rect.left;
-        break;
-      case "bottom":
-        top = rect.bottom + padding;
-        left = rect.left;
-        break;
-      case "left":
-        top = rect.top;
-        left = rect.left - boxWidth - padding;
-        break;
-      case "right":
-        top = rect.top;
-        left = rect.right + padding;
-        break;
-    }
+      const box = boxRef.current.getBoundingClientRect();
 
-    // Prevent overflow
-    top = Math.max(16, Math.min(top, window.innerHeight - boxHeight));
-    left = Math.max(16, Math.min(left, window.innerWidth - boxWidth));
+      let top = rect.top;
+      let left = rect.left;
 
-    setStyle({ top, left });
+      switch (step.placement) {
+        case "top":
+          top = rect.top - box.height - padding;
+          left = rect.left;
+          break;
+        case "bottom":
+          top = rect.bottom + padding;
+          left = rect.left;
+          break;
+        case "left":
+          top = rect.top;
+          left = rect.left - box.width - padding;
+          break;
+        case "right":
+          top = rect.top;
+          left = rect.right + padding;
+          break;
+      }
 
-    // Cleanup highlight
+      // Keep inside viewport
+      const margin = 16;
+
+      if (top + box.height > window.innerHeight - margin) {
+        top = window.innerHeight - box.height - margin;
+      }
+      if (top < margin) top = margin;
+
+      if (left + box.width > window.innerWidth - margin) {
+        left = window.innerWidth - box.width - margin;
+      }
+      if (left < margin) left = margin;
+
+      setStyle({ top, left });
+    });
+
     return () => {
       el.classList.remove("ring-2", "ring-primary", "ring-offset-2");
     };
@@ -80,16 +94,16 @@ export default function OnboardingOverlay() {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
       <div
+        ref={boxRef}
         className="fixed z-[10000] w-[min(360px,90vw)] bg-card border border-border shadow-2xl rounded-xl overflow-hidden"
         style={style}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ARROW POINTER */}
+        {/* ARROW */}
         {!isCentered && (
           <div className="absolute -top-2 left-6 w-4 h-4 rotate-45 bg-card border-l border-t border-border" />
         )}
 
-        {/* CONTENT */}
         <div className="px-5 pt-5 pb-0 flex items-start justify-between gap-2">
           <h3 className="font-heading font-bold text-base text-foreground leading-tight">
             {step.title}
@@ -136,8 +150,7 @@ export default function OnboardingOverlay() {
               Skip
             </Button>
             <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
-              {currentStep >= ONBOARDING_STEPS.length - 1 ? "Get Started" : "Next"}
-              {currentStep < ONBOARDING_STEPS.length - 1 && <ChevronRight className="w-3.5 h-3.5 ml-1" />}
+              {currentStep >= ONBOARDING_STEPS.length - 1 ? "Get Started" : "Next →"}
             </Button>
           </div>
         </div>
