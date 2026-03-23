@@ -36,7 +36,7 @@ export default function TourOverlay() {
         return;
       }
 
-      const el = document.querySelector(step.target) as HTMLElement | null;
+      const el = document.getElementById(step.targetId!) as HTMLElement | null;
       if (!el) {
         setTargetBox(null);
         return;
