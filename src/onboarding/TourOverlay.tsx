@@ -120,7 +120,7 @@ export default function TourOverlay() {
       {/* Backdrop */}
       <div className="fixed inset-0 z-[9998]" onClick={skipTour}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-        {targetBox && step.target && (
+        {targetBox && step.targetId && (
           <div
             className="absolute rounded-lg ring-2 ring-primary ring-offset-2 ring-offset-transparent"
             style={{
