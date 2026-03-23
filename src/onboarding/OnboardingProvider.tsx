@@ -46,8 +46,8 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const goToStep = useCallback((index: number) => {
-    const bounded = Math.max(0, Math.min(index, onboardingSteps.length - 1));
-    const step = onboardingSteps[bounded];
+    const bounded = Math.max(0, Math.min(index, ONBOARDING_STEPS.length - 1));
+    const step = ONBOARDING_STEPS[bounded];
     setCurrentStepIndex(bounded);
     localStorage.setItem(STORAGE_KEYS.stepIndex, String(bounded));
 
