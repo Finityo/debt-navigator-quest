@@ -17,7 +17,7 @@ import {
   Sun,
   HelpCircle,
 } from 'lucide-react';
-import finityoLogo from '@/assets/finityo-logo.png';
+import finityoLogo from '@/assets/app-icon-1024.png';
 import { useOnboardingStore } from '@/store/onboardingStore';
 
 const navItems = [
