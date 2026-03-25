@@ -17,7 +17,7 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   next: () =>
     set((state) => {
       const nextStep = state.currentStep + 1;
-      if (nextStep >= 17) {
+      if (nextStep >= 3) {
         localStorage.setItem("seen_onboarding", "true");
         return { hasSeen: true, currentStep: nextStep };
       }
