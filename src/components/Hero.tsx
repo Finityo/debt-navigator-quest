@@ -48,7 +48,7 @@ export default function Hero() {
 
       {/* BRAND */}
       <motion.div variants={scaleIn} className="flex flex-col items-center space-y-4">
-        <div className="glass-strong p-5 rounded-2xl glow">
+        <div className="glass-card p-5 rounded-3xl glow">
           <img src={logo} alt="Finityo logo" className="w-24 h-24" />
         </div>
         <motion.h1 variants={fadeUp} className="text-3xl font-bold font-heading tracking-tight text-foreground text-shadow-sm">

@@ -81,7 +81,7 @@ function MobileNavPanel({ onClose, children }: { onClose: () => void; children: 
       {/* Panel */}
       <div
         ref={panelRef}
-        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
+        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-sidebar border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
         style={{ transform: `translateX(${panelTranslate})` }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
@@ -101,9 +101,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const onboarding = useOnboardingStore();
 
   return (
-    <div className="flex min-h-screen" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+    <div className="flex min-h-screen liquid-bg" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {/* Desktop sidebar — glass */}
-      <aside className="hidden lg:flex w-[15.5rem] flex-col glass-strong border-r border-[var(--glass-border)] shrink-0">
+      <aside className="hidden lg:flex w-[15.5rem] flex-col glass-sidebar shrink-0">
         <div className="px-5 pt-7 pb-7 flex items-center gap-3">
           <img src={finityoLogo} alt="Finityo" className="w-8 h-8" />
           <div>
@@ -152,7 +152,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile header — glass */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-strong border-b border-[var(--glass-border)] shadow-glass">
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-header">
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
           <div className="flex items-center gap-1">
             <button
