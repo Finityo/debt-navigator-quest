@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import {
@@ -31,6 +31,68 @@ const navItems = [
   { to: '/activity', label: 'Activity', icon: ClipboardList },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
+
+function MobileNavPanel({ onClose, children }: { onClose: () => void; children: (close: () => void) => React.ReactNode }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const [dragX, setDragX] = useState(0);
+  const [closing, setClosing] = useState(false);
+
+  const THRESHOLD = 80;
+
+  const handleClose = useCallback(() => {
+    setClosing(true);
+    setTimeout(onClose, 250);
+  }, [onClose]);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const dx = e.touches[0].clientX - touchStart.current.x;
+    const dy = Math.abs(e.touches[0].clientY - touchStart.current.y);
+    // Only track horizontal swipe to the right
+    if (dx > 0 && dx > dy) {
+      setDragX(dx);
+    }
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    if (dragX > THRESHOLD) {
+      handleClose();
+    } else {
+      setDragX(0);
+    }
+    touchStart.current = null;
+  }, [dragX, handleClose]);
+
+  const panelTranslate = closing ? '100%' : `${dragX}px`;
+  const scrimOpacity = closing ? 0 : Math.max(0, 1 - dragX / 320);
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50" onClick={handleClose}>
+      {/* Scrim */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-250"
+        style={{ opacity: scrimOpacity }}
+      />
+      {/* Panel */}
+      <div
+        ref={panelRef}
+        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
+        style={{ transform: `translateX(${panelTranslate})` }}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {children(handleClose)}
+      </div>
+    </div>
+  );
+}
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -117,66 +179,59 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Mobile nav — slide-in glass panel */}
+        {/* Mobile nav — swipeable slide-in glass panel */}
         {mobileOpen && (
-          <div className="lg:hidden fixed inset-0 z-50" onClick={() => setMobileOpen(false)}>
-            {/* Scrim */}
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] animate-in fade-in duration-200" />
-            {/* Panel */}
-            <div
-              className="absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow animate-in slide-in-from-right duration-300 flex flex-col"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Panel header */}
-              <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[var(--glass-border)]">
-                <span className="text-sm font-heading font-bold text-foreground/70 uppercase tracking-wider">Menu</span>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-[var(--glass-bg-strong)] transition-colors"
-                >
-                  <X className="w-5 h-5 text-foreground/60" />
-                </button>
-              </div>
-              {/* Nav links */}
-              <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-                {navItems.map((item) => {
-                  const active = location.pathname === item.to;
-                  return (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${
-                        active
-                          ? 'glass-strong text-foreground border border-[var(--glass-border-strong)]'
-                          : 'text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)]'
-                      }`}
-                    >
-                      <item.icon className={`w-5 h-5 shrink-0 ${active ? 'text-primary' : ''}`} />
-                      {item.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-              {/* Panel footer */}
-              <div className="px-3 pb-5 pt-2 space-y-1 border-t border-[var(--glass-border)]">
-                <button
-                  onClick={() => { onboarding.reset(); setMobileOpen(false); }}
-                  className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
-                >
-                  <HelpCircle className="w-5 h-5 shrink-0" />
-                  Replay Tour
-                </button>
-                <button
-                  onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setMobileOpen(false); }}
-                  className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
-                >
-                  {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                </button>
-              </div>
-            </div>
-          </div>
+          <MobileNavPanel onClose={() => setMobileOpen(false)}>
+            {(handleClose) => (
+              <>
+                {/* Panel header */}
+                <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[var(--glass-border)]">
+                  <span className="text-sm font-heading font-bold text-foreground/70 uppercase tracking-wider">Menu</span>
+                  <button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-[var(--glass-bg-strong)] transition-colors">
+                    <X className="w-5 h-5 text-foreground/60" />
+                  </button>
+                </div>
+                {/* Nav links */}
+                <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+                  {navItems.map((item) => {
+                    const active = location.pathname === item.to;
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={handleClose}
+                        className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${
+                          active
+                            ? 'glass-strong text-foreground border border-[var(--glass-border-strong)]'
+                            : 'text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)]'
+                        }`}
+                      >
+                        <item.icon className={`w-5 h-5 shrink-0 ${active ? 'text-primary' : ''}`} />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                {/* Panel footer */}
+                <div className="px-3 pb-5 pt-2 space-y-1 border-t border-[var(--glass-border)]">
+                  <button
+                    onClick={() => { onboarding.reset(); handleClose(); }}
+                    className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+                  >
+                    <HelpCircle className="w-5 h-5 shrink-0" />
+                    Replay Tour
+                  </button>
+                  <button
+                    onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); handleClose(); }}
+                    className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+                  >
+                    {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
+                    {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                </div>
+              </>
+            )}
+          </MobileNavPanel>
         )}
 
         {/* Page content */}
