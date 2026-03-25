@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +13,30 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the caller
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const PLAID_CLIENT_ID = Deno.env.get("PLAID_CLIENT_ID");
     const PLAID_SECRET = Deno.env.get("PLAID_SECRET");
 
@@ -19,13 +44,12 @@ serve(async (req) => {
       throw new Error("Plaid credentials not configured");
     }
 
-    // Sandbox mode – switch to production via env var when ready
     const PLAID_ENV = Deno.env.get("PLAID_ENV") || "production";
     const PLAID_BASE_URL = `https://${PLAID_ENV}.plaid.com`;
 
     const { public_token } = await req.json();
 
-    if (!public_token) {
+    if (!public_token || typeof public_token !== "string") {
       return new Response(
         JSON.stringify({ error: "public_token is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -48,7 +72,7 @@ serve(async (req) => {
     if (!exchangeRes.ok) {
       console.error("Exchange error:", exchangeData);
       return new Response(
-        JSON.stringify({ error: exchangeData.error_message || "Token exchange failed" }),
+        JSON.stringify({ error: "Token exchange failed" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -71,7 +95,7 @@ serve(async (req) => {
     if (!liabilitiesRes.ok) {
       console.error("Liabilities error:", liabilitiesData);
       return new Response(
-        JSON.stringify({ error: liabilitiesData.error_message || "Failed to fetch liabilities" }),
+        JSON.stringify({ error: "Failed to fetch liabilities" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -141,7 +165,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("exchange-and-fetch error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
