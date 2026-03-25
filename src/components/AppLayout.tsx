@@ -138,6 +138,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="px-3 pb-5 pt-2 space-y-1">
+          {!user ? (
+            <button
+              onClick={() => navigate('/auth')}
+              className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-primary hover:text-primary/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+            >
+              <LogIn className="w-[18px] h-[18px]" />
+              Sign In
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-foreground/50">
+              <User className="w-[18px] h-[18px]" />
+              <span className="truncate">{user.email}</span>
+            </div>
+          )}
           <button
             onClick={() => onboarding.reset()}
             className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"

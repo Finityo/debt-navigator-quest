@@ -25,6 +25,8 @@ import { formatCurrency, formatDate } from '@/utils/format';
 export default function DashboardPage() {
   const { debts, settings, planResult, computeStatus } = useDebtStore();
   const navigate = useNavigate();
+  // Initialize cloud sync on dashboard mount
+  useDebtSync();
 
   const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
   const totalMinPayments = debts.reduce((sum, d) => sum + d.minPayment, 0);
