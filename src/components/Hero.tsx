@@ -52,7 +52,6 @@ export default function Hero() {
             src="/hero-logo.mp4"
             autoPlay
             loop
-            muted
             playsInline
             className="w-full h-full object-cover"
           />
