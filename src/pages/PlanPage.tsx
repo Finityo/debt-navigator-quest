@@ -211,13 +211,16 @@ function MonthRow({
                     const aprB = debts.find((d) => d.id === b.debtId)?.apr ?? 0;
                     return aprB - aprA;
                   })
-                  .map((s) => (
+                  .map((s, i) => (
                     <div
                       key={s.debtId}
                       className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-4 py-3 ${
                         s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-card border border-border/40'
                       }`}
                     >
+                      <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
+                        {i + 1}
+                      </span>
                       <span className="font-semibold min-w-[110px]">{s.creditorName}</span>
                       <span className="text-muted-foreground font-tabular">
                         Start: {formatCurrencyCents(s.startingBalance)}
