@@ -90,6 +90,24 @@ export default function SettingsPage() {
               />
             </div>
           </div>
+
+          {/* Voiceover */}
+          <div className="border-t pt-6 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Accessibility</Label>
+            <div className="flex items-center justify-between rounded-lg border p-4 mt-0.5">
+              <div className="flex items-center gap-3">
+                <Volume2 className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <span className="text-sm font-medium">Tour voiceover</span>
+                  <p className="text-[11px] text-muted-foreground">Read onboarding steps aloud using your device's voice</p>
+                </div>
+              </div>
+              <Switch
+                checked={voiceoverEnabled}
+                onCheckedChange={handleVoiceoverChange}
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
