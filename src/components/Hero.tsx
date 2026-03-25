@@ -71,8 +71,7 @@ export default function Hero() {
           Turn your debt into a clear, structured payoff plan
         </h2>
         <p className="text-muted-foreground leading-relaxed">
-          Finityo analyzes your balances, interest rates, and payments to build a precise strategy
-          — so you know exactly what to pay, when to pay it, and when you'll be debt-free.
+          See exactly what to pay, when to pay it, and when you'll be debt-free.
         </p>
       </motion.div>
 
