@@ -203,8 +203,14 @@ function MonthRow({
                 Debt-by-debt breakdown — {formatDate(ms.date)}
               </p>
               <div className="grid gap-2.5">
-                {snapshots
+                {[...snapshots]
                   .filter((s) => s.startingBalance > 0 || s.paymentApplied > 0)
+                  .sort((a, b) => {
+                    if (method === 'snowball') return a.startingBalance - b.startingBalance;
+                    const aprA = debts.find((d) => d.id === a.debtId)?.apr ?? 0;
+                    const aprB = debts.find((d) => d.id === b.debtId)?.apr ?? 0;
+                    return aprB - aprA;
+                  })
                   .map((s) => (
                     <div
                       key={s.debtId}
