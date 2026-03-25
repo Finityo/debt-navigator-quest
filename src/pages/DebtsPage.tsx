@@ -211,7 +211,7 @@ export default function DebtsPage() {
           onClick={() => navigate('/plan')}
           className="w-full h-14 text-base font-bold glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
         >
-          Continue to Your Plan <ArrowRight className="w-5 h-5 ml-2" />
+          See Your Payoff Plan <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
       )}
     </div>

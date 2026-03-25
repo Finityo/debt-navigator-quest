@@ -8,8 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Progress } from '@/components/ui/progress';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
-import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles, ClipboardCheck } from 'lucide-react';
 import type { PayoffMethod } from '@/types/debt';
 
 export default function PlanPage() {
@@ -25,6 +26,12 @@ export default function PlanPage() {
     ? planResult.monthlySummaries[planResult.payoffMonth - 1]?.date
     : null;
 
+  const initialTotalDebt = debts.reduce((s, d) => s + d.balance, 0);
+  const remainingDebt = planResult?.monthlySummaries?.[0]?.totalEndingDebt ?? initialTotalDebt;
+  const progressPercent = initialTotalDebt > 0
+    ? Math.max(0, Math.min(100, ((initialTotalDebt - remainingDebt) / initialTotalDebt) * 100))
+    : 0;
+
   return (
     <div className="space-y-6">
       {/* Step Indicator */}
@@ -34,14 +41,50 @@ export default function PlanPage() {
             Step 2 of 2
           </span>
         </div>
-        <h1 className="text-2xl font-heading font-bold text-foreground">Your Payoff Plan</h1>
-        <p className="text-sm text-muted-foreground">Your personalized debt-free roadmap</p>
       </div>
 
       <ComputeBanner />
 
       {planResult && (
         <div className="space-y-6">
+          {/* TASK 1 — Hero Outcome */}
+          <div className="text-center space-y-2">
+            <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
+              Your Outcome
+            </p>
+            <h1 className="text-2xl font-heading font-bold text-foreground">
+              You'll be debt-free by {payoffDate ? formatDate(payoffDate) : '—'}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Stay consistent and this is your finish line.
+            </p>
+          </div>
+
+          {/* TASK 3 — Progress Bar */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Progress</span>
+              <span>{progressPercent.toFixed(0)}%</span>
+            </div>
+            <Progress value={progressPercent} className="h-2" />
+          </div>
+
+          {/* TASK 2 — Savings Block */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Interest Saved</p>
+                <p className="text-sm text-muted-foreground">Compared to minimum payments</p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Time Saved</p>
+                <p className="text-sm text-muted-foreground">Faster payoff with your plan</p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Hero Summary */}
           <Card className="glass-card bg-gradient-to-br from-primary/8 to-accent/10 border-primary/20">
             <CardContent className="p-6">
@@ -52,7 +95,7 @@ export default function PlanPage() {
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
                   </div>
                   <p className="text-2xl font-bold font-heading font-tabular text-foreground">
-                    {formatCurrency(debts.reduce((s, d) => s + d.balance, 0))}
+                    {formatCurrency(initialTotalDebt)}
                   </p>
                 </div>
                 <div>
@@ -130,7 +173,7 @@ export default function PlanPage() {
             </CardContent>
           </Card>
 
-          {/* Monthly Breakdown — Cards not table */}
+          {/* Monthly Breakdown */}
           <div className="space-y-2" id="monthly-table">
             <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Monthly Breakdown</p>
             {planResult.monthlySummaries.map((ms) => {
@@ -155,14 +198,35 @@ export default function PlanPage() {
             })}
           </div>
 
+          {/* TASK 4 — Next Step Module */}
+          <Card className="glass-card">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <ClipboardCheck className="w-4 h-4 text-primary" />
+                <h3 className="font-heading font-semibold text-sm">Next Step</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Log your next payment to stay on track.
+              </p>
+              <Button className="w-full h-12 font-semibold">
+                Log a Payment
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Next Action */}
           <Button
             variant="outline"
             onClick={() => navigate('/scenarios')}
             className="w-full h-12 text-sm font-semibold"
           >
-            <Sparkles className="w-4 h-4 mr-2" /> Try different scenarios <ArrowRight className="w-4 h-4 ml-2" />
+            <Sparkles className="w-4 h-4 mr-2" /> Optimize your payoff <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
+
+          {/* TASK 6 — Return Trigger */}
+          <p className="text-xs text-muted-foreground text-center">
+            Check back monthly to track your progress and stay on plan
+          </p>
         </div>
       )}
     </div>
@@ -216,6 +280,13 @@ function MonthCard({
             </span>
           )}
         </div>
+
+        {/* TASK 5 — Milestone Feedback */}
+        {hasMilestone && (
+          <div className="mt-2 text-xs text-green-500 font-medium">
+            🎉 {ms.debtsPaidOffThisMonth.length} debt{ms.debtsPaidOffThisMonth.length > 1 ? 's' : ''} eliminated
+          </div>
+        )}
 
         {isExpanded && snapshots.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border/50 space-y-2">
