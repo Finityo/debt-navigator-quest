@@ -27,7 +27,7 @@ export default function PlanPage() {
     : null;
 
   const initialTotalDebt = debts.reduce((s, d) => s + d.balance, 0);
-  const remainingDebt = planResult?.monthlySummaries?.[0]?.totalEndingDebt ?? initialTotalDebt;
+  const remainingDebt = planResult?.monthlySummaries?.[planResult.monthlySummaries.length - 1]?.totalEndingDebt ?? initialTotalDebt;
   const progressPercent = initialTotalDebt > 0
     ? Math.max(0, Math.min(100, ((initialTotalDebt - remainingDebt) / initialTotalDebt) * 100))
     : 0;
@@ -47,23 +47,18 @@ export default function PlanPage() {
 
       {planResult && (
         <div className="space-y-6">
-          {/* TASK 1 — Hero Outcome */}
-          <div className="text-center space-y-2">
-            <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
-              Your Outcome
-            </p>
-            <h1 className="text-2xl font-heading font-bold text-foreground">
-              You'll be debt-free by {payoffDate ? formatDate(payoffDate) : '—'}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Stay consistent and this is your finish line.
-            </p>
-          </div>
+          {/* Hero Outcome */}
+          <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-1">
+            You'll be debt-free by {payoffDate ? formatDate(payoffDate) : '—'}
+          </h1>
+          <p className="text-sm text-muted-foreground text-center mb-6">
+            Stay consistent and this is your finish line.
+          </p>
 
           {/* TASK 3 — Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Progress</span>
+              <span>Debt Progress</span>
               <span>{progressPercent.toFixed(0)}%</span>
             </div>
             <Progress value={progressPercent} className="h-2" />
@@ -74,13 +69,13 @@ export default function PlanPage() {
             <Card className="glass-card">
               <CardContent className="p-4">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Interest Saved</p>
-                <p className="text-sm text-muted-foreground">Compared to minimum payments</p>
+                <p className="text-sm text-muted-foreground">Less interest paid over time</p>
               </CardContent>
             </Card>
             <Card className="glass-card">
               <CardContent className="p-4">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Time Saved</p>
-                <p className="text-sm text-muted-foreground">Faster payoff with your plan</p>
+                <p className="text-sm text-muted-foreground">Reach debt-free sooner</p>
               </CardContent>
             </Card>
           </div>
@@ -208,8 +203,8 @@ export default function PlanPage() {
               <p className="text-sm text-muted-foreground mb-3">
                 Log your next payment to stay on track.
               </p>
-              <Button className="w-full h-12 font-semibold">
-                Log a Payment
+              <Button disabled className="w-full h-12 font-semibold opacity-60 cursor-not-allowed">
+                Log a Payment (coming soon)
               </Button>
             </CardContent>
           </Card>
@@ -276,17 +271,11 @@ function MonthCard({
           </div>
           {hasMilestone && (
             <span className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full whitespace-nowrap font-semibold shrink-0">
-              🎉 {ms.debtsPaidOffThisMonth.length} paid off
+              🎉 {ms.debtsPaidOffThisMonth.length} debt{ms.debtsPaidOffThisMonth.length > 1 ? 's' : ''} eliminated
             </span>
           )}
         </div>
 
-        {/* TASK 5 — Milestone Feedback */}
-        {hasMilestone && (
-          <div className="mt-2 text-xs text-primary font-medium">
-            🎉 {ms.debtsPaidOffThisMonth.length} debt{ms.debtsPaidOffThisMonth.length > 1 ? 's' : ''} eliminated
-          </div>
-        )}
 
         {isExpanded && snapshots.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border/50 space-y-2">
