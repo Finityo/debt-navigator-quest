@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import logo from "@/assets/app-icon-1024.png";
 
 const stagger = {
   hidden: {},
