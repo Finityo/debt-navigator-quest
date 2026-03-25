@@ -27,7 +27,7 @@ export default function PlanPage() {
     : null;
 
   const initialTotalDebt = debts.reduce((s, d) => s + d.balance, 0);
-  const remainingDebt = planResult?.monthlySummaries?.[0]?.totalEndingDebt ?? initialTotalDebt;
+  const remainingDebt = planResult?.monthlySummaries?.[planResult.monthlySummaries.length - 1]?.totalEndingDebt ?? initialTotalDebt;
   const progressPercent = initialTotalDebt > 0
     ? Math.max(0, Math.min(100, ((initialTotalDebt - remainingDebt) / initialTotalDebt) * 100))
     : 0;
