@@ -93,9 +93,9 @@ export default function Hero() {
         <Button
           variant="outline"
           size="lg"
-          onClick={() => navigate("/debts")}
+          onClick={() => navigate("/auth")}
         >
-          View My Debts
+          Log In
         </Button>
       </motion.div>
 
