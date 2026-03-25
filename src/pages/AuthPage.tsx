@@ -21,7 +21,7 @@ export default function AuthPage() {
     );
   }
 
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to="/debts" replace />;
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen px-6">
