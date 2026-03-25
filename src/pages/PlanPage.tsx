@@ -69,13 +69,13 @@ export default function PlanPage() {
             <Card className="glass-card">
               <CardContent className="p-4">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Interest Saved</p>
-                <p className="text-sm text-muted-foreground">Compared to minimum payments</p>
+                <p className="text-sm text-muted-foreground">Less interest paid over time</p>
               </CardContent>
             </Card>
             <Card className="glass-card">
               <CardContent className="p-4">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Time Saved</p>
-                <p className="text-sm text-muted-foreground">Faster payoff with your plan</p>
+                <p className="text-sm text-muted-foreground">Reach debt-free sooner</p>
               </CardContent>
             </Card>
           </div>
