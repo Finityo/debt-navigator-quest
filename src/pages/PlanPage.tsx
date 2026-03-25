@@ -47,18 +47,13 @@ export default function PlanPage() {
 
       {planResult && (
         <div className="space-y-6">
-          {/* TASK 1 — Hero Outcome */}
-          <div className="text-center space-y-2">
-            <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
-              Your Outcome
-            </p>
-            <h1 className="text-2xl font-heading font-bold text-foreground">
-              You'll be debt-free by {payoffDate ? formatDate(payoffDate) : '—'}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Stay consistent and this is your finish line.
-            </p>
-          </div>
+          {/* Hero Outcome */}
+          <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-1">
+            You'll be debt-free by {payoffDate ? formatDate(payoffDate) : '—'}
+          </h1>
+          <p className="text-sm text-muted-foreground text-center mb-6">
+            Stay consistent and this is your finish line.
+          </p>
 
           {/* TASK 3 — Progress Bar */}
           <div className="space-y-2">
