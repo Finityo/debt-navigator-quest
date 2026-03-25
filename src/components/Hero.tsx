@@ -87,7 +87,7 @@ export default function Hero() {
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 pt-2">
         <Button
           size="lg"
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/debts")}
         >
           Build My Plan
         </Button>
