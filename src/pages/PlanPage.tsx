@@ -276,12 +276,6 @@ function MonthCard({
           )}
         </div>
 
-        {/* TASK 5 — Milestone Feedback */}
-        {hasMilestone && (
-          <div className="mt-2 text-xs text-primary font-medium">
-            🎉 {ms.debtsPaidOffThisMonth.length} debt{ms.debtsPaidOffThisMonth.length > 1 ? 's' : ''} eliminated
-          </div>
-        )}
 
         {isExpanded && snapshots.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border/50 space-y-2">
