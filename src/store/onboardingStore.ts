@@ -15,9 +15,13 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   hasSeen: false,
   start: () => set({ currentStep: 0, hasSeen: false }),
   next: () =>
-    set((state) => ({
-      currentStep: state.currentStep + 1,
-    })),
+    set((state) => {
+      const nextStep = state.currentStep + 1;
+      if (nextStep >= 17) {
+        return { hasSeen: true, currentStep: nextStep };
+      }
+      return { currentStep: nextStep };
+    }),
   prev: () =>
     set((state) => ({
       currentStep: Math.max(0, state.currentStep - 1),
