@@ -271,7 +271,7 @@ function MonthCard({
           </div>
           {hasMilestone && (
             <span className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full whitespace-nowrap font-semibold shrink-0">
-              🎉 {ms.debtsPaidOffThisMonth.length} paid off
+              🎉 {ms.debtsPaidOffThisMonth.length} debt{ms.debtsPaidOffThisMonth.length > 1 ? 's' : ''} eliminated
             </span>
           )}
         </div>
