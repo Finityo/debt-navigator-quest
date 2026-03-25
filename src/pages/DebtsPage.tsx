@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDebtStore } from '@/store/useDebtStore';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,7 +13,13 @@ import { DebtEditForm } from '@/components/DebtEditForm';
 import type { Debt, DebtType } from '@/types/debt';
 
 export default function DebtsPage() {
-  const { debts, addDebt, updateDebt, removeDebt, planResult } = useDebtStore();
+  const { debts, addDebt, updateDebt, removeDebt, planResult, settings, computePlan, _hasHydrated } = useDebtStore();
+
+  useEffect(() => {
+    if (_hasHydrated && debts.length > 0) {
+      computePlan();
+    }
+  }, [_hasHydrated, debts, settings, computePlan]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Debt>>({});
