@@ -101,7 +101,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const onboarding = useOnboardingStore();
 
   return (
-    <div className="flex min-h-screen" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+    <div className="flex min-h-screen liquid-bg" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {/* Desktop sidebar — glass */}
       <aside className="hidden lg:flex w-[15.5rem] flex-col glass-strong border-r border-[var(--glass-border)] shrink-0">
         <div className="px-5 pt-7 pb-7 flex items-center gap-3">
