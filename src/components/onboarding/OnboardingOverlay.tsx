@@ -185,7 +185,7 @@ export default function OnboardingOverlay() {
   );
 
   return (
-    <div className="fixed inset-0 z-[9998]" onClick={skip}>
+    <div className="fixed inset-0 z-[9998]" onClick={handleSkip}>
       {/* dim layer */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
