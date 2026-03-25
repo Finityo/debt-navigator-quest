@@ -6,12 +6,21 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Volume2 } from 'lucide-react';
 import type { PayoffMethod } from '@/types/debt';
+import { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useDebtStore();
   const { theme, setTheme } = useTheme();
+  const [voiceoverEnabled, setVoiceoverEnabled] = useState(
+    () => localStorage.getItem('finityo_voiceover_default') !== 'false'
+  );
+
+  const handleVoiceoverChange = (checked: boolean) => {
+    setVoiceoverEnabled(checked);
+    localStorage.setItem('finityo_voiceover_default', checked ? 'true' : 'false');
+  };
 
   return (
     <div className="space-y-8">
@@ -78,6 +87,24 @@ export default function SettingsPage() {
               <Switch
                 checked={theme === 'dark'}
                 onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+              />
+            </div>
+          </div>
+
+          {/* Voiceover */}
+          <div className="border-t pt-6 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Accessibility</Label>
+            <div className="flex items-center justify-between rounded-lg border p-4 mt-0.5">
+              <div className="flex items-center gap-3">
+                <Volume2 className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <span className="text-sm font-medium">Tour voiceover</span>
+                  <p className="text-[11px] text-muted-foreground">Read onboarding steps aloud using your device's voice</p>
+                </div>
+              </div>
+              <Switch
+                checked={voiceoverEnabled}
+                onCheckedChange={handleVoiceoverChange}
               />
             </div>
           </div>
