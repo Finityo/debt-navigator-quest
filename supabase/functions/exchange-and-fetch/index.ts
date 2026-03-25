@@ -13,28 +13,24 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate the caller
+    // Attempt to extract authenticated user (optional)
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (authHeader?.startsWith("Bearer ")) {
+      try {
+        const supabase = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          Deno.env.get("SUPABASE_ANON_KEY")!,
+          { global: { headers: { Authorization: authHeader } } }
+        );
+        const token = authHeader.replace("Bearer ", "");
+        const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+        // If we get a valid user, great — otherwise continue anonymously
+        if (!claimsError && claimsData?.claims?.sub) {
+          console.log("Authenticated user:", claimsData.claims.sub);
+        }
+      } catch {
+        // Auth validation failed — continue
+      }
     }
 
     const PLAID_CLIENT_ID = Deno.env.get("PLAID_CLIENT_ID");
@@ -108,7 +104,6 @@ serve(async (req) => {
 
     const debts: any[] = [];
 
-    // Credit cards
     for (const item of liabilities?.credit || []) {
       const account = accountMap.get(item.account_id) || {};
       debts.push({
@@ -124,7 +119,6 @@ serve(async (req) => {
       });
     }
 
-    // Student loans
     for (const item of liabilities?.student || []) {
       const account = accountMap.get(item.account_id) || {};
       debts.push({
@@ -141,7 +135,6 @@ serve(async (req) => {
       });
     }
 
-    // Mortgages
     for (const item of liabilities?.mortgage || []) {
       const account = accountMap.get(item.account_id) || {};
       debts.push({
