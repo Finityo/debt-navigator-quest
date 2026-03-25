@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
@@ -7,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import OnboardingOverlay from "@/components/onboarding/OnboardingOverlay";
-import { useOnboardingStore } from "@/store/onboardingStore";
+
 import Hero from "@/components/Hero";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
@@ -24,15 +23,6 @@ import NotFound from "@/pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const onboarding = useOnboardingStore();
-
-  useEffect(() => {
-    const seen = localStorage.getItem("seen_onboarding");
-    if (!seen) {
-      onboarding.start();
-      localStorage.setItem("seen_onboarding", "true");
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -12,16 +12,27 @@ type OnboardingState = {
 
 export const useOnboardingStore = create<OnboardingState>((set) => ({
   currentStep: 0,
-  hasSeen: false,
+  hasSeen: !!localStorage.getItem("seen_onboarding"),
   start: () => set({ currentStep: 0, hasSeen: false }),
   next: () =>
-    set((state) => ({
-      currentStep: state.currentStep + 1,
-    })),
+    set((state) => {
+      const nextStep = state.currentStep + 1;
+      if (nextStep >= 17) {
+        localStorage.setItem("seen_onboarding", "true");
+        return { hasSeen: true, currentStep: nextStep };
+      }
+      return { currentStep: nextStep };
+    }),
   prev: () =>
     set((state) => ({
       currentStep: Math.max(0, state.currentStep - 1),
     })),
-  skip: () => set({ hasSeen: true }),
-  reset: () => set({ currentStep: 0, hasSeen: false }),
+  skip: () => {
+    localStorage.setItem("seen_onboarding", "true");
+    set({ hasSeen: true });
+  },
+  reset: () => {
+    localStorage.removeItem("seen_onboarding");
+    set({ currentStep: 0, hasSeen: false });
+  },
 }));
