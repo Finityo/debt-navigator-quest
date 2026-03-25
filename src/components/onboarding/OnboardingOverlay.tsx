@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Volume2, VolumeX } from "lucide-react";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 
 type Placement = "top" | "bottom" | "left" | "right" | "center";
 
