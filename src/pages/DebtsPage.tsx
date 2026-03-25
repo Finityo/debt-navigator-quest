@@ -1,49 +1,30 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDebtStore } from '@/store/useDebtStore';
-import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { Debt, DebtType } from '@/types/debt';
-import { formatCurrency, formatPercent } from '@/utils/format';
-import { Plus, X, Check, CreditCard, Landmark } from 'lucide-react';
+import { formatCurrency, formatDate } from '@/utils/format';
+import { Plus, CreditCard, Landmark, ArrowRight, Upload, TrendingDown, Calendar, DollarSign } from 'lucide-react';
 import PlaidConnect from '@/components/PlaidConnect';
 import ManualDebtForm from '@/components/ManualDebtForm';
 import DebtCard from '@/components/DebtCard';
 import CsvImportExport from '@/components/CsvImportExport';
-
-const debtTypes: { value: DebtType; label: string }[] = [
-  { value: 'credit_card', label: 'Credit Card' },
-  { value: 'student_loan', label: 'Student Loan' },
-  { value: 'auto_loan', label: 'Auto Loan' },
-  { value: 'mortgage', label: 'Mortgage' },
-  { value: 'personal_loan', label: 'Personal Loan' },
-  { value: 'medical', label: 'Medical' },
-  { value: 'other', label: 'Other' },
-];
-
-const emptyDebt = (): Partial<Debt> => ({
-  creditorName: '',
-  balance: 0,
-  apr: 0,
-  minPayment: 0,
-  type: 'credit_card',
-  notes: '',
-});
+import { DebtEditForm } from '@/components/DebtEditForm';
+import type { Debt, DebtType } from '@/types/debt';
 
 export default function DebtsPage() {
-  const { debts, addDebt, updateDebt, removeDebt } = useDebtStore();
+  const { debts, addDebt, updateDebt, removeDebt, planResult } = useDebtStore();
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<Partial<Debt>>(emptyDebt());
+  const [editForm, setEditForm] = useState<Partial<Debt>>({});
+  const [showImport, setShowImport] = useState(false);
+  const navigate = useNavigate();
 
   const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
 
   const startEdit = (debt: Debt) => {
     setEditingId(debt.id);
-    setForm({
+    setEditForm({
       creditorName: debt.creditorName,
       balance: debt.balance,
       apr: debt.apr * 100,
@@ -56,171 +37,183 @@ export default function DebtsPage() {
   const handleSaveEdit = () => {
     if (!editingId) return;
     updateDebt(editingId, {
-      creditorName: form.creditorName,
-      balance: Number(form.balance),
-      apr: Number(form.apr) / 100,
-      minPayment: Number(form.minPayment),
-      type: form.type as DebtType,
-      notes: form.notes,
+      creditorName: editForm.creditorName,
+      balance: Number(editForm.balance),
+      apr: Number(editForm.apr) / 100,
+      minPayment: Number(editForm.minPayment),
+      type: editForm.type as DebtType,
+      notes: editForm.notes,
     });
     setEditingId(null);
-    setForm(emptyDebt());
+    setEditForm({});
   };
 
-  const EditForm = ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => (
-    <Card className="border-2 border-primary/15">
-      <CardContent className="p-6 space-y-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Creditor Name</Label>
-            <Input
-              value={form.creditorName || ''}
-              onChange={(e) => setForm({ ...form, creditorName: e.target.value })}
-              placeholder="e.g. Chase Visa"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Type</Label>
-            <Select value={form.type || 'credit_card'} onValueChange={(v) => setForm({ ...form, type: v as DebtType })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {debtTypes.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Balance ($)</Label>
-            <Input
-              type="number"
-              value={form.balance || ''}
-              onChange={(e) => setForm({ ...form, balance: parseFloat(e.target.value) || 0 })}
-              placeholder="4,200"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">APR (%)</Label>
-            <Input
-              type="number"
-              step="0.1"
-              value={form.apr || ''}
-              onChange={(e) => setForm({ ...form, apr: parseFloat(e.target.value) || 0 })}
-              placeholder="21.9"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Min Payment ($)</Label>
-            <Input
-              type="number"
-              value={form.minPayment || ''}
-              onChange={(e) => setForm({ ...form, minPayment: parseFloat(e.target.value) || 0 })}
-              placeholder="95"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Notes</Label>
-            <Input
-              value={form.notes || ''}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="Optional"
-            />
-          </div>
-        </div>
-        <div className="flex gap-2.5 justify-end pt-1">
-          <Button variant="ghost" size="sm" onClick={onCancel}>
-            <X className="w-4 h-4 mr-1" /> Cancel
-          </Button>
-          <Button size="sm" onClick={onSave}>
-            <Check className="w-4 h-4 mr-1" /> Save
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  const payoffDate = planResult?.payoffMonth
+    ? planResult.monthlySummaries[planResult.payoffMonth - 1]?.date
+    : null;
 
   return (
-    <div className="space-y-8">
-      <PageHeader title="Debts" description="Add and manage your debts" />
+    <div className="space-y-6">
+      {/* Step Indicator */}
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+            Step 1 of 2
+          </span>
+        </div>
+        <h1 className="text-2xl font-heading font-bold text-foreground">Add Your Debts</h1>
+        <p className="text-sm text-muted-foreground">Enter your balances to build your payoff plan</p>
+      </div>
 
-      {/* Bank Import Section */}
-      <Card className="border border-primary/20 bg-accent/30">
-        <CardContent className="p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10">
-              <Landmark className="w-5 h-5 text-primary" />
+      {/* EMPTY STATE */}
+      {debts.length === 0 && !isAdding && (
+        <Card className="glass-card border-dashed border-primary/20">
+          <CardContent className="py-14 px-6 text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
+              <CreditCard className="w-7 h-7 text-primary" />
             </div>
             <div>
-              <h2 className="font-heading font-bold text-base">Connect Bank to Auto-Import Debts</h2>
-              <p className="text-xs text-muted-foreground">Securely pull your credit cards, student loans &amp; mortgages in seconds.</p>
+              <h3 className="font-heading font-bold text-xl mb-2">Add your first debt</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                Start by adding a debt manually, connecting your bank, or uploading a CSV.
+              </p>
             </div>
-          </div>
-          <PlaidConnect />
-        </CardContent>
-      </Card>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                onClick={() => setIsAdding(true)}
+                className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
+                data-tour="manual-add-debt" id="add-debt-btn"
+              >
+                <Plus className="w-4 h-4 mr-2" /> Add Debt
+              </Button>
+              <Button variant="outline" onClick={() => setShowImport(!showImport)} id="connect-accounts-btn">
+                <Landmark className="w-4 h-4 mr-2" /> Import from Bank
+              </Button>
+              <Button variant="outline" onClick={() => setShowImport(!showImport)} id="import-btn">
+                <Upload className="w-4 h-4 mr-2" /> Upload CSV
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* CSV Import/Export */}
-      <CsvImportExport />
-
-      {/* Summary */}
-      <Card>
-        <CardContent className="p-5 flex items-center gap-3.5">
-          <div className="p-2.5 rounded-lg bg-primary/10">
-            <CreditCard className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Total Debt</p>
-            <p className="text-2xl font-bold font-heading font-tabular mt-0.5">{formatCurrency(totalDebt)}</p>
-          </div>
-          <span className="ml-auto text-sm text-muted-foreground">
-            {debts.length} debt{debts.length !== 1 ? 's' : ''}
-          </span>
-        </CardContent>
-      </Card>
+      {/* Bank Import (toggleable) */}
+      {showImport && (
+        <div className="space-y-4">
+          <Card className="border border-primary/20 bg-accent/30">
+            <CardContent className="p-5 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Landmark className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-bold text-sm">Connect Bank</h2>
+                  <p className="text-xs text-muted-foreground">Auto-import debts securely</p>
+                </div>
+              </div>
+              <PlaidConnect />
+            </CardContent>
+          </Card>
+          <CsvImportExport />
+        </div>
+      )}
 
       {/* Manual Add Form */}
       {isAdding && (
         <ManualDebtForm onClose={() => setIsAdding(false)} />
       )}
 
-      <div className="space-y-3.5">
-        {debts.length === 0 && !isAdding && (
-          <Card className="glass-card border-dashed border-primary/20 shadow-xl">
-            <CardContent className="py-14 px-6 text-center space-y-5">
-              <div className="w-14 h-14 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
-                <CreditCard className="w-6 h-6 text-primary" />
+      {/* Debt Cards */}
+      {debts.length > 0 && (
+        <div className="space-y-3">
+          {debts.map((debt) =>
+            editingId === debt.id ? (
+              <DebtEditForm
+                key={debt.id}
+                form={editForm}
+                setForm={setEditForm}
+                onSave={handleSaveEdit}
+                onCancel={() => { setEditingId(null); setEditForm({}); }}
+              />
+            ) : (
+              <DebtCard key={debt.id} debt={debt} onEdit={startEdit} onRemove={removeDebt} />
+            )
+          )}
+        </div>
+      )}
+
+      {/* Add Another Button */}
+      {debts.length > 0 && !isAdding && (
+        <Button
+          variant="outline"
+          onClick={() => setIsAdding(true)}
+          className="w-full border-dashed h-12"
+          id="add-debt-btn"
+        >
+          <Plus className="w-4 h-4 mr-2" /> Add Another Debt
+        </Button>
+      )}
+
+      {/* Import tools (always accessible when debts exist) */}
+      {debts.length > 0 && !showImport && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowImport(true)}
+          className="text-xs text-muted-foreground"
+          id="connect-accounts-btn"
+        >
+          <Landmark className="w-3.5 h-3.5 mr-1.5" /> Import from Bank or CSV
+        </Button>
+      )}
+
+      {/* Live Plan Preview */}
+      {debts.length > 0 && (
+        <Card className="glass-card border-primary/20 bg-gradient-to-br from-primary/5 to-accent/10">
+          <CardContent className="p-5 space-y-4">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+              Your Plan Preview
+            </p>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
+                </div>
+                <p className="text-lg font-bold font-heading font-tabular text-foreground">{formatCurrency(totalDebt)}</p>
               </div>
               <div>
-                <h3 className="font-heading font-bold text-lg mb-1.5">No debts yet</h3>
-                <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                  Add your first debt manually or connect your bank above to get started with a personalized payoff plan.
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff</span>
+                </div>
+                <p className="text-lg font-bold font-heading font-tabular text-primary">
+                  {payoffDate ? formatDate(payoffDate) : '—'}
                 </p>
               </div>
-              <Button
-                onClick={() => setIsAdding(true)}
-                className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
-                data-tour="manual-add-debt" id="add-debt-btn"
-              >
-                <Plus className="w-4 h-4 mr-2" /> Add Your First Debt
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrendingDown className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Interest</span>
+                </div>
+                <p className="text-lg font-bold font-heading font-tabular text-destructive">
+                  {planResult ? formatCurrency(planResult.totalInterestPaid) : '—'}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-        {debts.map((debt) =>
-          editingId === debt.id ? (
-            <EditForm key={debt.id} onSave={handleSaveEdit} onCancel={() => { setEditingId(null); setForm(emptyDebt()); }} />
-          ) : (
-            <DebtCard key={debt.id} debt={debt} onEdit={startEdit} onRemove={removeDebt} />
-          )
-        )}
-
-        {debts.length > 0 && !isAdding && (
-          <Button variant="outline" onClick={() => setIsAdding(true)} className="w-full border-dashed h-12" id="add-debt-btn">
-            <Plus className="w-4 h-4 mr-2" /> Add Manual Debt
-          </Button>
-        )}
-      </div>
+      {/* Continue CTA */}
+      {debts.length > 0 && (
+        <Button
+          onClick={() => navigate('/plan')}
+          className="w-full h-14 text-base font-bold glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
+          Continue to Your Plan <ArrowRight className="w-5 h-5 ml-2" />
+        </Button>
+      )}
     </div>
   );
 }
