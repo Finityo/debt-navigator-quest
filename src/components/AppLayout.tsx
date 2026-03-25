@@ -117,29 +117,65 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Mobile nav overlay — glass */}
+        {/* Mobile nav — slide-in glass panel */}
         {mobileOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-glass-lg pt-16">
-            <nav className="px-4 space-y-1">
-              {navItems.map((item) => {
-                const active = location.pathname === item.to;
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-200 ${
-                      active
-                        ? 'glass-strong text-foreground border border-[var(--glass-border-strong)]'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-[var(--glass-bg)]'
-                    }`}
-                  >
-                    <item.icon className={`w-5 h-5 ${active ? 'text-primary' : ''}`} />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
+          <div className="lg:hidden fixed inset-0 z-50" onClick={() => setMobileOpen(false)}>
+            {/* Scrim */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] animate-in fade-in duration-200" />
+            {/* Panel */}
+            <div
+              className="absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow animate-in slide-in-from-right duration-300 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Panel header */}
+              <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[var(--glass-border)]">
+                <span className="text-sm font-heading font-bold text-foreground/70 uppercase tracking-wider">Menu</span>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-[var(--glass-bg-strong)] transition-colors"
+                >
+                  <X className="w-5 h-5 text-foreground/60" />
+                </button>
+              </div>
+              {/* Nav links */}
+              <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+                {navItems.map((item) => {
+                  const active = location.pathname === item.to;
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${
+                        active
+                          ? 'glass-strong text-foreground border border-[var(--glass-border-strong)]'
+                          : 'text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)]'
+                      }`}
+                    >
+                      <item.icon className={`w-5 h-5 shrink-0 ${active ? 'text-primary' : ''}`} />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+              {/* Panel footer */}
+              <div className="px-3 pb-5 pt-2 space-y-1 border-t border-[var(--glass-border)]">
+                <button
+                  onClick={() => { onboarding.reset(); setMobileOpen(false); }}
+                  className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+                >
+                  <HelpCircle className="w-5 h-5 shrink-0" />
+                  Replay Tour
+                </button>
+                <button
+                  onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setMobileOpen(false); }}
+                  className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+                >
+                  {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
+                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
