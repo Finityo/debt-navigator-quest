@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Volume2, VolumeX } from "lucide-react";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 
 type Placement = "top" | "bottom" | "left" | "right" | "center";
 
@@ -12,10 +13,21 @@ export default function OnboardingOverlay() {
   const step = ONBOARDING_STEPS[currentStep];
   const location = useLocation();
   const navigate = useNavigate();
+  const { speak, stop } = useSpeechSynthesis();
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [mode, setMode] = useState<"anchored" | "sheet" | "center">("center");
+
+  // Speak step description on change
+  useEffect(() => {
+    if (!step || hasSeen) return;
+    if (voiceEnabled) {
+      speak(`${step.title}. ${step.description}`);
+    }
+    return () => stop();
+  }, [currentStep, hasSeen, voiceEnabled]);
 
   // Auto-navigate to the step's route
   useEffect(() => {
@@ -123,15 +135,32 @@ export default function OnboardingOverlay() {
     </span>
   );
 
+  const handleSkip = () => {
+    stop();
+    skip();
+  };
+
   const controls = (
     <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => {
+          if (voiceEnabled) stop();
+          setVoiceEnabled(!voiceEnabled);
+        }}
+        title={voiceEnabled ? "Mute voiceover" : "Enable voiceover"}
+      >
+        {voiceEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+      </Button>
       {currentStep > 0 && (
         <Button variant="ghost" size="sm" onClick={prev} className="h-8 px-3 text-xs">
           <ChevronLeft className="w-3.5 h-3.5 mr-1" />
           Back
         </Button>
       )}
-      <Button variant="ghost" size="sm" onClick={skip} className="h-8 px-3 text-xs">
+      <Button variant="ghost" size="sm" onClick={handleSkip} className="h-8 px-3 text-xs">
         Skip
       </Button>
       <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
@@ -156,7 +185,7 @@ export default function OnboardingOverlay() {
   );
 
   return (
-    <div className="fixed inset-0 z-[9998]" onClick={skip}>
+    <div className="fixed inset-0 z-[9998]" onClick={handleSkip}>
       {/* dim layer */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
