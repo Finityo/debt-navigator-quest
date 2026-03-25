@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import OnboardingOverlay from "@/components/onboarding/OnboardingOverlay";
-import { useOnboardingStore } from "@/store/onboardingStore";
+
 import Hero from "@/components/Hero";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
