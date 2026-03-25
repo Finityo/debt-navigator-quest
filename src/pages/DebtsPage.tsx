@@ -75,7 +75,7 @@ export default function DebtsPage() {
             <div>
               <h3 className="font-heading font-bold text-xl mb-2">Add your first debt</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                Start by adding a debt manually, connecting your bank, or uploading a CSV.
+                Add your first debt to see your payoff date instantly.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
