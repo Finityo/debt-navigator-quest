@@ -58,7 +58,7 @@ export default function PlanPage() {
           {/* TASK 3 — Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Progress</span>
+              <span>Debt Progress</span>
               <span>{progressPercent.toFixed(0)}%</span>
             </div>
             <Progress value={progressPercent} className="h-2" />
