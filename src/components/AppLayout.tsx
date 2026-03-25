@@ -152,7 +152,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile header — glass */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-strong border-b border-[var(--glass-border)] shadow-glass">
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-header">
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
           <div className="flex items-center gap-1">
             <button
