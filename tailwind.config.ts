@@ -17,6 +17,16 @@ export default {
         heading: ['Space Grotesk', 'sans-serif'],
         body: ['DM Sans', 'sans-serif'],
       },
+      backdropBlur: {
+        'glass-sm': '8px',
+        'glass-md': '16px',
+        'glass-lg': '24px',
+      },
+      boxShadow: {
+        'glass': '0 4px 30px rgba(0,0,0,0.08)',
+        'glass-hover': '0 8px 40px rgba(0,0,0,0.12)',
+        'glass-glow': '0 0 40px hsl(var(--primary) / 0.15)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -77,20 +87,12 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
