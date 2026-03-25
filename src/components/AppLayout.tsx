@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import {
   LayoutDashboard,
@@ -16,9 +16,12 @@ import {
   Moon,
   Sun,
   HelpCircle,
+  LogIn,
+  User,
 } from 'lucide-react';
 import finityoLogo from '@/assets/app-icon-1024.png';
 import { useOnboardingStore } from '@/store/onboardingStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
