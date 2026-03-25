@@ -20,6 +20,15 @@ export default function OnboardingOverlay() {
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [mode, setMode] = useState<"anchored" | "sheet" | "center">("center");
 
+  // Speak step description on change
+  useEffect(() => {
+    if (!step || hasSeen) return;
+    if (voiceEnabled) {
+      speak(`${step.title}. ${step.description}`);
+    }
+    return () => stop();
+  }, [currentStep, hasSeen, voiceEnabled]);
+
   // Auto-navigate to the step's route
   useEffect(() => {
     if (!step || hasSeen) return;
