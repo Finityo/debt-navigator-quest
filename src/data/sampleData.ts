@@ -31,16 +31,6 @@ export const sampleDebts: Debt[] = [
     startDate: '2025-01-01',
     notes: 'Federal loan',
   },
-  {
-    id: 'debt-4',
-    creditorName: 'Auto Loan',
-    balance: 8900,
-    apr: 0.069,
-    minPayment: 280,
-    type: 'auto_loan',
-    startDate: '2025-01-01',
-    notes: '',
-  },
 ];
 
 export const sampleSettings: PlanSettings = {
