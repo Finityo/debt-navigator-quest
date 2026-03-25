@@ -81,7 +81,7 @@ function MobileNavPanel({ onClose, children }: { onClose: () => void; children: 
       {/* Panel */}
       <div
         ref={panelRef}
-        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
+        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-sidebar border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
         style={{ transform: `translateX(${panelTranslate})` }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
