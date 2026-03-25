@@ -24,15 +24,6 @@ import NotFound from "@/pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const onboarding = useOnboardingStore();
-
-  useEffect(() => {
-    const seen = localStorage.getItem("seen_onboarding");
-    if (!seen) {
-      onboarding.start();
-      localStorage.setItem("seen_onboarding", "true");
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
