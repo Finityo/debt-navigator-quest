@@ -135,15 +135,32 @@ export default function OnboardingOverlay() {
     </span>
   );
 
+  const handleSkip = () => {
+    stop();
+    skip();
+  };
+
   const controls = (
     <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => {
+          if (voiceEnabled) stop();
+          setVoiceEnabled(!voiceEnabled);
+        }}
+        title={voiceEnabled ? "Mute voiceover" : "Enable voiceover"}
+      >
+        {voiceEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+      </Button>
       {currentStep > 0 && (
         <Button variant="ghost" size="sm" onClick={prev} className="h-8 px-3 text-xs">
           <ChevronLeft className="w-3.5 h-3.5 mr-1" />
           Back
         </Button>
       )}
-      <Button variant="ghost" size="sm" onClick={skip} className="h-8 px-3 text-xs">
+      <Button variant="ghost" size="sm" onClick={handleSkip} className="h-8 px-3 text-xs">
         Skip
       </Button>
       <Button size="sm" onClick={next} className="h-8 px-4 text-xs font-semibold">
