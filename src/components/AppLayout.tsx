@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import {
   LayoutDashboard,
@@ -16,9 +16,12 @@ import {
   Moon,
   Sun,
   HelpCircle,
+  LogIn,
+  User,
 } from 'lucide-react';
 import finityoLogo from '@/assets/app-icon-1024.png';
 import { useOnboardingStore } from '@/store/onboardingStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -96,9 +99,11 @@ function MobileNavPanel({ onClose, children }: { onClose: () => void; children: 
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const onboarding = useOnboardingStore();
+  const { user } = useAuth();
 
   return (
     <div className="flex min-h-screen liquid-bg" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
@@ -133,6 +138,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="px-3 pb-5 pt-2 space-y-1">
+          {!user ? (
+            <button
+              onClick={() => navigate('/auth')}
+              className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-primary hover:text-primary/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+            >
+              <LogIn className="w-[18px] h-[18px]" />
+              Sign In
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-foreground/50">
+              <User className="w-[18px] h-[18px]" />
+              <span className="truncate">{user.email}</span>
+            </div>
+          )}
           <button
             onClick={() => onboarding.reset()}
             className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
@@ -214,6 +233,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </nav>
                 {/* Panel footer */}
                 <div className="px-3 pb-5 pt-2 space-y-1 border-t border-[var(--glass-border)]">
+                  {!user ? (
+                    <Link
+                      to="/auth"
+                      onClick={handleClose}
+                      className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-primary hover:text-primary/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
+                    >
+                      <LogIn className="w-5 h-5 shrink-0" />
+                      Sign In
+                    </Link>
+                  ) : (
+                    <div className="flex items-center gap-3 px-3.5 py-3 text-[15px] text-foreground/50">
+                      <User className="w-5 h-5 shrink-0" />
+                      <span className="truncate">{user.email}</span>
+                    </div>
+                  )}
                   <button
                     onClick={() => { onboarding.reset(); handleClose(); }}
                     className="flex items-center gap-3 w-full px-3.5 py-3 rounded-xl text-[15px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"

@@ -14,13 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      debts: {
+        Row: {
+          apr: number
+          balance: number
+          created_at: string
+          due_day: number
+          id: string
+          minimum: number
+          name: string
+          notes: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          apr?: number
+          balance?: number
+          created_at?: string
+          due_day?: number
+          id?: string
+          minimum?: number
+          name?: string
+          notes?: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          apr?: number
+          balance?: number
+          created_at?: string
+          due_day?: number
+          id?: string
+          minimum?: number
+          name?: string
+          notes?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_user_account: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

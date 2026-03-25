@@ -6,8 +6,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import OnboardingOverlay from "@/components/onboarding/OnboardingOverlay";
+import { AuthProvider } from "@/hooks/useAuth";
 
 import Hero from "@/components/Hero";
+import AuthPage from "@/pages/AuthPage";
 import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
 import PlanPage from "@/pages/PlanPage";
@@ -18,6 +20,8 @@ import ActivityPage from "@/pages/ActivityPage";
 import SettingsPage from "@/pages/SettingsPage";
 import ExtraPaymentsPage from "@/pages/ExtraPaymentsPage";
 import InstallPage from "@/pages/InstallPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import TermsPage from "@/pages/TermsPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,29 +31,34 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" storageKey="finityo-theme">
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppLayout>
-              <Routes>
-                <Route path="/" element={<Hero />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/debts" element={<DebtsPage />} />
-                <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
-                <Route path="/plan" element={<PlanPage />} />
-                <Route path="/timeline" element={<TimelinePage />} />
-                <Route path="/scenarios" element={<ScenariosPage />} />
-                <Route path="/sensitivity" element={<SensitivityPage />} />
-                <Route path="/activity" element={<ActivityPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/install" element={<InstallPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AppLayout>
-            <OnboardingOverlay />
-          </BrowserRouter>
-        </TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AppLayout>
+                <Routes>
+                  <Route path="/" element={<Hero />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/debts" element={<DebtsPage />} />
+                  <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
+                  <Route path="/plan" element={<PlanPage />} />
+                  <Route path="/timeline" element={<TimelinePage />} />
+                  <Route path="/scenarios" element={<ScenariosPage />} />
+                  <Route path="/sensitivity" element={<SensitivityPage />} />
+                  <Route path="/activity" element={<ActivityPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/install" element={<InstallPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AppLayout>
+              <OnboardingOverlay />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
