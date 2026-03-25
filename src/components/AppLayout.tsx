@@ -32,7 +32,69 @@ const navItems = [
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
-export function AppLayout({ children }: { children: React.ReactNode }) {
+function MobileNavPanel({ onClose, children }: { onClose: () => void; children: (close: () => void) => React.ReactNode }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const [dragX, setDragX] = useState(0);
+  const [closing, setClosing] = useState(false);
+
+  const THRESHOLD = 80;
+
+  const handleClose = useCallback(() => {
+    setClosing(true);
+    setTimeout(onClose, 250);
+  }, [onClose]);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const dx = e.touches[0].clientX - touchStart.current.x;
+    const dy = Math.abs(e.touches[0].clientY - touchStart.current.y);
+    // Only track horizontal swipe to the right
+    if (dx > 0 && dx > dy) {
+      setDragX(dx);
+    }
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    if (dragX > THRESHOLD) {
+      handleClose();
+    } else {
+      setDragX(0);
+    }
+    touchStart.current = null;
+  }, [dragX, handleClose]);
+
+  const panelTranslate = closing ? '100%' : `${dragX}px`;
+  const scrimOpacity = closing ? 0 : Math.max(0, 1 - dragX / 320);
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50" onClick={handleClose}>
+      {/* Scrim */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-250"
+        style={{ opacity: scrimOpacity }}
+      />
+      {/* Panel */}
+      <div
+        ref={panelRef}
+        className={`absolute top-0 right-0 h-full w-[min(80vw,320px)] glass-strong border-l border-[var(--glass-border)] shadow-glow flex flex-col ${closing ? 'transition-transform duration-250 ease-in' : dragX > 0 ? '' : 'animate-in slide-in-from-right duration-300'}`}
+        style={{ transform: `translateX(${panelTranslate})` }}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {children(handleClose)}
+      </div>
+    </div>
+  );
+}
+
+
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
