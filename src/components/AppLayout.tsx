@@ -99,9 +99,11 @@ function MobileNavPanel({ onClose, children }: { onClose: () => void; children: 
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const onboarding = useOnboardingStore();
+  const { user } = useAuth();
 
   return (
     <div className="flex min-h-screen liquid-bg" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
