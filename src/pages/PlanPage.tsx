@@ -150,11 +150,15 @@ function MonthRow({
   ms,
   isExpanded,
   snapshots,
+  method,
+  debts,
   onToggle,
 }: {
   ms: import('@/types/debt').MonthlyPlanSummary;
   isExpanded: boolean;
   snapshots: import('@/types/debt').MonthlyDebtSnapshot[];
+  method: import('@/types/debt').PayoffMethod;
+  debts: import('@/types/debt').Debt[];
   onToggle: () => void;
 }) {
   const hasMilestone = ms.debtsPaidOffThisMonth.length > 0;
