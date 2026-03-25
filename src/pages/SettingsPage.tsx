@@ -13,6 +13,14 @@ import { useState, useEffect } from 'react';
 export default function SettingsPage() {
   const { settings, updateSettings } = useDebtStore();
   const { theme, setTheme } = useTheme();
+  const [voiceoverEnabled, setVoiceoverEnabled] = useState(
+    () => localStorage.getItem('finityo_voiceover_default') !== 'false'
+  );
+
+  const handleVoiceoverChange = (checked: boolean) => {
+    setVoiceoverEnabled(checked);
+    localStorage.setItem('finityo_voiceover_default', checked ? 'true' : 'false');
+  };
 
   return (
     <div className="space-y-8">
