@@ -14,7 +14,9 @@ export default function OnboardingOverlay() {
   const location = useLocation();
   const navigate = useNavigate();
   const { speak, stop } = useSpeechSynthesis();
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(
+    () => localStorage.getItem('finityo_voiceover_default') !== 'false'
+  );
 
   const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
