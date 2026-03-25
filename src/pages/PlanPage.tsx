@@ -19,8 +19,12 @@ export default function PlanPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (_hasHydrated && debts.length === 0) {
+      navigate('/debts', { replace: true });
+      return;
+    }
     if (_hasHydrated) computePlan();
-  }, [_hasHydrated, computePlan]);
+  }, [_hasHydrated, debts.length, navigate, computePlan]);
 
   const payoffDate = planResult?.payoffMonth
     ? planResult.monthlySummaries[planResult.payoffMonth - 1]?.date
