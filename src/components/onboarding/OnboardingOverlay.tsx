@@ -13,6 +13,8 @@ export default function OnboardingOverlay() {
   const step = ONBOARDING_STEPS[currentStep];
   const location = useLocation();
   const navigate = useNavigate();
+  const { speak, stop } = useSpeechSynthesis();
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
