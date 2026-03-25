@@ -106,6 +106,8 @@ export default function PlanPage() {
                         ms={ms}
                         isExpanded={isExpanded}
                         snapshots={snapshots}
+                        method={settings.method}
+                        debts={debts}
                         onToggle={() =>
                           setExpandedMonth(isExpanded ? null : ms.monthNumber)
                         }
