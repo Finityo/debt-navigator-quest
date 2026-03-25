@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
 import { MethodComparison } from '@/components/plan/MethodComparison';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
