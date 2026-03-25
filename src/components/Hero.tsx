@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import logo from "@/assets/app-icon-1024.png";
 
 const stagger = {
   hidden: {},
@@ -48,8 +47,15 @@ export default function Hero() {
 
       {/* BRAND */}
       <motion.div variants={scaleIn} className="flex flex-col items-center space-y-4">
-        <div className="glass-card p-5 rounded-3xl glow">
-          <img src={logo} alt="Finityo logo" className="w-24 h-24" />
+        <div className="glass-card rounded-3xl glow overflow-hidden w-36 h-36">
+          <video
+            src="/hero-logo.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
         </div>
         <motion.h1 variants={fadeUp} className="text-3xl font-bold font-heading tracking-tight text-foreground text-shadow-sm">
           Finityo
