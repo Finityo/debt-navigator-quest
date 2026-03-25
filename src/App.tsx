@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="light" storageKey="finityo-theme">
+      <ThemeProvider attribute="class" defaultTheme="dark" storageKey="finityo-theme">
         <TooltipProvider>
           <Toaster />
           <Sonner />

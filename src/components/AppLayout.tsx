@@ -39,16 +39,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const onboarding = useOnboardingStore();
 
   return (
-    <div className="flex min-h-screen bg-background" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-[15.5rem] flex-col bg-sidebar border-r border-sidebar-border shrink-0">
+    <div className="flex min-h-screen" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      {/* Desktop sidebar — glass */}
+      <aside className="hidden lg:flex w-[15.5rem] flex-col glass-strong border-r border-[var(--glass-border)] shrink-0">
         <div className="px-5 pt-7 pb-7 flex items-center gap-3">
           <img src={finityoLogo} alt="Finityo" className="w-8 h-8" />
           <div>
-            <h1 className="text-lg font-bold font-heading text-sidebar-primary tracking-tight leading-none">
+            <h1 className="text-lg font-bold font-heading text-primary tracking-tight leading-none">
               Finityo
             </h1>
-            <p className="text-[10px] text-sidebar-foreground/35 mt-1 font-medium tracking-wider uppercase">Debt Freedom Engine</p>
+            <p className="text-[10px] text-foreground/35 mt-1 font-medium tracking-wider uppercase">Debt Freedom Engine</p>
           </div>
         </div>
         <nav className="flex-1 px-3 space-y-1">
@@ -58,13 +58,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
                   active
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                    : 'text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent/50'
+                    ? 'glass-strong text-foreground shadow-sm border border-[var(--glass-border-strong)]'
+                    : 'text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)]'
                 }`}
               >
-                <item.icon className={`w-[18px] h-[18px] ${active ? 'text-sidebar-primary' : ''}`} />
+                <item.icon className={`w-[18px] h-[18px] ${active ? 'text-primary' : ''}`} />
                 {item.label}
               </Link>
             );
@@ -73,14 +73,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="px-3 pb-5 pt-2 space-y-1">
           <button
             onClick={() => onboarding.reset()}
-            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-lg text-[13px] font-medium text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent/50 transition-all duration-150"
+            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
           >
             <HelpCircle className="w-[18px] h-[18px]" />
             Replay Tour
           </button>
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-lg text-[13px] font-medium text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent/50 transition-all duration-150"
+            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-foreground/50 hover:text-foreground/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
           >
             {theme === 'dark' ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
             {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
@@ -88,28 +88,28 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Mobile header */}
+      {/* Mobile header — glass */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 border-b bg-card shadow-sm">
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-strong border-b border-[var(--glass-border)] shadow-glass">
           <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
           <div className="flex items-center gap-1">
             <button
               onClick={() => onboarding.reset()}
-              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              className="p-2 rounded-xl hover:bg-[var(--glass-bg-strong)] transition-colors"
               aria-label="Replay tour"
             >
               <HelpCircle className="w-5 h-5" />
             </button>
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              className="p-2 rounded-xl hover:bg-[var(--glass-bg-strong)] transition-colors"
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            className="p-2 rounded-xl hover:bg-[var(--glass-bg-strong)] transition-colors"
             aria-label="Toggle navigation"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -117,9 +117,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Mobile nav overlay */}
+        {/* Mobile nav overlay — glass */}
         {mobileOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur-sm pt-16">
+          <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-glass-lg pt-16">
             <nav className="px-4 space-y-1">
               {navItems.map((item) => {
                 const active = location.pathname === item.to;
@@ -128,10 +128,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     key={item.to}
                     to={item.to}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3.5 rounded-lg text-base font-medium transition-colors ${
+                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-200 ${
                       active
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                        ? 'glass-strong text-foreground border border-[var(--glass-border-strong)]'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-[var(--glass-bg)]'
                     }`}
                   >
                     <item.icon className={`w-5 h-5 ${active ? 'text-primary' : ''}`} />

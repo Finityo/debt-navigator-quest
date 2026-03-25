@@ -28,7 +28,7 @@ export default function Hero() {
       variants={stagger}
       initial="hidden"
       animate="show"
-      className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center space-y-10 glass"
+      className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center space-y-10"
     >
       {/* AMBIENT BACKGROUND GLOW */}
       <div className="absolute inset-0 -z-10">
@@ -51,7 +51,7 @@ export default function Hero() {
         <div className="glass-strong p-5 rounded-2xl glow">
           <img src={logo} alt="Finityo logo" className="w-24 h-24" />
         </div>
-        <motion.h1 variants={fadeUp} className="text-3xl font-bold font-heading tracking-tight text-foreground">
+        <motion.h1 variants={fadeUp} className="text-3xl font-bold font-heading tracking-tight text-foreground text-shadow-sm">
           Finityo
         </motion.h1>
         <motion.p variants={fadeUp} className="text-sm text-muted-foreground">
@@ -61,7 +61,7 @@ export default function Hero() {
 
       {/* HEADLINE */}
       <motion.div variants={fadeUp} className="space-y-4 max-w-lg">
-        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.08)]">
+        <h2 className="text-3xl font-semibold font-heading leading-snug text-foreground text-shadow-sm">
           Turn your debt into a clear, structured payoff plan
         </h2>
         <p className="text-muted-foreground leading-relaxed">
@@ -81,7 +81,6 @@ export default function Hero() {
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 pt-2">
         <Button
           size="lg"
-          className="glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground font-semibold hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/dashboard")}
         >
           Build My Plan
@@ -89,7 +88,6 @@ export default function Hero() {
         <Button
           variant="outline"
           size="lg"
-          className="glass hover:bg-accent/10 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           onClick={() => navigate("/debts")}
         >
           View My Debts
