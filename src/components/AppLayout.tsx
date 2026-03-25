@@ -94,7 +94,7 @@ function MobileNavPanel({ onClose, children }: { onClose: () => void; children: 
   );
 }
 
-
+export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
