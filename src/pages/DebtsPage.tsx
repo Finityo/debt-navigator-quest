@@ -75,7 +75,7 @@ export default function DebtsPage() {
             <div>
               <h3 className="font-heading font-bold text-xl mb-2">Add your first debt</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                Start by adding a debt manually, connecting your bank, or uploading a CSV.
+                Add your first debt to see your payoff date instantly.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -211,7 +211,7 @@ export default function DebtsPage() {
           onClick={() => navigate('/plan')}
           className="w-full h-14 text-base font-bold glass-strong glow bg-primary/90 hover:bg-primary text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
         >
-          Continue to Your Plan <ArrowRight className="w-5 h-5 ml-2" />
+          See Your Payoff Plan <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
       )}
     </div>
