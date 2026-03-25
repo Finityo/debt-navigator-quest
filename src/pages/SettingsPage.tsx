@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Volume2 } from 'lucide-react';
 import type { PayoffMethod } from '@/types/debt';
+import { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useDebtStore();
