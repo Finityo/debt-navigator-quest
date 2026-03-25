@@ -203,8 +203,8 @@ export default function PlanPage() {
               <p className="text-sm text-muted-foreground mb-3">
                 Log your next payment to stay on track.
               </p>
-              <Button className="w-full h-12 font-semibold">
-                Log a Payment
+              <Button disabled className="w-full h-12 font-semibold opacity-60 cursor-not-allowed">
+                Log a Payment (coming soon)
               </Button>
             </CardContent>
           </Card>
