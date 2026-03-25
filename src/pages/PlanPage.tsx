@@ -212,16 +212,30 @@ function MonthRow({
                     const aprB = debts.find((d) => d.id === b.debtId)?.apr ?? 0;
                     return aprB - aprA;
                   })
-                  .map((s, i) => (
+                  .map((s, i) => {
+                    const debt = debts.find((d) => d.id === s.debtId);
+                    const tooltipText = method === 'snowball'
+                      ? `#${i + 1} lowest balance: ${formatCurrencyCents(s.startingBalance)}`
+                      : `#${i + 1} highest APR: ${((debt?.apr ?? 0) * 100).toFixed(1)}%`;
+                    return (
                     <div
                       key={s.debtId}
                       className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-4 py-3 ${
                         s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-card border border-border/40'
                       }`}
                     >
-                      <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
-                        {i + 1}
-                      </span>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0 cursor-help">
+                              {i + 1}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="text-xs">
+                            {tooltipText}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                       <span className="font-semibold min-w-[110px]">{s.creditorName}</span>
                       <span className="text-muted-foreground font-tabular">
                         Start: {formatCurrencyCents(s.startingBalance)}
