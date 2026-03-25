@@ -259,7 +259,8 @@ function MonthRow({
                         <span className="text-primary font-bold">✓ Paid Off</span>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
               </div>
             </div>
           </td>
