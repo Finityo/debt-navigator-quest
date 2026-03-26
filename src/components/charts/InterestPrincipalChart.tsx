@@ -15,7 +15,7 @@ export function InterestPrincipalChart({ summaries }: Props) {
       .map((s) => ({
         month: `Month ${s.monthNumber}`,
         interest: s.totalInterest,
-        principal: Math.max(0, s.totalPaid - s.totalInterest),
+        principal: s.totalPrincipal,
       }));
   }, [summaries]);
 
