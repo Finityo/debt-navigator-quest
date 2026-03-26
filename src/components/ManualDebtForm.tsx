@@ -154,11 +154,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
             <Label className="text-xs font-medium text-muted-foreground">
               APR (%) {type === 'credit_card' && <span className="text-primary">• recommended</span>}
             </Label>
-            <Input
-              type="number"
-              step="0.1"
+            <StableNumberInput
               value={apr}
-              onChange={(e) => { setApr(e.target.value); setErrors((p) => ({ ...p, apr: '' })); }}
+              onCommit={(v) => { setApr(String(v)); setErrors((p) => ({ ...p, apr: '' })); }}
               placeholder="21.9"
               className={cn(errors.apr && 'border-destructive')}
             />
