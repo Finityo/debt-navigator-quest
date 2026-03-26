@@ -208,11 +208,13 @@ function KpiCard({
   icon: Icon,
   label,
   value,
+  subtext,
   accent,
 }: {
   icon: React.ElementType;
   label: string;
   value: string;
+  subtext?: string;
   accent?: 'primary' | 'destructive';
 }) {
   const iconBg = accent === 'destructive' ? 'bg-destructive/10' : accent === 'primary' ? 'bg-primary/10' : 'bg-muted';
@@ -228,6 +230,7 @@ function KpiCard({
       </div>
       <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">{label}</p>
       <p className={`text-2xl font-bold font-heading font-tabular leading-none tracking-tight text-shadow-sm ${valueColor}`}>{value}</p>
+      {subtext && <p className="text-[10px] text-muted-foreground mt-1.5">{subtext}</p>}
     </div>
   );
 }
