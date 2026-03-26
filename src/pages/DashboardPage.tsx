@@ -112,6 +112,23 @@ export default function DashboardPage() {
               />
             </div>
             <KpiCard icon={Clock} label="Plan Length" value={`${settings.monthsHorizon} months`} />
+            {(interestSaved > 0 || extraPayments.length > 0) && (
+              <KpiCard
+                icon={PiggyBank}
+                label="Interest Saved"
+                value={formatCurrency(interestSaved)}
+                subtext={monthsSaved > 0 ? `${monthsSaved} months faster` : 'Add extra payments to save'}
+                accent="primary"
+              />
+            )}
+            {(interestSaved > 0 || extraPayments.length > 0) && (
+              <KpiCard
+                icon={Clock}
+                label="Time Saved"
+                value={monthsSaved > 0 ? `${monthsSaved} months faster` : 'No time saved yet'}
+                accent="primary"
+              />
+            )}
           </div>
 
           {/* Progress Card */}
