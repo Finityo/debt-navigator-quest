@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { formatCurrency } from '@/utils/format';
 import type { ExtraPayment } from '@/types/debt';
 import { Plus, Trash2, Edit2, X, Check, DollarSign, Banknote } from 'lucide-react';
