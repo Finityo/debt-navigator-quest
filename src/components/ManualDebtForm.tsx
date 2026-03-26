@@ -140,10 +140,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
           {/* Balance */}
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Balance ($) *</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={balance}
-              onChange={(e) => { setBalance(e.target.value); setErrors((p) => ({ ...p, balance: '' })); }}
+              onCommit={(v) => { setBalance(String(v)); setErrors((p) => ({ ...p, balance: '' })); }}
               placeholder="4,200"
               className={cn(errors.balance && 'border-destructive')}
             />
