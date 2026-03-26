@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MethodComparison } from '@/components/plan/MethodComparison';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
