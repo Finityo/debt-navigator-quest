@@ -15,9 +15,10 @@ import { useInterestComparison } from '@/hooks/useInterestComparison';
 import type { PayoffMethod } from '@/types/debt';
 
 export default function PlanPage() {
-  const { planResult, debts, settings, computePlan, updateSettings, _hasHydrated } = useDebtStore();
+  const { planResult, debts, settings, extraPayments, computePlan, updateSettings, _hasHydrated } = useDebtStore();
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
   const navigate = useNavigate();
+  const { interestSaved, monthsSaved } = useInterestComparison(debts, settings, extraPayments);
 
   useEffect(() => {
     if (_hasHydrated && debts.length === 0) {
