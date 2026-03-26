@@ -10,7 +10,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
-import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles, ClipboardCheck } from 'lucide-react';
+import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles, ClipboardCheck, PiggyBank } from 'lucide-react';
+import { useInterestComparison } from '@/hooks/useInterestComparison';
 import type { PayoffMethod } from '@/types/debt';
 
 export default function PlanPage() {
