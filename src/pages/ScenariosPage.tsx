@@ -46,6 +46,7 @@ export default function ScenariosPage() {
 
       {debts.length > 0 && (
         <div className="space-y-8">
+          <MethodComparison />
           <Card>
             <CardContent className="p-6">
               <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5 flex items-center gap-2">
