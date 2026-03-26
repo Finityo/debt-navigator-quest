@@ -282,7 +282,7 @@ function MonthCard({
             )}
           </div>
           <span className="font-medium text-sm font-tabular whitespace-nowrap">{formatDate(ms.date)}</span>
-          <div className="flex-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <div className="flex-1 flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1 text-[11px] sm:text-xs text-muted-foreground">
             <span>Start: <strong className="text-foreground font-tabular">{formatCurrency(ms.totalStartingDebt)}</strong></span>
             <span className="text-destructive/70">Int: <strong className="font-tabular">{formatCurrencyCents(ms.totalInterest)}</strong></span>
             <span className="text-primary/80">Prin: <strong className="font-tabular">{formatCurrencyCents(ms.totalPrincipal)}</strong></span>
