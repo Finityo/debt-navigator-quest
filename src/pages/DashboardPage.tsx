@@ -3,6 +3,7 @@ import { useDebtSync } from '@/hooks/useDebtSync';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { DebtBalanceChart } from '@/components/charts/DebtBalanceChart';
