@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { PaymentRecord } from '@/types/debt';
@@ -92,12 +93,9 @@ export default function ActivityPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs font-medium text-muted-foreground">Amount ($)</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  step={10}
+                <StableNumberInput
                   value={formAmount || ''}
-                  onChange={(e) => setFormAmount(parseFloat(e.target.value) || 0)}
+                  onCommit={(v) => setFormAmount(v)}
                   placeholder="100"
                 />
               </div>

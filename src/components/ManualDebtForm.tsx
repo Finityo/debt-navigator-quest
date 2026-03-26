@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { useDebtStore } from '@/store/useDebtStore';
 import type { DebtType } from '@/types/debt';
 import { toast } from 'sonner';
@@ -139,10 +140,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
           {/* Balance */}
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Balance ($) *</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={balance}
-              onChange={(e) => { setBalance(e.target.value); setErrors((p) => ({ ...p, balance: '' })); }}
+              onCommit={(v) => { setBalance(String(v)); setErrors((p) => ({ ...p, balance: '' })); }}
               placeholder="4,200"
               className={cn(errors.balance && 'border-destructive')}
             />
@@ -154,11 +154,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
             <Label className="text-xs font-medium text-muted-foreground">
               APR (%) {type === 'credit_card' && <span className="text-primary">• recommended</span>}
             </Label>
-            <Input
-              type="number"
-              step="0.1"
+            <StableNumberInput
               value={apr}
-              onChange={(e) => { setApr(e.target.value); setErrors((p) => ({ ...p, apr: '' })); }}
+              onCommit={(v) => { setApr(String(v)); setErrors((p) => ({ ...p, apr: '' })); }}
               placeholder="21.9"
               className={cn(errors.apr && 'border-destructive')}
             />
@@ -168,10 +166,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
           {/* Min Payment */}
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Min Payment ($/mo)</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={minPayment}
-              onChange={(e) => { setMinPayment(e.target.value); setErrors((p) => ({ ...p, minPayment: '' })); }}
+              onCommit={(v) => { setMinPayment(String(v)); setErrors((p) => ({ ...p, minPayment: '' })); }}
               placeholder="95"
               className={cn(errors.minPayment && 'border-destructive')}
             />

@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { formatCurrency } from '@/utils/format';
 import type { ExtraPayment } from '@/types/debt';
 import { Plus, Trash2, Edit2, X, Check, DollarSign, Banknote } from 'lucide-react';
@@ -67,12 +68,9 @@ export default function ExtraPaymentsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Month Number</Label>
-            <Input
-              type="number"
-              min={1}
-              max={settings.monthsHorizon}
+            <StableNumberInput
               value={formMonth || ''}
-              onChange={(e) => setFormMonth(parseInt(e.target.value) || 1)}
+              onCommit={(v) => setFormMonth(Math.max(1, Math.min(settings.monthsHorizon, Math.round(v))))}
               placeholder="1"
             />
             <p className="text-[11px] text-muted-foreground">
@@ -81,12 +79,9 @@ export default function ExtraPaymentsPage() {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Extra Amount ($)</Label>
-            <Input
-              type="number"
-              min={0}
-              step={50}
+            <StableNumberInput
               value={formAmount || ''}
-              onChange={(e) => setFormAmount(parseFloat(e.target.value) || 0)}
+              onCommit={(v) => setFormAmount(v)}
               placeholder="200"
             />
           </div>

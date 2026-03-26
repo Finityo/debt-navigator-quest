@@ -5,6 +5,7 @@ import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { computeDebtPlan } from '@/lib/computeDebtPlan';
@@ -62,12 +63,9 @@ export default function ScenariosPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs font-medium text-muted-foreground">Additional Monthly Extra ($)</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    step={50}
+                  <StableNumberInput
                     value={altExtraMonthly || ''}
-                    onChange={(e) => setAltExtraMonthly(parseFloat(e.target.value) || 0)}
+                    onCommit={(v) => setAltExtraMonthly(v)}
                     placeholder="0"
                   />
                 </div>
