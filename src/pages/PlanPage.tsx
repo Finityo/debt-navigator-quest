@@ -10,13 +10,15 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { formatCurrency, formatCurrencyCents, formatDate } from '@/utils/format';
-import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles, ClipboardCheck } from 'lucide-react';
+import { ChevronDown, ChevronRight, ArrowRight, DollarSign, Calendar, TrendingDown, Sparkles, ClipboardCheck, PiggyBank } from 'lucide-react';
+import { useInterestComparison } from '@/hooks/useInterestComparison';
 import type { PayoffMethod } from '@/types/debt';
 
 export default function PlanPage() {
-  const { planResult, debts, settings, computePlan, updateSettings, _hasHydrated } = useDebtStore();
+  const { planResult, debts, settings, extraPayments, computePlan, updateSettings, _hasHydrated } = useDebtStore();
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
   const navigate = useNavigate();
+  const { interestSaved, monthsSaved } = useInterestComparison(debts, settings, extraPayments);
 
   useEffect(() => {
     if (_hasHydrated && debts.length === 0) {
@@ -68,21 +70,37 @@ export default function PlanPage() {
             <Progress value={progressPercent} className="h-2" />
           </div>
 
-          {/* TASK 2 — Savings Block */}
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="glass-card">
-              <CardContent className="p-4">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Interest Saved</p>
-                <p className="text-sm text-muted-foreground">Less interest paid over time</p>
+          {/* Savings Block */}
+          {interestSaved > 0 && (
+            <Card className="glass-card border-primary/20 bg-primary/5">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <PiggyBank className="w-5 h-5 text-primary" />
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">You're Saving</p>
+                </div>
+                <p className="text-2xl font-bold font-heading text-primary">{formatCurrency(interestSaved)}</p>
+                {monthsSaved > 0 && (
+                  <p className="text-sm text-muted-foreground mt-1">and finishing <strong className="text-foreground">{monthsSaved} months</strong> sooner</p>
+                )}
               </CardContent>
             </Card>
-            <Card className="glass-card">
-              <CardContent className="p-4">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Time Saved</p>
-                <p className="text-sm text-muted-foreground">Reach debt-free sooner</p>
-              </CardContent>
-            </Card>
-          </div>
+          )}
+          {interestSaved === 0 && extraPayments.length === 0 && (
+            <div className="grid grid-cols-2 gap-3">
+              <Card className="glass-card">
+                <CardContent className="p-4">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Interest Saved</p>
+                  <p className="text-sm text-muted-foreground">Add extra payments to save</p>
+                </CardContent>
+              </Card>
+              <Card className="glass-card">
+                <CardContent className="p-4">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Time Saved</p>
+                  <p className="text-sm text-muted-foreground">Add extra payments to accelerate</p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* Hero Summary */}
           <Card className="glass-card bg-gradient-to-br from-primary/8 to-accent/10 border-primary/20">

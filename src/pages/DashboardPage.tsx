@@ -1,5 +1,6 @@
 import { useDebtStore } from '@/store/useDebtStore';
 import { useDebtSync } from '@/hooks/useDebtSync';
+import { useInterestComparison } from '@/hooks/useInterestComparison';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
@@ -20,14 +21,16 @@ import {
   CheckCircle2,
   BarChart3,
   Clock,
+  PiggyBank,
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
 
 export default function DashboardPage() {
-  const { debts, settings, planResult, computeStatus } = useDebtStore();
+  const { debts, settings, extraPayments, planResult, computeStatus } = useDebtStore();
   const navigate = useNavigate();
-  // Initialize cloud sync on dashboard mount
   useDebtSync();
+
+  const { interestSaved, monthsSaved } = useInterestComparison(debts, settings, extraPayments);
 
   const totalDebt = debts.reduce((sum, d) => sum + d.balance, 0);
   const totalMinPayments = debts.reduce((sum, d) => sum + d.minPayment, 0);
@@ -111,6 +114,23 @@ export default function DashboardPage() {
               />
             </div>
             <KpiCard icon={Clock} label="Plan Length" value={`${settings.monthsHorizon} months`} />
+            {(interestSaved > 0 || extraPayments.length > 0) && (
+              <KpiCard
+                icon={PiggyBank}
+                label="Interest Saved"
+                value={formatCurrency(interestSaved)}
+                subtext={monthsSaved > 0 ? `${monthsSaved} months faster` : 'Add extra payments to save'}
+                accent="primary"
+              />
+            )}
+            {(interestSaved > 0 || extraPayments.length > 0) && (
+              <KpiCard
+                icon={Clock}
+                label="Time Saved"
+                value={monthsSaved > 0 ? `${monthsSaved} months faster` : 'No time saved yet'}
+                accent="primary"
+              />
+            )}
           </div>
 
           {/* Progress Card */}
