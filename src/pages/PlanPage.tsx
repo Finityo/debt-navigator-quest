@@ -320,7 +320,7 @@ function MonthCard({
                 return (
                   <div
                     key={s.debtId}
-                    className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-4 py-3 ${
+                    className={`flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-[11px] sm:text-xs rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 ${
                       s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-muted/40 border border-border/40'
                     }`}
                   >
