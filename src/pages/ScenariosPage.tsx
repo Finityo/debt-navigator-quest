@@ -62,12 +62,9 @@ export default function ScenariosPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs font-medium text-muted-foreground">Additional Monthly Extra ($)</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    step={50}
+                  <StableNumberInput
                     value={altExtraMonthly || ''}
-                    onChange={(e) => setAltExtraMonthly(parseFloat(e.target.value) || 0)}
+                    onCommit={(v) => setAltExtraMonthly(v)}
                     placeholder="0"
                   />
                 </div>

@@ -2,6 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Check } from 'lucide-react';
 import type { Debt, DebtType } from '@/types/debt';
@@ -49,29 +50,25 @@ export function DebtEditForm({ form, setForm, onSave, onCancel }: DebtEditFormPr
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Balance ($)</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={form.balance || ''}
-              onChange={(e) => setForm({ ...form, balance: parseFloat(e.target.value) || 0 })}
+              onCommit={(v) => setForm({ ...form, balance: v })}
               placeholder="4,200"
             />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">APR (%)</Label>
-            <Input
-              type="number"
-              step="0.1"
+            <StableNumberInput
               value={form.apr || ''}
-              onChange={(e) => setForm({ ...form, apr: parseFloat(e.target.value) || 0 })}
+              onCommit={(v) => setForm({ ...form, apr: v })}
               placeholder="21.9"
             />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Min Payment ($)</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={form.minPayment || ''}
-              onChange={(e) => setForm({ ...form, minPayment: parseFloat(e.target.value) || 0 })}
+              onCommit={(v) => setForm({ ...form, minPayment: v })}
               placeholder="95"
             />
           </div>

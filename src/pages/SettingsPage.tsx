@@ -126,13 +126,10 @@ export default function SettingsPage() {
 
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Horizon (months)</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={settings.monthsHorizon}
-              onChange={(e) => updateSettings({ monthsHorizon: parseInt(e.target.value) || 60 })}
+              onCommit={(v) => updateSettings({ monthsHorizon: Math.max(1, Math.min(360, Math.round(v))) })}
               className="mt-0.5"
-              min={1}
-              max={360}
             />
             <p className="text-[11px] text-muted-foreground">
               Maximum number of months to project your payoff plan.

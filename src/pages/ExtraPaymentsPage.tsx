@@ -79,12 +79,9 @@ export default function ExtraPaymentsPage() {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Extra Amount ($)</Label>
-            <Input
-              type="number"
-              min={0}
-              step={50}
+            <StableNumberInput
               value={formAmount || ''}
-              onChange={(e) => setFormAmount(parseFloat(e.target.value) || 0)}
+              onCommit={(v) => setFormAmount(v)}
               placeholder="200"
             />
           </div>

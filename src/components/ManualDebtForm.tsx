@@ -166,10 +166,9 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
           {/* Min Payment */}
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Min Payment ($/mo)</Label>
-            <Input
-              type="number"
+            <StableNumberInput
               value={minPayment}
-              onChange={(e) => { setMinPayment(e.target.value); setErrors((p) => ({ ...p, minPayment: '' })); }}
+              onCommit={(v) => { setMinPayment(String(v)); setErrors((p) => ({ ...p, minPayment: '' })); }}
               placeholder="95"
               className={cn(errors.minPayment && 'border-destructive')}
             />
