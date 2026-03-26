@@ -1,5 +1,6 @@
 import { useDebtStore } from '@/store/useDebtStore';
 import { useDebtSync } from '@/hooks/useDebtSync';
+import { useInterestComparison } from '@/hooks/useInterestComparison';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
 import { Card, CardContent } from '@/components/ui/card';
