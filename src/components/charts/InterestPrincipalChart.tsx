@@ -13,7 +13,7 @@ export function InterestPrincipalChart({ summaries }: Props) {
     return summaries
       .filter((_, i) => i % step === 0 || i === summaries.length - 1)
       .map((s) => ({
-        month: `Mo ${s.monthNumber}`,
+        month: `Month ${s.monthNumber}`,
         interest: s.totalInterest,
         principal: Math.max(0, s.totalPaid - s.totalInterest),
       }));
