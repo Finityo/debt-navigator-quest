@@ -68,12 +68,9 @@ export default function ExtraPaymentsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Month Number</Label>
-            <Input
-              type="number"
-              min={1}
-              max={settings.monthsHorizon}
+            <StableNumberInput
               value={formMonth || ''}
-              onChange={(e) => setFormMonth(parseInt(e.target.value) || 1)}
+              onCommit={(v) => setFormMonth(Math.max(1, Math.min(settings.monthsHorizon, Math.round(v))))}
               placeholder="1"
             />
             <p className="text-[11px] text-muted-foreground">
