@@ -105,31 +105,31 @@ export default function PlanPage() {
           {/* Hero Summary */}
           <Card className="glass-card bg-gradient-to-br from-primary/8 to-accent/10 border-primary/20">
             <CardContent className="p-6">
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <DollarSign className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-foreground">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-foreground">
                     {formatCurrency(initialTotalDebt)}
                   </p>
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff Date</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-primary" id="payoff-date">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-primary" id="payoff-date">
                     {payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
                   </p>
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <TrendingDown className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Interest</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <TrendingDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Interest</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-destructive">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-destructive">
                     {formatCurrency(planResult.totalInterestPaid)}
                   </p>
                 </div>

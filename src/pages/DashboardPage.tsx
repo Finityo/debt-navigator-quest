@@ -249,7 +249,7 @@ function KpiCard({
         </div>
       </div>
       <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">{label}</p>
-      <p className={`text-2xl font-bold font-heading font-tabular leading-none tracking-tight text-shadow-sm ${valueColor}`}>{value}</p>
+      <p className={`text-xl sm:text-2xl font-bold font-heading font-tabular leading-tight tracking-tight text-shadow-sm break-words ${valueColor}`}>{value}</p>
       {subtext && <p className="text-[10px] text-muted-foreground mt-1.5">{subtext}</p>}
     </div>
   );
