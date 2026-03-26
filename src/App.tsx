@@ -40,7 +40,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Hero />} />
                   <Route path="/auth" element={<AuthPage />} />
-                  {/* /dashboard deprecated — entry point is now /debts */}
+                  <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/debts" element={<DebtsPage />} />
                   <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
                   <Route path="/plan" element={<PlanPage />} />
