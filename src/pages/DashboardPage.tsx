@@ -36,9 +36,35 @@ export default function DashboardPage() {
     ? planResult.monthlySummaries[planResult.payoffMonth - 1]?.date
     : null;
 
+  // Motivation header values
+  const payoffMonths = planResult?.payoffMonth ?? 0;
+  const years = Math.floor(payoffMonths / 12);
+  const months = payoffMonths % 12;
+
+  // Progress calculation
+  const remainingBalance = planResult?.remainingBalance ?? totalDebt;
+  const percentPaid = totalDebt > 0 ? ((totalDebt - remainingBalance) / totalDebt) * 100 : 0;
+
+  // Status logic — never show "Complete" if balance remains
+  const statusValue =
+    planResult?.completionStatus === 'complete' && remainingBalance <= 0
+      ? 'On Track ✅'
+      : remainingBalance > 0
+        ? `${formatCurrency(remainingBalance)} left`
+        : 'Plan Ready ✅';
+  const statusAccent: 'primary' | 'destructive' =
+    planResult?.completionStatus === 'complete' && remainingBalance <= 0 ? 'primary' : 'destructive';
+
   return (
     <div className="space-y-8">
-      <PageHeader title="Dashboard" description="Your debt freedom at a glance" />
+      <PageHeader
+        title="Dashboard"
+        description={
+          hasResult && payoffMonths > 0
+            ? `You'll be debt-free in ${years > 0 ? `${years}y ` : ''}${months}m`
+            : 'Your debt freedom at a glance'
+        }
+      />
 
       <ComputeBanner />
 
@@ -47,32 +73,55 @@ export default function DashboardPage() {
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div id="total-debt-card">
-            <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
+              <KpiCard icon={DollarSign} label="Total Debt" value={formatCurrency(totalDebt)} accent="destructive" />
             </div>
             <div id="monthly-payment-card">
-            <KpiCard icon={TrendingDown} label="Monthly Minimums" value={formatCurrency(totalMinPayments)} />
+              <KpiCard icon={TrendingDown} label="Current Minimum Payments" value={formatCurrency(totalMinPayments)} />
             </div>
             <div>
+              <KpiCard
+                icon={CalendarDays}
+                label="Projected Payoff"
+                value={payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
+                subtext={payoffMonths > 0 ? `In ${years > 0 ? `${years} years ` : ''}${months} months` : undefined}
+                accent="primary"
+              />
+            </div>
             <KpiCard
-              icon={CalendarDays}
-              label="Projected Payoff"
-              value={payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
+              icon={Percent}
+              label="Total Interest"
+              value={formatCurrency(planResult.totalInterestPaid)}
+              accent="destructive"
+            />
+            <KpiCard
+              icon={Wallet}
+              label="Total You'll Pay"
+              value={formatCurrency(planResult.totalPaid)}
+              subtext="Includes original debt + total interest"
               accent="primary"
             />
-            </div>
-            <KpiCard icon={Percent} label="Total Interest" value={formatCurrency(planResult.totalInterestPaid)} accent="destructive" />
-            <KpiCard icon={Wallet} label="Total Paid" value={formatCurrency(planResult.totalPaid)} accent="primary" />
             <KpiCard icon={Target} label="Strategy" value={settings.method === 'avalanche' ? 'Avalanche' : 'Snowball'} />
             <div>
-            <KpiCard
-              icon={AlertCircle}
-              label="Status"
-              value={planResult.completionStatus === 'complete' ? 'Complete ✓' : `${formatCurrency(planResult.remainingBalance)} left`}
-              accent={planResult.completionStatus === 'complete' ? 'primary' : 'destructive'}
-            />
+              <KpiCard
+                icon={AlertCircle}
+                label="Status"
+                value={statusValue}
+                accent={statusAccent}
+              />
             </div>
-            <KpiCard icon={Clock} label="Horizon" value={`${settings.monthsHorizon} mo`} />
+            <KpiCard icon={Clock} label="Plan Length" value={`${settings.monthsHorizon} months`} />
           </div>
+
+          {/* Progress Card */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Progress</p>
+                <p className="text-sm font-bold font-heading text-primary">{percentPaid.toFixed(0)}% Paid Off</p>
+              </div>
+              <Progress value={percentPaid} className="h-3" />
+            </CardContent>
+          </Card>
 
           {/* Charts */}
           {planResult.monthlySummaries.length > 0 && (
