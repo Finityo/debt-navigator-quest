@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MethodComparison } from '@/components/plan/MethodComparison';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
@@ -45,6 +46,7 @@ export default function ScenariosPage() {
 
       {debts.length > 0 && (
         <div className="space-y-8">
+          <MethodComparison />
           <Card>
             <CardContent className="p-6">
               <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5 flex items-center gap-2">
