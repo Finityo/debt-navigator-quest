@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   BarChart3,
   Clock,
+  PiggyBank,
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
 
