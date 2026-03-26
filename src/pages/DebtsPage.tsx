@@ -180,29 +180,29 @@ export default function DebtsPage() {
             <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
               Your Plan Preview
             </p>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 mb-1">
+                  <DollarSign className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted-foreground shrink-0" />
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
                 </div>
-                <p className="text-lg font-bold font-heading font-tabular text-foreground">{formatCurrency(totalDebt)}</p>
+                <p className="text-base sm:text-lg font-bold font-heading font-tabular text-foreground">{formatCurrency(totalDebt)}</p>
               </div>
               <div>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 mb-1">
+                  <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted-foreground shrink-0" />
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff</span>
                 </div>
-                <p className="text-lg font-bold font-heading font-tabular text-primary">
+                <p className="text-base sm:text-lg font-bold font-heading font-tabular text-primary">
                   {payoffDate ? formatDate(payoffDate) : '—'}
                 </p>
               </div>
               <div>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <TrendingDown className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Interest</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 mb-1">
+                  <TrendingDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted-foreground shrink-0" />
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Interest</span>
                 </div>
-                <p className="text-lg font-bold font-heading font-tabular text-destructive">
+                <p className="text-base sm:text-lg font-bold font-heading font-tabular text-destructive">
                   {planResult ? formatCurrency(planResult.totalInterestPaid) : '—'}
                 </p>
               </div>

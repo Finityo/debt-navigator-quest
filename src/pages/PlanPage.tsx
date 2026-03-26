@@ -105,31 +105,31 @@ export default function PlanPage() {
           {/* Hero Summary */}
           <Card className="glass-card bg-gradient-to-br from-primary/8 to-accent/10 border-primary/20">
             <CardContent className="p-6">
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <DollarSign className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Debt</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-foreground">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-foreground">
                     {formatCurrency(initialTotalDebt)}
                   </p>
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff Date</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Payoff</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-primary" id="payoff-date">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-primary" id="payoff-date">
                     {payoffDate ? formatDate(payoffDate) : 'Beyond horizon'}
                   </p>
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <TrendingDown className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Total Interest</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
+                    <TrendingDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Interest</span>
                   </div>
-                  <p className="text-2xl font-bold font-heading font-tabular text-destructive">
+                  <p className="text-lg sm:text-2xl font-bold font-heading font-tabular text-destructive">
                     {formatCurrency(planResult.totalInterestPaid)}
                   </p>
                 </div>
@@ -282,7 +282,7 @@ function MonthCard({
             )}
           </div>
           <span className="font-medium text-sm font-tabular whitespace-nowrap">{formatDate(ms.date)}</span>
-          <div className="flex-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <div className="flex-1 flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1 text-[11px] sm:text-xs text-muted-foreground">
             <span>Start: <strong className="text-foreground font-tabular">{formatCurrency(ms.totalStartingDebt)}</strong></span>
             <span className="text-destructive/70">Int: <strong className="font-tabular">{formatCurrencyCents(ms.totalInterest)}</strong></span>
             <span className="text-primary/80">Prin: <strong className="font-tabular">{formatCurrencyCents(ms.totalPrincipal)}</strong></span>
@@ -320,7 +320,7 @@ function MonthCard({
                 return (
                   <div
                     key={s.debtId}
-                    className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs rounded-lg px-4 py-3 ${
+                    className={`flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-[11px] sm:text-xs rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 ${
                       s.isPaidOff ? 'bg-primary/8 border border-primary/15' : 'bg-muted/40 border border-border/40'
                     }`}
                   >
@@ -336,7 +336,7 @@ function MonthCard({
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <span className="font-semibold min-w-[110px]">{s.creditorName}</span>
+                    <span className="font-semibold min-w-[90px] sm:min-w-[110px]">{s.creditorName}</span>
                     <span className="text-muted-foreground font-tabular">Start: {formatCurrencyCents(s.startingBalance)}</span>
                     <span className="text-destructive/70 font-tabular">+{formatCurrencyCents(s.interestAccrued)} int</span>
                     <span className="text-primary/80 font-tabular">−{formatCurrencyCents(s.principalPaid)} principal</span>

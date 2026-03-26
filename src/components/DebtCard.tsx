@@ -27,12 +27,12 @@ export default function DebtCard({ debt, onEdit, onRemove }: DebtCardProps) {
             <span>Min: <strong className="text-foreground font-tabular">{formatCurrency(debt.minPayment)}/mo</strong></span>
           </div>
         </div>
-        <div className="flex gap-1 shrink-0">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(debt)}>
-            <Edit2 className="w-3.5 h-3.5" />
+        <div className="flex gap-1.5 shrink-0">
+          <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8" onClick={() => onEdit(debt)}>
+            <Edit2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => onRemove(debt.id)}>
-            <Trash2 className="w-3.5 h-3.5" />
+          <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 text-destructive hover:text-destructive" onClick={() => onRemove(debt.id)}>
+            <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
           </Button>
         </div>
       </CardContent>
