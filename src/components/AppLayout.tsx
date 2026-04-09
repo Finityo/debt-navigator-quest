@@ -110,7 +110,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar — glass */}
       <aside className="hidden lg:flex w-[15.5rem] flex-col glass-sidebar shrink-0">
         <div className="px-5 pt-7 pb-7 flex items-center gap-3">
-          <img src={finityoLogo} alt="Finityo" className="w-8 h-8" />
+          <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0">
+            <video src="/assets/hero-logo.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+          </div>
           <div>
             <h1 className="text-lg font-bold font-heading text-primary tracking-tight leading-none">
               Finityo
@@ -172,7 +174,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile header — glass */}
       <div className="flex flex-col flex-1 min-w-0">
         <header className="lg:hidden flex items-center justify-between px-4 py-3 glass-header">
-          <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0">
+              <video src="/assets/hero-logo.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+            </div>
+            <h1 className="text-lg font-bold font-heading text-primary tracking-tight">Finityo</h1>
+          </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => onboarding.reset()}

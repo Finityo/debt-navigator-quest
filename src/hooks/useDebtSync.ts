@@ -138,7 +138,7 @@ export function useDebtSync() {
 
     const { error } = await supabase
       .from('debts')
-      .update(patch)
+      .update(patch as any)
       .eq('id', id);
 
     if (error) {

@@ -49,9 +49,10 @@ export default function Hero() {
       <motion.div variants={scaleIn} className="flex flex-col items-center space-y-4">
         <div className="glass-card rounded-3xl glow overflow-hidden w-36 h-36">
           <video
-            src="/hero-logo.mp4"
+            src="/assets/hero-logo.mp4"
             autoPlay
             loop
+            muted
             playsInline
             className="w-full h-full object-cover"
           />
