@@ -19,7 +19,7 @@
 - [x] Strategy toggle validated — Avalanche vs Snowball updates interest, savings, and progress instantly
 - [x] Payoff date, total interest, progress bar reflect live engine output
 - [x] No stale data, no dead routes, no blank screens
-- [ ] Input/form hardening for debt edit fields (remaining risk — Phase 2)
+- [x] Input/form hardening for debt edit fields (Phase 2 complete)
 
 ## Web Release
 

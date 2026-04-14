@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { Plus, CreditCard, Landmark, ArrowRight, Upload, TrendingDown, Calendar, DollarSign } from 'lucide-react';
+import { toast } from 'sonner';
 import PlaidConnect from '@/components/PlaidConnect';
 import ManualDebtForm from '@/components/ManualDebtForm';
 import DebtCard from '@/components/DebtCard';
@@ -38,16 +39,29 @@ export default function DebtsPage() {
 
   const handleSaveEdit = () => {
     if (!editingId) return;
+
+    const balance = Number(editForm.balance);
+    const apr = Number(editForm.apr);
+    const minPayment = Number(editForm.minPayment);
+    const name = (editForm.creditorName || '').trim();
+
+    // Final guard — DebtEditForm validates inline, but double-check here
+    if (!name || isNaN(balance) || balance <= 0 || isNaN(apr) || apr < 0 || isNaN(minPayment) || minPayment < 0) {
+      toast.error('Please fix invalid fields before saving');
+      return;
+    }
+
     updateDebt(editingId, {
-      creditorName: editForm.creditorName,
-      balance: Number(editForm.balance),
-      apr: Number(editForm.apr) / 100,
-      minPayment: Number(editForm.minPayment),
+      creditorName: name,
+      balance: Math.round(balance * 100) / 100,
+      apr: Math.round(apr * 100) / 10000, // UI % → decimal, rounded
+      minPayment: Math.round(minPayment * 100) / 100,
       type: editForm.type as DebtType,
       notes: editForm.notes,
     });
     setEditingId(null);
     setEditForm({});
+    toast.success('Debt updated');
   };
 
   const payoffDate = planResult?.payoffMonth

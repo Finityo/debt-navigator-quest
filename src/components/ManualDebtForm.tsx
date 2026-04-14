@@ -144,6 +144,7 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
               value={balance}
               onCommit={(v) => { setBalance(String(v)); setErrors((p) => ({ ...p, balance: '' })); }}
               placeholder="4,200"
+              max={10_000_000}
               className={cn(errors.balance && 'border-destructive')}
             />
             {errors.balance && <p className="text-[11px] text-destructive">{errors.balance}</p>}
@@ -158,6 +159,7 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
               value={apr}
               onCommit={(v) => { setApr(String(v)); setErrors((p) => ({ ...p, apr: '' })); }}
               placeholder="21.9"
+              max={100}
               className={cn(errors.apr && 'border-destructive')}
             />
             {errors.apr && <p className="text-[11px] text-destructive">{errors.apr}</p>}
@@ -170,6 +172,7 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
               value={minPayment}
               onCommit={(v) => { setMinPayment(String(v)); setErrors((p) => ({ ...p, minPayment: '' })); }}
               placeholder="95"
+              max={1_000_000}
               className={cn(errors.minPayment && 'border-destructive')}
             />
             {errors.minPayment && <p className="text-[11px] text-destructive">{errors.minPayment}</p>}
