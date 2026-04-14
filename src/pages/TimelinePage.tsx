@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
@@ -6,7 +8,14 @@ import { formatCurrency, formatDate, formatDateFull } from '@/utils/format';
 import { CheckCircle2, Clock, Trophy } from 'lucide-react';
 
 export default function TimelinePage() {
-  const { planResult, debts } = useDebtStore();
+  const { planResult, debts, _hasHydrated } = useDebtStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (_hasHydrated && debts.length === 0) {
+      navigate('/debts', { replace: true });
+    }
+  }, [_hasHydrated, debts.length, navigate]);
 
   return (
     <div className="space-y-8">

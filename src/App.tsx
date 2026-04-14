@@ -10,7 +10,6 @@ import { AuthProvider } from "@/hooks/useAuth";
 
 import Hero from "@/components/Hero";
 import AuthPage from "@/pages/AuthPage";
-import DashboardPage from "@/pages/DashboardPage";
 import DebtsPage from "@/pages/DebtsPage";
 import PlanPage from "@/pages/PlanPage";
 import TimelinePage from "@/pages/TimelinePage";
@@ -40,7 +39,6 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Hero />} />
                   <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/debts" element={<DebtsPage />} />
                   <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
                   <Route path="/plan" element={<PlanPage />} />

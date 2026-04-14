@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
 import { ComputeBanner } from '@/components/ComputeBanner';
@@ -12,7 +13,14 @@ import { BarChart3, Play, TrendingDown } from 'lucide-react';
 import type { PlanResult } from '@/types/debt';
 
 export default function SensitivityPage() {
-  const { debts, settings, extraPayments } = useDebtStore();
+  const { debts, settings, extraPayments, _hasHydrated } = useDebtStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (_hasHydrated && debts.length === 0) {
+      navigate('/debts', { replace: true });
+    }
+  }, [_hasHydrated, debts.length, navigate]);
   const [extraAmounts, setExtraAmounts] = useState('0,100,200,300,500');
   const [results, setResults] = useState<{ extra: number; result: PlanResult }[]>([]);
 

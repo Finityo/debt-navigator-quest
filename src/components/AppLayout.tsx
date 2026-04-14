@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import {
-  LayoutDashboard,
   CreditCard,
   Calculator,
   CalendarDays,
@@ -24,7 +23,6 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/debts', label: 'Debts', icon: CreditCard },
   { to: '/extra-payments', label: 'Extra Payments', icon: Banknote },
   { to: '/plan', label: 'Plan', icon: Calculator },

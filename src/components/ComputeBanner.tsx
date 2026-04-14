@@ -1,11 +1,11 @@
-import { useDebtStore, type ComputeStatus } from '@/store/useDebtStore';
+import { useDebtStore } from '@/store/useDebtStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calculator, AlertTriangle, RefreshCw, Info } from 'lucide-react';
+import { AlertTriangle, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function ComputeBanner() {
-  const { debts, planResult, computeStatus, computePlan, validationErrors } = useDebtStore();
+  const { debts, validationErrors } = useDebtStore();
   const navigate = useNavigate();
 
   if (debts.length === 0) {
@@ -34,7 +34,7 @@ export function ComputeBanner() {
     validationErrors.settings.length > 0 ||
     validationErrors.extraPayments.length > 0;
 
-  if (hasErrors && computeStatus !== 'computed') {
+  if (hasErrors) {
     const allErrors = [
       ...Object.values(validationErrors.debts).flat(),
       ...validationErrors.settings,
@@ -60,45 +60,6 @@ export function ComputeBanner() {
               )}
             </ul>
           </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!planResult) {
-    return (
-      <Card className="border border-primary/15 bg-accent/40">
-        <CardContent className="py-12 px-6 flex flex-col items-center text-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Calculator className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-heading font-bold text-base">Ready to compute your plan</h3>
-            <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
-              {debts.length} debt{debts.length !== 1 ? 's' : ''} loaded. Run the engine to see your payoff timeline.
-            </p>
-          </div>
-          <Button onClick={computePlan} size="default">
-            <Calculator className="w-4 h-4 mr-2" /> Compute Plan
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (computeStatus === 'stale') {
-    return (
-      <Card className="border border-warning/25 bg-warning/5">
-        <CardContent className="p-4 flex items-center gap-3.5">
-          <div className="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center shrink-0">
-            <RefreshCw className="w-4 h-4 text-warning" />
-          </div>
-          <p className="text-sm text-muted-foreground flex-1">
-            Your inputs have changed. Recalculate to see updated results.
-          </p>
-          <Button size="sm" variant="outline" onClick={computePlan} className="shrink-0">
-            <RefreshCw className="w-3 h-3 mr-1.5" /> Recalculate
-          </Button>
         </CardContent>
       </Card>
     );
