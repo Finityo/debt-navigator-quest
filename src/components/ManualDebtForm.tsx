@@ -159,6 +159,7 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
               value={apr}
               onCommit={(v) => { setApr(String(v)); setErrors((p) => ({ ...p, apr: '' })); }}
               placeholder="21.9"
+              max={100}
               className={cn(errors.apr && 'border-destructive')}
             />
             {errors.apr && <p className="text-[11px] text-destructive">{errors.apr}</p>}
