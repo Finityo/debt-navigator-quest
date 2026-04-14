@@ -2,17 +2,31 @@
 
 ## Pre-Release
 
-- [ ] `bun test` — all tests pass
-- [ ] Engine locked (Milestone 1) — no math changes without re-verification
-- [ ] Input normalization complete (Milestone 2) — all paths use `normalizeDebtInput`
-- [ ] Stability verified (Milestone 3) — hydration, store↔engine parity, scenarios
+- [x] `bun test` — all tests pass
+- [x] Engine locked (Milestone 1) — no math changes without re-verification
+- [x] Input normalization complete (Milestone 2) — all paths use `normalizeDebtInput`
+- [x] Stability verified (Milestone 3) — hydration, store↔engine parity, scenarios
+
+## Phase 1 — Flow & Integration Lock
+
+- [x] Hero CTAs route correctly (`/debts`, `/auth`)
+- [x] All `/dashboard` references removed (code, nav, redirects)
+- [x] Auto-compute enforced — no manual compute button required
+- [x] ComputeBanner shows validation errors only, never blocks valid plans
+- [x] Flow guards active: `/plan`, `/timeline`, `/scenarios`, `/sensitivity` → redirect to `/debts` when no debts
+- [x] Desktop flow validated (Hero → Debts → Add/Edit/Delete → Plan → Strategy Toggle → Scenarios)
+- [x] Mobile flow validated at 390px (Hero → Debts → Plan → Strategy Toggle)
+- [x] Strategy toggle validated — Avalanche vs Snowball updates interest, savings, and progress instantly
+- [x] Payoff date, total interest, progress bar reflect live engine output
+- [x] No stale data, no dead routes, no blank screens
+- [ ] Input/form hardening for debt edit fields (remaining risk — Phase 2)
 
 ## Web Release
 
-- [ ] `bun build` succeeds with no errors
+- [x] `bun build` succeeds with no errors
 - [ ] Environment variables configured in hosting platform
 - [ ] Deploy to Lovable / Vercel / Netlify
-- [ ] Smoke test: add debt → view plan → verify payoff date
+- [x] Smoke test: add debt → view plan → verify payoff date
 - [ ] Smoke test: CSV import → plan renders correctly
 - [ ] Smoke test: Plaid connect (sandbox) → debts populate
 
@@ -20,7 +34,7 @@
 
 - [ ] Verify edge functions respond (create-link-token, exchange-and-fetch)
 - [ ] Check browser console for errors on all pages
-- [ ] Confirm snowball/avalanche switching produces different results
+- [x] Confirm snowball/avalanche switching produces different results
 
 ## Native (Future Phase)
 
