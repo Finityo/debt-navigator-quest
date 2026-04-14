@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MethodComparison } from '@/components/plan/MethodComparison';
 import { useDebtStore } from '@/store/useDebtStore';
 import { PageHeader } from '@/components/PageHeader';
@@ -15,7 +16,15 @@ import type { PayoffMethod, PlanResult } from '@/types/debt';
 import { GitCompare, Play } from 'lucide-react';
 
 export default function ScenariosPage() {
-  const { debts, settings, extraPayments, planResult } = useDebtStore();
+  const { debts, settings, extraPayments, planResult, _hasHydrated } = useDebtStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (_hasHydrated && debts.length === 0) {
+      navigate('/debts', { replace: true });
+    }
+  }, [_hasHydrated, debts.length, navigate]);
+
   const [altMethod, setAltMethod] = useState<PayoffMethod>(
     settings.method === 'avalanche' ? 'snowball' : 'avalanche'
   );

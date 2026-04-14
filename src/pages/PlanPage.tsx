@@ -215,7 +215,7 @@ export default function PlanPage() {
             })}
           </div>
 
-          {/* TASK 4 — Next Step Module */}
+          {/* Next Step Module */}
           <Card className="glass-card">
             <CardContent className="p-5">
               <div className="flex items-center gap-2 mb-2">
@@ -225,8 +225,8 @@ export default function PlanPage() {
               <p className="text-sm text-muted-foreground mb-3">
                 Log your next payment to stay on track.
               </p>
-              <Button disabled className="w-full h-12 font-semibold opacity-60 cursor-not-allowed">
-                Log a Payment (coming soon)
+              <Button onClick={() => navigate('/activity')} className="w-full h-12 font-semibold">
+                Log a Payment
               </Button>
             </CardContent>
           </Card>
