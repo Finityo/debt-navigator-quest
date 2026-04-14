@@ -172,6 +172,7 @@ export default function ManualDebtForm({ onClose }: ManualDebtFormProps) {
               value={minPayment}
               onCommit={(v) => { setMinPayment(String(v)); setErrors((p) => ({ ...p, minPayment: '' })); }}
               placeholder="95"
+              max={1_000_000}
               className={cn(errors.minPayment && 'border-destructive')}
             />
             {errors.minPayment && <p className="text-[11px] text-destructive">{errors.minPayment}</p>}
