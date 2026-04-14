@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { Plus, CreditCard, Landmark, ArrowRight, Upload, TrendingDown, Calendar, DollarSign } from 'lucide-react';
+import { toast } from 'sonner';
 import PlaidConnect from '@/components/PlaidConnect';
 import ManualDebtForm from '@/components/ManualDebtForm';
 import DebtCard from '@/components/DebtCard';
