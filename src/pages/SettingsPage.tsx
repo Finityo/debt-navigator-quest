@@ -22,7 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Moon, Sun, Volume2, LogOut, Trash2, Shield, FileText, Loader2 } from 'lucide-react';
+import { Moon, Sun, Volume2, LogOut, Trash2, Shield, FileText, Loader2, Download } from 'lucide-react';
+import { exportUserGuidePDF } from '@/utils/exportUserGuide';
 import type { PayoffMethod } from '@/types/debt';
 import { toast } from 'sonner';
 
