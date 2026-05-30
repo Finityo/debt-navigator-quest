@@ -175,6 +175,28 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Help & Resources */}
+          <div className="border-t pt-6 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Help & Resources</Label>
+            <div className="flex flex-col gap-2 mt-2">
+              <Button
+                variant="outline"
+                className="justify-start text-sm"
+                onClick={() => {
+                  try {
+                    exportUserGuidePDF();
+                    toast.success('User guide downloaded');
+                  } catch {
+                    toast.error('Failed to generate PDF');
+                  }
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download User Guide (PDF)
+              </Button>
+            </div>
+          </div>
+
           {/* Legal Links */}
           <div className="border-t pt-6 space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Legal</Label>
