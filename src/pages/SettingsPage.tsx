@@ -22,7 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Moon, Sun, Volume2, LogOut, Trash2, Shield, FileText, Loader2 } from 'lucide-react';
+import { Moon, Sun, Volume2, LogOut, Trash2, Shield, FileText, Loader2, Download } from 'lucide-react';
+import { exportUserGuidePDF } from '@/utils/exportUserGuide';
 import type { PayoffMethod } from '@/types/debt';
 import { toast } from 'sonner';
 
@@ -171,6 +172,28 @@ export default function SettingsPage() {
                 checked={voiceoverEnabled}
                 onCheckedChange={handleVoiceoverChange}
               />
+            </div>
+          </div>
+
+          {/* Help & Resources */}
+          <div className="border-t pt-6 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Help & Resources</Label>
+            <div className="flex flex-col gap-2 mt-2">
+              <Button
+                variant="outline"
+                className="justify-start text-sm"
+                onClick={() => {
+                  try {
+                    exportUserGuidePDF();
+                    toast.success('User guide downloaded');
+                  } catch {
+                    toast.error('Failed to generate PDF');
+                  }
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download User Guide (PDF)
+              </Button>
             </div>
           </div>
 
