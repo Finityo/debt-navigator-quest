@@ -277,6 +277,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 p-4 md:p-6 lg:p-8 xl:p-10 max-w-5xl w-full mx-auto">
           {children}
         </main>
+
+        {/* Footer */}
+        <footer className="border-t border-[var(--glass-border)] mt-8">
+          <div className="max-w-5xl w-full mx-auto px-4 md:px-6 lg:px-8 py-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-foreground/50">
+            <p className="leading-relaxed max-w-md">
+              Finityo is a planning tool and does not provide financial advice.
+            </p>
+            <nav className="flex items-center gap-4">
+              <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+              <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
+            </nav>
+            <p>© {new Date().getFullYear()} Finityo</p>
+          </div>
+        </footer>
       </div>
     </div>
   );
