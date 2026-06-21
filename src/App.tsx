@@ -21,6 +21,7 @@ import ExtraPaymentsPage from "@/pages/ExtraPaymentsPage";
 import InstallPage from "@/pages/InstallPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
+import SupportPage from "@/pages/SupportPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
