@@ -1,3 +1,4 @@
+import { getPlaidConfig } from "../_shared/plaidConfig.ts";
 // Sandbox-only diagnostics: reports configuration and runs a Plaid test-bank import.
 // Never returns credentials, tokens, or account data — only booleans, codes and counts.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -23,9 +24,7 @@ serve(async (req) => {
     const { data: claims, error: claimsError } = await supabase.auth.getClaims(authHeader.replace("Bearer ", ""));
     if (claimsError || !claims?.claims?.sub) return json({ error: "Unauthorized" }, 401);
 
-    const clientId = Deno.env.get("PLAID_CLIENT_ID");
-    const secret = Deno.env.get("PLAID_SECRET");
-    const env = Deno.env.get("PLAID_ENV") || "production";
+    const { clientId, secret, env } = getPlaidConfig();
     const config = { env, clientIdSet: !!clientId, secretSet: !!secret };
 
     let body: { action?: string } = {};

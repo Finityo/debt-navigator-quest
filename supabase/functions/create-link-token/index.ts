@@ -1,3 +1,4 @@
+import { getPlaidConfig } from "../_shared/plaidConfig.ts";
 import { sanitizePlaidError, userMessageForPlaidError } from "../_shared/plaidError.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -39,14 +40,12 @@ serve(async (req) => {
     const userId = claimsData.claims.sub;
 
 
-    const PLAID_CLIENT_ID = Deno.env.get("PLAID_CLIENT_ID");
-    const PLAID_SECRET = Deno.env.get("PLAID_SECRET");
+    const { clientId: PLAID_CLIENT_ID, secret: PLAID_SECRET, env: PLAID_ENV } = getPlaidConfig();
 
     if (!PLAID_CLIENT_ID || !PLAID_SECRET) {
       throw new Error("Plaid credentials not configured");
     }
 
-    const PLAID_ENV = Deno.env.get("PLAID_ENV") || "production";
     const PLAID_BASE_URL = `https://${PLAID_ENV}.plaid.com`;
 
     const response = await fetch(`${PLAID_BASE_URL}/link/token/create`, {

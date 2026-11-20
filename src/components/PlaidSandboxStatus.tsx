@@ -9,7 +9,7 @@ interface TestResult { ok: boolean; step: string; error_code?: string | null; de
 const STEP_HELP: Record<string, string> = {
   env: 'Bank import is not in sandbox mode.',
   config: 'Plaid client ID or secret is missing.',
-  credentials: 'Plaid rejected the keys. Make sure PLAID_SECRET is your Sandbox secret.',
+  credentials: 'Plaid rejected the keys. Make sure PLAID_SECRET_S is your Sandbox secret.',
   exchange: 'Test bank login worked, but the connection step failed.',
   liabilities: 'Connected, but debt details could not be fetched. Check Liabilities is enabled in Plaid.',
 };
@@ -61,7 +61,7 @@ export function PlaidSandboxStatus() {
       )}
       <ol className="list-decimal pl-5 text-xs text-muted-foreground space-y-1">
         <li>In the Plaid dashboard, open Team Settings → Keys and copy the Sandbox secret.</li>
-        <li>In Project Settings → Secrets, update PLAID_SECRET with that value.</li>
+        <li>In Project Settings → Secrets, save it as PLAID_SECRET_S (and the client ID as PLAID_CLIENT_ID_S).</li>
         <li>Tap "Run test import" below.</li>
       </ol>
       {test && (
