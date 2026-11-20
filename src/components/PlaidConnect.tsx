@@ -66,30 +66,9 @@ export default function PlaidConnect() {
     if (user) fetchLinkToken();
   }, [user, fetchLinkToken]);
 
-  if (authLoading) {
-    return (
-      <div className="p-4 text-center text-muted-foreground">
-        Preparing secure connection...
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="p-4 text-center space-y-3">
-        <p className="text-sm text-muted-foreground">
-          Sign in to securely connect your bank and auto-import your debts.
-        </p>
-        <Button asChild variant="outline" size="sm">
-          <Link to="/auth">Sign In to Connect</Link>
-        </Button>
-      </div>
-    );
-  }
-
   const config: PlaidLinkOptionsWithLinkToken = {
-    token: linkToken!,
-    onSuccess: async (public_token, metadata) => {
+    token: linkToken,
+    onSuccess: async (public_token) => {
       try {
         setLoading(true);
         const { data, error } = await supabase.functions.invoke('exchange-and-fetch', {
@@ -123,12 +102,43 @@ export default function PlaidConnect() {
     },
   };
 
-  const { open, ready, error } = usePlaidLink(linkToken ? config : ({} as any));
+  // Keep the Link hook mounted while authentication and token loading change.
+  const { open, ready, error } = usePlaidLink(config);
 
-  if (!linkToken) {
+  if (authLoading) {
     return (
       <div className="p-4 text-center text-muted-foreground">
         Preparing secure connection...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="p-4 text-center space-y-3">
+        <p className="text-sm text-muted-foreground">
+          Sign in to securely connect your bank and auto-import your debts.
+        </p>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/auth">Sign In to Connect</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (!linkToken) {
+    return (
+      <div className="p-4 text-center space-y-2">
+        {errorMsg ? (
+          <>
+            <p className="text-destructive text-sm">{errorMsg}</p>
+            <Button variant="outline" size="sm" onClick={fetchLinkToken}>
+              Try Again
+            </Button>
+          </>
+        ) : (
+          <p className="text-muted-foreground">Preparing secure connection...</p>
+        )}
       </div>
     );
   }

@@ -13,24 +13,27 @@ serve(async (req) => {
   }
 
   try {
-    // Attempt to extract authenticated user (optional)
+    // Require the same authenticated session as link-token creation.
     const authHeader = req.headers.get("Authorization");
-    if (authHeader?.startsWith("Bearer ")) {
-      try {
-        const supabase = createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          Deno.env.get("SUPABASE_ANON_KEY")!,
-          { global: { headers: { Authorization: authHeader } } }
-        );
-        const token = authHeader.replace("Bearer ", "");
-        const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-        // If we get a valid user, great — otherwise continue anonymously
-        if (!claimsError && claimsData?.claims?.sub) {
-          console.log("Authenticated user:", claimsData.claims.sub);
-        }
-      } catch {
-        // Auth validation failed — continue
-      }
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(
+      authHeader.slice(7)
+    );
+    if (claimsError || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const PLAID_CLIENT_ID = Deno.env.get("PLAID_CLIENT_ID");
