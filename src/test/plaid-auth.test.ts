@@ -16,9 +16,10 @@ function loadHandler(name: string, valid: boolean) {
   const createClient = () => ({ auth: { getClaims: async () => valid
     ? { data: { claims: { sub: 'test-user' } }, error: null }
     : { data: null, error: new Error('invalid') } } });
-  new Function('serve', 'createClient', 'Deno', 'fetch', compiled)(
+  const getPlaidConfig = () => ({ env: 'sandbox', clientId: 'test-fixture', secret: 'test-fixture' });
+  new Function('serve', 'createClient', 'Deno', 'fetch', 'getPlaidConfig', compiled)(
     (value: Handler) => { handler = value; }, createClient,
-    { env: { get: () => 'test-fixture' } }, fetch,
+    { env: { get: () => 'test-fixture' } }, fetch, getPlaidConfig,
   );
   if (!handler) throw new Error('Handler was not registered');
   return { handler, fetch };
