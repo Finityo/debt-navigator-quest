@@ -1,3 +1,4 @@
+import { sanitizePlaidError, userMessageForPlaidError } from "../_shared/plaidError.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -65,9 +66,10 @@ serve(async (req) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Plaid error:", data);
+      const err = sanitizePlaidError("/link/token/create", PLAID_ENV, response.status, data);
+      console.error("Plaid error:", err);
       return new Response(
-        JSON.stringify({ error: data.error_message || "Failed to create link token" }),
+        JSON.stringify({ error: userMessageForPlaidError(err, "Failed to create link token") }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

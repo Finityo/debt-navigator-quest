@@ -1,3 +1,4 @@
+import { sanitizePlaidError, userMessageForPlaidError } from "../_shared/plaidError.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -69,9 +70,10 @@ serve(async (req) => {
     const exchangeData = await exchangeRes.json();
 
     if (!exchangeRes.ok) {
-      console.error("Exchange error:", exchangeData);
+      const err = sanitizePlaidError("/item/public_token/exchange", PLAID_ENV, exchangeRes.status, exchangeData);
+      console.error("Plaid error:", err);
       return new Response(
-        JSON.stringify({ error: "Token exchange failed" }),
+        JSON.stringify({ error: userMessageForPlaidError(err, "Token exchange failed") }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -92,9 +94,10 @@ serve(async (req) => {
     const liabilitiesData = await liabilitiesRes.json();
 
     if (!liabilitiesRes.ok) {
-      console.error("Liabilities error:", liabilitiesData);
+      const err = sanitizePlaidError("/liabilities/get", PLAID_ENV, liabilitiesRes.status, liabilitiesData);
+      console.error("Plaid error:", err);
       return new Response(
-        JSON.stringify({ error: "Failed to fetch liabilities" }),
+        JSON.stringify({ error: userMessageForPlaidError(err, "Failed to fetch liabilities") }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
