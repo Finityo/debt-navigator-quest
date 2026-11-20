@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Moon, Sun, Volume2, LogOut, Trash2, Shield, FileText, Loader2, Download } from 'lucide-react';
+import { PlaidSandboxStatus } from '@/components/PlaidSandboxStatus';
 import { exportUserGuidePDF } from '@/utils/exportUserGuide';
 import type { PayoffMethod } from '@/types/debt';
 import { toast } from 'sonner';
@@ -174,6 +175,12 @@ export default function SettingsPage() {
               />
             </div>
           </div>
+
+          {user && (
+            <div className="border-t pt-6">
+              <PlaidSandboxStatus />
+            </div>
+          )}
 
           {/* Help & Resources */}
           <div className="border-t pt-6 space-y-1.5">
