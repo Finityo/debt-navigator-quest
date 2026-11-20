@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink, PlaidLinkOptionsWithLinkToken } from 'react-plaid-link';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useDebtStore } from '@/store/useDebtStore';
+import { useAuth } from '@/hooks/useAuth';
 import type { Debt, DebtType } from '@/types/debt';
 import { toast } from 'sonner';
 
@@ -40,6 +42,7 @@ function normalizePlaidDebts(debts: any[]): Debt[] {
 }
 
 export default function PlaidConnect() {
+  const { user, loading: authLoading } = useAuth();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -49,6 +52,7 @@ export default function PlaidConnect() {
 
   const fetchLinkToken = useCallback(async () => {
     try {
+      setErrorMsg(null);
       const { data, error } = await supabase.functions.invoke('create-link-token');
       if (error) throw error;
       setLinkToken(data.link_token);
@@ -59,8 +63,29 @@ export default function PlaidConnect() {
   }, []);
 
   useEffect(() => {
-    fetchLinkToken();
-  }, [fetchLinkToken]);
+    if (user) fetchLinkToken();
+  }, [user, fetchLinkToken]);
+
+  if (authLoading) {
+    return (
+      <div className="p-4 text-center text-muted-foreground">
+        Preparing secure connection...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="p-4 text-center space-y-3">
+        <p className="text-sm text-muted-foreground">
+          Sign in to securely connect your bank and auto-import your debts.
+        </p>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/auth">Sign In to Connect</Link>
+        </Button>
+      </div>
+    );
+  }
 
   const config: PlaidLinkOptionsWithLinkToken = {
     token: linkToken!,
@@ -133,7 +158,12 @@ export default function PlaidConnect() {
       </Button>
 
       {errorMsg && (
-        <p className="text-destructive text-center text-sm">{errorMsg}</p>
+        <div className="text-center space-y-2">
+          <p className="text-destructive text-sm">{errorMsg}</p>
+          <Button variant="outline" size="sm" onClick={fetchLinkToken}>
+            Try Again
+          </Button>
+        </div>
       )}
 
       {success && (
