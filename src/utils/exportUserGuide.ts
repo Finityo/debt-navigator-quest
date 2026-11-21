@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 type Section = {
   heading: string;
@@ -16,7 +17,7 @@ const SECTIONS: Section[] = [
     heading: 'Step 1 — Land on the Hero',
     body: [
       'Open the app to see the Finityo welcome screen.',
-      'Tap "Build My Plan" to start, or "Log In" if you already have an account.',
+      AUTH_PAGE_ENABLED ? 'Tap "Build My Plan" to start, or "Log In" if you already have an account.' : 'Tap "Build My Plan" to start. Sign-in is temporarily unavailable.',
       'Takes under 60 seconds to get to your first plan.',
     ],
   },
@@ -25,7 +26,7 @@ const SECTIONS: Section[] = [
     body: [
       'On the "Add Your Debts" screen there are three ways to add a debt:',
       '1. Manual — tap "Add Debt" and enter creditor name, current balance, APR (%), minimum monthly payment, and type.',
-      '2. Bank import — tap "Import from Bank" to securely connect via Plaid and auto-pull balances.',
+      AUTH_PAGE_ENABLED ? '2. Bank import — tap "Import from Bank" to securely connect via Plaid and auto-pull balances.' : '2. Bank import — requires an existing signed-in account. While sign-in is paused, signed-out users can enter debts manually or upload CSV.',
       '3. CSV upload — tap "Upload CSV" to import a spreadsheet.',
       'Tips: add as many debts as you need with "Add Another Debt". Edit or delete any debt from its card. Fields are validated — no negatives, letters, or absurd values.',
     ],
@@ -64,7 +65,7 @@ const SECTIONS: Section[] = [
   {
     heading: 'Step 7 — Save & Sync (Optional)',
     body: [
-      'Create an account from "Log In" to persist your data across devices. Your debts, settings, and progress sync automatically once signed in.',
+      AUTH_PAGE_ENABLED ? 'Create an account from "Log In" to persist your data across devices. Your debts, settings, and progress sync automatically once signed in.' : 'New sign-ins and account creation are temporarily unavailable. Existing signed-in accounts can continue syncing; you can still build a plan without signing in.',
     ],
   },
   {
