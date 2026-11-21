@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      bank_ai_service_state: {
+        Row: {
+          blocked_status: number
+          blocked_type: string
+          service: string
+          updated_at: string
+        }
+        Insert: {
+          blocked_status: number
+          blocked_type: string
+          service: string
+          updated_at?: string
+        }
+        Update: {
+          blocked_status?: number
+          blocked_type?: string
+          service?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       debts: {
         Row: {
           apr: number

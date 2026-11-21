@@ -7,6 +7,7 @@ import { formatCurrency, formatDate } from '@/utils/format';
 import { Plus, CreditCard, Landmark, ArrowRight, Upload, TrendingDown, Calendar, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 import PlaidConnect from '@/components/PlaidConnect';
+import { BankTroubleshooting } from '@/components/BankTroubleshooting';
 import ManualDebtForm from '@/components/ManualDebtForm';
 import DebtCard from '@/components/DebtCard';
 import CsvImportExport from '@/components/CsvImportExport';
@@ -128,6 +129,7 @@ export default function DebtsPage() {
                 </div>
               </div>
               <PlaidConnect />
+              <BankTroubleshooting />
             </CardContent>
           </Card>
           <CsvImportExport />

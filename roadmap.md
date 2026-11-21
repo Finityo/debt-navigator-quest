@@ -13,3 +13,10 @@
 - [x] Require authentication for token exchange.
 - [x] Eight targeted tests pass; desktop and 390px bank sign-in navigation verified without crashes; build clean; deployed exchange rejects invalid authentication with 401.
 - [ ] Verify real signed-in Plaid initialization and import (separate bank-import check; not exercised by this sign-in restoration).
+## AI bank troubleshooting
+- [ ] Add signed-in, credential-safe Finityo troubleshooting in bank import.
+- [ ] Deploy and test authentication, sensitive-input rejection, model guidance, and desktop/mobile UI.
+- [ ] Preserve all debt math, Plaid configuration, signup pause, and email delivery.
+
+## Password reset
+- [ ] Send account recovery link (waiting for account email; email delivery previously unresolved).
