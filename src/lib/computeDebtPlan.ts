@@ -197,13 +197,12 @@ export function runEngine(
       const paymentApplied = round2(debt.monthMinPaid + debt.monthExtraApplied);
 
       // R2: principalPaid = paymentApplied - interestAccrued
-      const rawPrincipal = round2(paymentApplied - debt.monthInterest);
-      // Prevent negative principal (negative amortization case)
-      const principalPaid = round2(Math.max(0, rawPrincipal));
-
-      if (rawPrincipal < -0.01) {
-        // negative amortization case (allowed but tracked)
-      }
+      // Signed on purpose: when a minimum payment is below the month's
+      // interest (negative amortization), principal is negative and the
+      // shortfall accrues to the balance, which Step 1-2 math already
+      // handles. Clamping to 0 here made the identity check below throw
+      // and crashed the whole plan for such debts (fixed Nov 20, 2026).
+      const principalPaid = round2(paymentApplied - debt.monthInterest);
 
       // R3: endingBalance = startingBalance + interestAccrued - paymentApplied
       const expectedEnding = round2(debt.monthStartBalance + debt.monthInterest - paymentApplied);

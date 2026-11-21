@@ -337,7 +337,7 @@ function MonthCard({
                     <span className="font-semibold min-w-[90px] sm:min-w-[110px]">{s.creditorName}</span>
                     <span className="text-muted-foreground font-tabular">Start: {formatCurrencyCents(s.startingBalance)}</span>
                     <span className="text-destructive/70 font-tabular">+{formatCurrencyCents(s.interestAccrued)} int</span>
-                    <span className="text-primary/80 font-tabular">−{formatCurrencyCents(s.principalPaid)} principal</span>
+                    <span className="text-primary/80 font-tabular">{s.principalPaid < 0 ? '+' : '−'}{formatCurrencyCents(Math.abs(s.principalPaid))} principal</span>
                     <span className="font-tabular font-semibold">End: {formatCurrencyCents(s.endingBalance)}</span>
                     {s.isPaidOff && <span className="text-primary font-bold">✓ Paid Off</span>}
                   </div>
