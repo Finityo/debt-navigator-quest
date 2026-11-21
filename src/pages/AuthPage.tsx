@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function AuthPage() {
   const { user, loading } = useAuth();
@@ -63,6 +64,7 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,6 +96,15 @@ function LoginForm() {
         {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
         Sign In
       </Button>
+      <Button type="button" variant="ghost" className="w-full h-10" disabled={resetting || !email} onClick={async () => {
+        setResetting(true);
+        try {
+          const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+          if (error) throw error;
+          toast.success('If this account exists, a password-reset link will be emailed.');
+        } catch (e) { toast.error(e instanceof Error ? e.message : 'Could not request a password reset.'); }
+        finally { setResetting(false); }
+      }}>{resetting ? 'Requesting link…' : 'Forgot password?'}</Button>
     </form>
   );
 }

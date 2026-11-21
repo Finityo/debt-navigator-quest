@@ -14,9 +14,11 @@
 - [x] Eight targeted tests pass; desktop and 390px bank sign-in navigation verified without crashes; build clean; deployed exchange rejects invalid authentication with 401.
 - [ ] Verify real signed-in Plaid initialization and import (separate bank-import check; not exercised by this sign-in restoration).
 ## AI bank troubleshooting
-- [ ] Add signed-in, credential-safe Finityo troubleshooting in bank import.
-- [ ] Deploy and test authentication, sensitive-input rejection, model guidance, and desktop/mobile UI.
-- [ ] Preserve all debt math, Plaid configuration, signup pause, and email delivery.
+- [x] Add signed-in, credential-safe Finityo troubleshooting in bank import.
+- [x] Deployed; real signed-in AI guidance returned; signed-out requests rejected; mobile sensitive input rejected without a model call.
+- [x] Preserve all debt math, Plaid configuration, signup pause, and email sending settings.
 
 ## Password reset
-- [ ] Send account recovery link (waiting for account email; email delivery previously unresolved).
+- [x] Recovery link requested; delivery log confirms sent at 2026-11-21 00:19:14 UTC.
+- [x] Add password recovery form and Forgot password action; mobile form verified without changing the owner's password.
+- [ ] Complete password change (owner must open the emailed link and choose a private new password).

@@ -10,6 +10,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 
 import Hero from "@/components/Hero";
 import { AuthEntryRoute } from "@/components/AuthEntryRoute";
+import ResetPasswordPage from '@/pages/ResetPasswordPage';
 import DebtsPage from "@/pages/DebtsPage";
 import PlanPage from "@/pages/PlanPage";
 import TimelinePage from "@/pages/TimelinePage";
@@ -40,6 +41,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Hero />} />
                   <Route path="/auth" element={<AuthEntryRoute />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/debts" element={<DebtsPage />} />
                   <Route path="/extra-payments" element={<ExtraPaymentsPage />} />
                   <Route path="/plan" element={<PlanPage />} />
