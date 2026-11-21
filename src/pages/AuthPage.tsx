@@ -7,11 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Mail, Lock, Loader2 } from 'lucide-react';
 
 export default function AuthPage() {
   const { user, loading } = useAuth();
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
 
   if (loading) {
     return (
@@ -38,27 +37,21 @@ export default function AuthPage() {
       >
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold font-heading text-foreground text-shadow-sm">
-            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+            Welcome Back
           </h1>
           <p className="text-sm text-muted-foreground mt-2">
-            {mode === 'login' ? 'Sign in to access your debt plan' : 'Start your debt freedom journey'}
+            Sign in to access your debt plan
           </p>
         </div>
 
         <Card className="glass-card">
           <CardContent className="p-6">
-            {mode === 'login' ? <LoginForm /> : <SignupForm />}
+            <LoginForm />
           </CardContent>
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
-          <button
-            onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-primary hover:underline font-medium"
-          >
-            {mode === 'login' ? 'Sign up' : 'Sign in'}
-          </button>
+          Account creation is temporarily paused. Existing accounts can sign in with their password.
         </p>
       </motion.div>
     </div>
@@ -84,72 +77,22 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Email</Label>
+        <Label htmlFor="login-email" className="text-xs text-muted-foreground">Email</Label>
         <div className="relative">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-9" required />
+          <Input id="login-email" autoComplete="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-9" required />
         </div>
       </div>
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Password</Label>
+        <Label htmlFor="login-password" className="text-xs text-muted-foreground">Password</Label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" required minLength={6} />
+          <Input id="login-password" autoComplete="current-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" required minLength={6} />
         </div>
       </div>
       <Button type="submit" className="w-full" disabled={submitting}>
         {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
         Sign In
-      </Button>
-    </form>
-  );
-}
-
-function SignupForm() {
-  const { signUp } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    const { error } = await signUp(email, password, displayName);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Check your email for a verification link!');
-    }
-    setSubmitting(false);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Display Name</Label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="pl-9" placeholder="Optional" />
-        </div>
-      </div>
-      <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Email</Label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-9" required />
-        </div>
-      </div>
-      <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Password</Label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" required minLength={6} />
-        </div>
-      </div>
-      <Button type="submit" className="w-full" disabled={submitting}>
-        {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-        Create Account
       </Button>
     </form>
   );

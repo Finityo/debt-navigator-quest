@@ -65,7 +65,7 @@ const SECTIONS: Section[] = [
   {
     heading: 'Step 7 — Save & Sync (Optional)',
     body: [
-      AUTH_PAGE_ENABLED ? 'Create an account from "Log In" to persist your data across devices. Your debts, settings, and progress sync automatically once signed in.' : 'New sign-ins and account creation are temporarily unavailable. Existing signed-in accounts can continue syncing; you can still build a plan without signing in.',
+      AUTH_PAGE_ENABLED ? 'Use "Log In" to sign in to an existing account. Your debts, settings, and progress sync automatically once signed in. New account creation is temporarily paused.' : 'New sign-ins and account creation are temporarily unavailable. Existing signed-in accounts can continue syncing; you can still build a plan without signing in.',
     ],
   },
   {
