@@ -7,6 +7,7 @@ import { useDebtStore } from '@/store/useDebtStore';
 import { useAuth } from '@/hooks/useAuth';
 import type { Debt, DebtType } from '@/types/debt';
 import { toast } from 'sonner';
+import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 function mapPlaidType(type: string): DebtType {
   switch (type) {
@@ -117,11 +118,11 @@ export default function PlaidConnect() {
     return (
       <div className="p-4 text-center space-y-3">
         <p className="text-sm text-muted-foreground">
-          Sign in to securely connect your bank and auto-import your debts.
+          {AUTH_PAGE_ENABLED ? 'Sign in to securely connect your bank and auto-import your debts.' : 'Bank import requires a signed-in account. Sign-in is temporarily unavailable; enter your debts manually for now.'}
         </p>
-        <Button asChild variant="outline" size="sm">
+        {AUTH_PAGE_ENABLED && <Button asChild variant="outline" size="sm">
           <Link to="/auth">Sign In to Connect</Link>
-        </Button>
+        </Button>}
       </div>
     );
   }

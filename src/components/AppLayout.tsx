@@ -21,6 +21,7 @@ import {
 import finityoLogo from '@/assets/app-icon-1024.png';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useAuth } from '@/hooks/useAuth';
+import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 const navItems = [
   { to: '/debts', label: 'Debts', icon: CreditCard },
@@ -138,7 +139,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="px-3 pb-5 pt-2 space-y-1">
-          {!user ? (
+          {!user ? (AUTH_PAGE_ENABLED && (
             <button
               onClick={() => navigate('/auth')}
               className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-primary hover:text-primary/80 hover:bg-[var(--glass-bg)] transition-all duration-200"
@@ -146,7 +147,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <LogIn className="w-[18px] h-[18px]" />
               Sign In
             </button>
-          ) : (
+          )) : (
             <div className="flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-foreground/50">
               <User className="w-[18px] h-[18px]" />
               <span className="truncate">{user.email}</span>
@@ -238,7 +239,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </nav>
                 {/* Panel footer */}
                 <div className="px-3 pb-5 pt-2 space-y-1 border-t border-[var(--glass-border)]">
-                  {!user ? (
+                  {!user ? (AUTH_PAGE_ENABLED && (
                     <Link
                       to="/auth"
                       onClick={handleClose}
@@ -247,7 +248,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                       <LogIn className="w-5 h-5 shrink-0" />
                       Sign In
                     </Link>
-                  ) : (
+                  )) : (
                     <div className="flex items-center gap-3 px-3.5 py-3 text-[15px] text-foreground/50">
                       <User className="w-5 h-5 shrink-0" />
                       <span className="truncate">{user.email}</span>

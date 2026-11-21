@@ -27,6 +27,7 @@ import { PlaidSandboxStatus } from '@/components/PlaidSandboxStatus';
 import { exportUserGuidePDF } from '@/utils/exportUserGuide';
 import type { PayoffMethod } from '@/types/debt';
 import { toast } from 'sonner';
+import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useDebtStore();
@@ -89,8 +90,8 @@ export default function SettingsPage() {
           <CardContent className="p-6">
             <Label className="text-xs font-medium text-muted-foreground">Account</Label>
             <div className="flex items-center justify-between rounded-lg border border-border p-4 mt-2">
-              <p className="text-sm text-muted-foreground">Sign in to sync your debts across devices</p>
-              <Button size="sm" onClick={() => navigate('/auth')}>Sign In</Button>
+              <p className="text-sm text-muted-foreground">{AUTH_PAGE_ENABLED ? 'Sign in to sync your debts across devices' : 'Sign-in is temporarily unavailable. You can still enter debts manually and build your plan.'}</p>
+              {AUTH_PAGE_ENABLED && <Button size="sm" onClick={() => navigate('/auth')}>Sign In</Button>}
             </div>
           </CardContent>
         </Card>

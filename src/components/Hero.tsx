@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 const stagger = {
   hidden: {},
@@ -90,13 +91,13 @@ export default function Hero() {
         >
           Build My Plan
         </Button>
-        <Button
+        {AUTH_PAGE_ENABLED && <Button
           variant="outline"
           size="lg"
           onClick={() => navigate("/auth")}
         >
           Log In
-        </Button>
+        </Button>}
       </motion.div>
 
       {/* TRUST */}
