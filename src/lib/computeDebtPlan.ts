@@ -15,6 +15,12 @@
 //   R4: ALL monetary values rounded to 2 decimals at each step
 //   R5: Snowball — minimums on all, extra to smallest balance,
 //       freed minimums roll over NEXT month (not same month)
+//   R6: When a minimum is clamped by the amount due, the unused part
+//       of that minimum joins THIS month's extra pool (same-month
+//       cascade, R01 validation F-1, Nov 21, 2026). Priority order is
+//       set from month-opening values with deterministic tie-breakers:
+//       snowball = balance asc, APR desc, id asc; avalanche = APR
+//       desc, balance asc, id asc (R01 validation F-2).
 //
 // Runtime Validation:
 //   - Payment breakdown identity check (R2 ↔ paymentApplied)
@@ -77,10 +83,21 @@ interface ActiveDebt {
 }
 
 function sortByStrategy(debts: ActiveDebt[], method: 'snowball' | 'avalanche'): ActiveDebt[] {
+  // Priority is set from month-opening values (monthStartBalance) and
+  // does not change midway through a month except to skip debts
+  // already paid off. Tie-breakers are deterministic (R6), so the
+  // same inputs always produce the same plan regardless of the order
+  // debts were entered in.
   return [...debts].sort((a, b) => {
     if (a.isPaidOff !== b.isPaidOff) return a.isPaidOff ? 1 : -1;
-    if (method === 'snowball') return a.balance - b.balance;
-    return b.apr - a.apr;
+    if (method === 'snowball') {
+      if (a.monthStartBalance !== b.monthStartBalance) return a.monthStartBalance - b.monthStartBalance;
+      if (a.apr !== b.apr) return b.apr - a.apr;
+    } else {
+      if (a.apr !== b.apr) return b.apr - a.apr;
+      if (a.monthStartBalance !== b.monthStartBalance) return a.monthStartBalance - b.monthStartBalance;
+    }
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
   });
 }
 
@@ -148,6 +165,9 @@ export function runEngine(
     }
 
     // ── STEP 2: Apply minimum payments ──
+    // R6: a minimum clamped by the amount due leaves surplus from
+    // this month's budget; track it for this month's extra pool.
+    let cappedMinimumSurplus = 0;
     for (const debt of activeDebts) {
       if (debt.isPaidOff) continue;
       // Overpay prevention (Task 4): clamp to balance
@@ -155,11 +175,14 @@ export function runEngine(
       const minPay = round2(Math.min(debt.minimum, maxPayable));
       debt.balance = round2(debt.balance - minPay);
       debt.monthMinPaid = minPay;
+      if (minPay < debt.minimum) {
+        cappedMinimumSurplus = round2(cappedMinimumSurplus + round2(debt.minimum - minPay));
+      }
     }
 
     // ── STEP 3: Extra payment pool ──
     const userExtra = extraByMonth.get(month) ?? 0;
-    let extraPool = round2(userExtra + freedMinimums);
+    let extraPool = round2(userExtra + freedMinimums + cappedMinimumSurplus);
 
     // ── STEP 4: Apply extra payments per strategy ──
     const sorted = sortByStrategy(activeDebts, method);
