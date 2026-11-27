@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StableNumberInput } from '@/components/ui/stable-number-input';
 import { formatCurrency } from '@/utils/format';
+import { getExtraPaymentDate } from '@/lib/extraPayments';
 import type { ExtraPayment } from '@/types/debt';
 import { Plus, Trash2, Edit2, X, Check, DollarSign, Banknote } from 'lucide-react';
 
@@ -19,11 +20,18 @@ export default function ExtraPaymentsPage() {
 
   const sorted = [...extraPayments].sort((a, b) => a.monthNumber - b.monthNumber);
 
-  const getDateForMonth = (monthNum: number) => {
-    const d = new Date(settings.startDate);
-    d.setMonth(d.getMonth() + monthNum - 1);
-    return d.toISOString().slice(0, 10);
-  };
+  // Dates are derived from the plan start date (Month N = the 1st of
+  // start month + N - 1), never read from the stored row, so the page
+  // always agrees with Settings even for older saved data.
+  const getDateForMonth = (monthNum: number) =>
+    getExtraPaymentDate(settings.startDate, monthNum);
+
+  const formatMonthYear = (isoDate: string) =>
+    new Date(`${isoDate}T00:00:00Z`).toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
 
   const handleAdd = () => {
     if (formMonth < 1 || formAmount <= 0) return;
@@ -142,7 +150,7 @@ export default function ExtraPaymentsPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Month {ep.monthNumber}</span>
                     <span className="text-[11px] text-muted-foreground">
-                      ({new Date(ep.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })})
+                      ({formatMonthYear(getDateForMonth(ep.monthNumber))})
                     </span>
                   </div>
                   <p className="text-xl font-bold font-heading font-tabular text-primary mt-1">

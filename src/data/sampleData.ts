@@ -39,10 +39,3 @@ export const sampleSettings: PlanSettings = {
   monthsHorizon: 60,
 };
 
-export const sampleExtraPayments: ExtraPayment[] = [
-  { monthNumber: 1, date: '2025-04-01', extraAmount: 200 },
-  { monthNumber: 2, date: '2025-05-01', extraAmount: 200 },
-  { monthNumber: 3, date: '2025-06-01', extraAmount: 200 },
-  { monthNumber: 6, date: '2025-09-01', extraAmount: 500 },
-  { monthNumber: 12, date: '2026-03-01', extraAmount: 500 },
-];

@@ -2,7 +2,11 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Debt, ExtraPayment, PlanSettings, PlanResult, PaymentRecord } from '@/types/debt';
 import { computeDebtPlan } from '@/lib/computeDebtPlan';
-import { sampleDebts, sampleSettings, sampleExtraPayments } from '@/data/sampleData';
+import { sampleDebts, sampleSettings } from '@/data/sampleData';
+import {
+  cleanPersistedExtraPayments,
+  reanchorExtraPayments,
+} from '@/lib/extraPayments';
 
 // --- Validation ---
 
@@ -110,7 +114,9 @@ export const useDebtStore = create<DebtStore>()(
     (set, get) => ({
       debts: sampleDebts,
       settings: sampleSettings,
-      extraPayments: sampleExtraPayments,
+      // Extra payments start blank: amounts vary month to month and are
+      // entered by the user, never seeded (changed Nov 20, 2026).
+      extraPayments: [],
       paymentRecords: [],
       planResult: null,
       validationErrors: emptyValidation(),
@@ -133,7 +139,17 @@ export const useDebtStore = create<DebtStore>()(
       },
 
       updateSettings: (updates) => {
-        set((s) => ({ settings: { ...s.settings, ...updates } }));
+        set((s) => {
+          const settings = { ...s.settings, ...updates };
+          return {
+            settings,
+            // Extra-payment dates derive from the start date, so a new
+            // start date re-anchors every scheduled payment.
+            extraPayments: updates.startDate
+              ? reanchorExtraPayments(s.extraPayments, settings.startDate)
+              : s.extraPayments,
+          };
+        });
         autoRecompute(set, get);
       },
 
@@ -193,6 +209,19 @@ export const useDebtStore = create<DebtStore>()(
     }),
     {
       name: 'finityo-store',
+      version: 1,
+      migrate: (persisted: any, version: number) => {
+        // Version 0 saves may still carry the legacy seeded extra
+        // payments. Strip them and re-anchor genuine entries to the
+        // saved start date before the state is used.
+        if (persisted && version < 1) {
+          persisted.extraPayments = cleanPersistedExtraPayments(
+            persisted.extraPayments ?? [],
+            persisted.settings?.startDate ?? sampleSettings.startDate
+          );
+        }
+        return persisted;
+      },
       partialize: (state) => ({
         debts: state.debts,
         settings: state.settings,
