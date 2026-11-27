@@ -4,7 +4,15 @@ import { ONBOARDING_STEPS } from "@/onboarding/onboardingSteps";
 import { useOnboardingStore } from "@/store/onboardingStore";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Volume2, VolumeX } from "lucide-react";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+
+// Recorded narration for each tour step (recorded voice, not device
+// speech synthesis). Clips live in public/audio and read each step's
+// on-screen title and description verbatim.
+const STEP_AUDIO: Record<string, string> = {
+  "debts-intro": "/audio/intro-debts.mp3",
+  "plan-intro": "/audio/intro-plan.mp3",
+  "scenarios": "/audio/intro-scenarios.mp3",
+};
 
 type Placement = "top" | "bottom" | "left" | "right" | "center";
 
@@ -13,7 +21,14 @@ export default function OnboardingOverlay() {
   const step = ONBOARDING_STEPS[currentStep];
   const location = useLocation();
   const navigate = useNavigate();
-  const { speak, stop } = useSpeechSynthesis();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const stop = () => {
+    const a = audioRef.current;
+    if (a) {
+      a.pause();
+      a.currentTime = 0;
+    }
+  };
   const [voiceEnabled, setVoiceEnabled] = useState(
     () => localStorage.getItem('finityo_voiceover_default') !== 'false'
   );
@@ -22,11 +37,19 @@ export default function OnboardingOverlay() {
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [mode, setMode] = useState<"anchored" | "sheet" | "center">("center");
 
-  // Speak step description on change
+  // Play the step's recorded narration on change; stop on step
+  // change, mute, skip, or close (the effect cleanup covers them).
   useEffect(() => {
     if (!step || hasSeen) return;
     if (voiceEnabled) {
-      speak(`${step.title}. ${step.description}`);
+      const src = STEP_AUDIO[step.id];
+      if (src) {
+        if (!audioRef.current) audioRef.current = new Audio();
+        const a = audioRef.current;
+        a.src = src;
+        a.currentTime = 0;
+        a.play().catch(() => {});
+      }
     }
     return () => stop();
   }, [currentStep, hasSeen, voiceEnabled]);
