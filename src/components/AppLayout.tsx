@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   Banknote,
+  Wallet,
   Moon,
   Sun,
   HelpCircle,
@@ -25,6 +26,7 @@ import { AUTH_PAGE_ENABLED } from '@/config/authAvailability';
 
 const navItems = [
   { to: '/debts', label: 'Debts', icon: CreditCard },
+  { to: '/budget', label: 'Monthly Budget', icon: Wallet },
   { to: '/extra-payments', label: 'Extra Payments', icon: Banknote },
   { to: '/plan', label: 'Plan', icon: Calculator },
   { to: '/timeline', label: 'Timeline', icon: CalendarDays },
